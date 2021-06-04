@@ -1,7 +1,7 @@
 package asd.group2.bms.repository;
 
-import asd.group2.bms.model.Role;
-import asd.group2.bms.model.RoleType;
+import asd.group2.bms.model.user.Role;
+import asd.group2.bms.model.user.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

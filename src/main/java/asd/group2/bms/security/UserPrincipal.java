@@ -1,6 +1,6 @@
 package asd.group2.bms.security;
 
-import asd.group2.bms.model.User;
+import asd.group2.bms.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,6 +1,6 @@
 package asd.group2.bms.repository;
 
-import asd.group2.bms.model.User;
+import asd.group2.bms.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

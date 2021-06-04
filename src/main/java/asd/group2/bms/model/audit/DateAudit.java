@@ -1,4 +1,4 @@
-package asd.group2.bms.model;
+package asd.group2.bms.model.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;

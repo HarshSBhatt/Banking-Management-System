@@ -1,4 +1,4 @@
-package asd.group2.bms.model;
+package asd.group2.bms.model.user;
 
 import org.hibernate.annotations.NaturalId;
 

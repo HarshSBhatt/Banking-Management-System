@@ -1,6 +1,6 @@
 package asd.group2.bms.security;
 
-import asd.group2.bms.model.User;
+import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

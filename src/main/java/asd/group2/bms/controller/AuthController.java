@@ -1,9 +1,9 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.exception.BMSException;
-import asd.group2.bms.model.Role;
-import asd.group2.bms.model.RoleType;
-import asd.group2.bms.model.User;
+import asd.group2.bms.model.user.Role;
+import asd.group2.bms.model.user.RoleType;
+import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.*;
 import asd.group2.bms.repository.RoleRepository;
 import asd.group2.bms.repository.UserRepository;

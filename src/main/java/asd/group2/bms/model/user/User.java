@@ -1,5 +1,6 @@
-package asd.group2.bms.model;
+package asd.group2.bms.model.user;
 
+import asd.group2.bms.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
