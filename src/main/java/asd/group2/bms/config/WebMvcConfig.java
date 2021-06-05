@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @description: This will handle cross-origin requests
+ */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 

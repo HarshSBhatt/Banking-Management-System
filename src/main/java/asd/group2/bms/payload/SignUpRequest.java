@@ -4,6 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * @description: Structure of signup request
+ */
 public class SignUpRequest {
     @NotBlank
     @Size(min = 4, max = 40)

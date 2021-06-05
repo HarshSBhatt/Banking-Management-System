@@ -2,6 +2,9 @@ package asd.group2.bms.payload;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @description: Structure of login request
+ */
 public class LoginRequest {
     @NotBlank
     private String usernameOrEmail;

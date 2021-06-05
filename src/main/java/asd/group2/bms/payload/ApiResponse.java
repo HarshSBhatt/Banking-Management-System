@@ -1,5 +1,8 @@
 package asd.group2.bms.payload;
 
+/**
+ * @description: Structure of api response
+ */
 public class ApiResponse {
     private Boolean success;
     private String message;

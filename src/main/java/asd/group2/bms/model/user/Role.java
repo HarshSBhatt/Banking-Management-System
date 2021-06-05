@@ -4,6 +4,9 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
+/**
+* @description: This will create roles table in the database
+*/
 @Entity
 @Table(name = "roles")
 public class Role {

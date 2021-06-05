@@ -44,6 +44,10 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+    /**
+     * @description: Authenticate the user's login request.
+     * @param  loginRequest: username and password
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -57,6 +61,10 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
+    /**
+     * @description: Register the user into the system.
+     * @param  signUpRequest: username, email, password and related information
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {

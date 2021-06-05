@@ -20,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * @description: Security configuration, which is the most important part of this application
+ */
 @Configuration
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)

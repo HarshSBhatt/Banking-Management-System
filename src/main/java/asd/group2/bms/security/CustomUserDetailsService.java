@@ -14,6 +14,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * @descriptions: This will return user details.
+     * @param usernameOrEmail: username or email of the user
+     */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -25,7 +29,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.create(user);
     }
 
-    // This method is used by JWTAuthenticationFilter
+    /**
+     * @descriptions: This method is used by JWTAuthenticationFilter.
+     * @param id: user id
+     */
     @Transactional
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)

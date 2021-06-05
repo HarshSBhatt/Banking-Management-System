@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * @description: This will implement UserDetails interface,
+ * and return the UserPrincipal object
+ * from loadUserByUsername() method.
+ */
 public class UserPrincipal implements UserDetails {
     private Long id;
 

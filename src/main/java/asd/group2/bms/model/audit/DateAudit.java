@@ -14,6 +14,9 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 
+/**
+ * @description: We will extend this table such that it will inject created_at and updated_at in tables we want to keep record
+ */
 public class DateAudit {
     @CreatedDate
     @Column(nullable = false, updatable = false)

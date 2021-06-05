@@ -1,5 +1,8 @@
 package asd.group2.bms.payload;
 
+/**
+ * @description: Structure of JWT response
+ */
 public class JwtAuthenticationResponse {
     private String accessToken;
     private String tokenType = "Bearer";
