@@ -6,10 +6,10 @@ import javax.validation.constraints.NotBlank;
  * @description: Structure of login request
  */
 public class LoginRequest {
-    @NotBlank
+    @NotBlank(message = "Username or email is required")
     private String usernameOrEmail;
 
-    @NotBlank
+    @NotBlank(message = "Password can not be empty")
     private String password;
 
     public String getUsernameOrEmail() {
