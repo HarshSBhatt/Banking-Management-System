@@ -4,21 +4,17 @@ stages:
   - build
   - test
 
-buildStep:
+build:
   image: maven:3.8.1-openjdk-16
   stage: build
-  tags:
-    - bms_group2
   artifacts:
     paths:
       - Group2/target
   script: mvn clean install
 
-testStep:
+test:
   image: maven:3.8.1-openjdk-16
   stage: test
-  tags:
-    - bms_group2
   artifacts:
     when: always
     reports:
