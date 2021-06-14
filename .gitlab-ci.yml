@@ -7,6 +7,8 @@ stages:
 build:
   image: maven:3.8.1-openjdk-16
   stage: build
+  tags:
+    - dalfcs_docker_kvm
   artifacts:
     paths:
       - Group2/target
@@ -15,6 +17,8 @@ build:
 test:
   image: maven:3.8.1-openjdk-16
   stage: test
+  tags:
+    - dalfcs_docker_kvm
   artifacts:
     when: always
     reports:
