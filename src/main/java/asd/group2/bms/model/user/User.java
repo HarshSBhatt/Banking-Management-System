@@ -67,11 +67,6 @@ public class User extends DateAudit {
     private Set<Role> roles = new HashSet<>();
 
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            mappedBy = "user")
-    private Account account;
-
     public User() {
 
     }
@@ -174,13 +169,5 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
     }
 }
