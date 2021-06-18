@@ -11,8 +11,9 @@ import asd.group2.bms.security.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
 
 /**
  * @description: It will handle all the user related requests.
@@ -26,19 +27,19 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     /**
+     * @param currentUser: logged in user
      * @description: It will return the current user.
-     * @param  currentUser: logged in user
      */
     @GetMapping("/user/me")
-    @PreAuthorize("hasRole('USER')")
+    @RolesAllowed({ "ROLE_USER" })
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(), currentUser.getAddress());
         return userSummary;
     }
 
     /**
+     * @param username: username of the user
      * @description: It will return true or false.
-     * @param  username: username of the user
      */
     @GetMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
@@ -47,8 +48,8 @@ public class UserController {
     }
 
     /**
+     * @param email: email of the user
      * @description: It will return true or false.
-     * @param  email: email of the user
      */
     @GetMapping("/user/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
@@ -57,15 +58,16 @@ public class UserController {
     }
 
     /**
+     * @param username: username of the user
      * @description: It will return user profile.
-     * @param  username: username of the user
      */
     @GetMapping("/users/{username}")
+    @RolesAllowed({ "ROLE_USER", "ROLE_MANAGER" })
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
+        UserProfile userProfile = new UserProfile(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getBirthday(), user.getEmail(), user.getPhone(), user.getAddress(), user.getCreatedAt());
 
         return userProfile;
     }

@@ -1,15 +1,22 @@
 package asd.group2.bms.payload;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.*;
+import java.util.Date;
 
 /**
  * @description: Structure of signup request
  */
 public class SignUpRequest {
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "First Name is required")
     @Size(min = 4, max = 40)
-    private String name;
-    
+    private String firstName;
+
+    @NotBlank(message = "Last Name is required")
+    @Size(min = 4, max = 40)
+    private String lastName;
+
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 15)
     private String username;
@@ -19,16 +26,36 @@ public class SignUpRequest {
     @Email(message = "Please enter a valid email")
     private String email;
 
+    @NotNull(message = "Birthdate is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
+
+    @NotBlank(message = "Phone number is required")
+    @Size(max = 15)
+    private String phone;
+
+    @NotBlank(message = "Address is required")
+    @Size(max = 200)
+    private String address;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 20)
     private String password;
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -45,6 +72,30 @@ public class SignUpRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPassword() {

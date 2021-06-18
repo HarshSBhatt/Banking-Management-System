@@ -1,6 +1,7 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.exception.BMSException;
+import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
@@ -45,8 +46,8 @@ public class AuthController {
     JwtTokenProvider tokenProvider;
 
     /**
+     * @param loginRequest: username and password
      * @description: Authenticate the user's login request.
-     * @param  loginRequest: username and password
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -62,8 +63,8 @@ public class AuthController {
     }
 
     /**
+     * @param signUpRequest: username, email, password and related information
      * @description: Register the user into the system.
-     * @param  signUpRequest: username, email, password and related information
      */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
@@ -78,8 +79,8 @@ public class AuthController {
         }
 
         // Creating user's account
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-                signUpRequest.getPassword());
+        User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
+                signUpRequest.getBirthday(), signUpRequest.getPhone(), signUpRequest.getPassword(), signUpRequest.getAddress(), AccountStatus.PENDING);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
