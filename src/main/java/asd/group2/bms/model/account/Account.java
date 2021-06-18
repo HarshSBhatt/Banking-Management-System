@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * @description: This will create users table in the database
+ * @description: This will create accounts table in the database
  */
 @Entity
 @Table(name = "accounts")
@@ -24,6 +24,7 @@ public class Account extends DateAudit {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
     private AccountType accountType;
 
