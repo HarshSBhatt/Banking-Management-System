@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * @description: This will create accounts table in the database
@@ -29,7 +28,6 @@ public class Account extends DateAudit {
     private AccountType accountType;
 
     @NotNull
-    @Size(max = 40)
     private Double balance;
 
     @NotNull

@@ -1,6 +1,4 @@
-package asd.group2.bms.model;
-
-import org.hibernate.annotations.NaturalId;
+package asd.group2.bms.model.term_deposit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,9 +12,6 @@ import javax.validation.constraints.Size;
 @Table(name = "term_deposits")
 public class TermDeposit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     @Size(max = 100)
     private String duration;
@@ -27,18 +22,9 @@ public class TermDeposit {
     public TermDeposit() {
     }
 
-    public TermDeposit(Long id, String duration, float rateOfInterest) {
-        this.id = id;
+    public TermDeposit(String duration, float rateOfInterest) {
         this.duration = duration;
         this.rateOfInterest = rateOfInterest;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getDuration() {
