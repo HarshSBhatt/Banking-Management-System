@@ -1,5 +1,6 @@
 package asd.group2.bms.model.user;
 
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -64,6 +65,7 @@ public class User extends DateAudit {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
 
     public User() {
 
