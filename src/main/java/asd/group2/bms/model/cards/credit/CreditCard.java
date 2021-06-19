@@ -36,25 +36,25 @@ public class CreditCard extends DateAudit {
     private String pin;
 
     @NotBlank
-    @Column(columnDefinition = "integer default 5000")
-    private int limit;
+    @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
+    private Integer transactionLimit;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private CreditCardStatus creditCardStatus;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(name = "is_active", columnDefinition = "boolean default false")
     private Boolean isActive;
 
     public CreditCard() {
     }
 
-    public CreditCard(Long creditCardNumber, User user, Account account, String pin, int limit, CreditCardStatus creditCardStatus, Boolean isActive) {
+    public CreditCard(Long creditCardNumber, User user, Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Boolean isActive) {
         this.creditCardNumber = creditCardNumber;
         this.user = user;
         this.account = account;
         this.pin = pin;
-        this.limit = limit;
+        this.transactionLimit = transactionLimit;
         this.creditCardStatus = creditCardStatus;
         this.isActive = isActive;
     }
@@ -91,12 +91,12 @@ public class CreditCard extends DateAudit {
         this.pin = pin;
     }
 
-    public int getLimit() {
-        return limit;
+    public Integer getTransactionLimit() {
+        return transactionLimit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setTransactionLimit(Integer transactionLimit) {
+        this.transactionLimit = transactionLimit;
     }
 
     public CreditCardStatus getCreditCardStatus() {
