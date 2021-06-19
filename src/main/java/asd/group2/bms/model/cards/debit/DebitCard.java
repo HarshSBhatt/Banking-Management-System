@@ -36,8 +36,8 @@ public class DebitCard extends DateAudit {
     private String pin;
 
     @NotBlank
-    @Column(columnDefinition = "integer default 5000")
-    private int limit;
+    @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
+    private Integer transactionLimit;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -46,12 +46,12 @@ public class DebitCard extends DateAudit {
     public DebitCard() {
     }
 
-    public DebitCard(Long debitCardNumber, User user, Account account, String pin, int limit, DebitCardStatus debitCardStatus) {
+    public DebitCard(Long debitCardNumber, User user, Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus) {
         this.debitCardNumber = debitCardNumber;
         this.user = user;
         this.account = account;
         this.pin = pin;
-        this.limit = limit;
+        this.transactionLimit = transactionLimit;
         this.debitCardStatus = debitCardStatus;
     }
 
@@ -87,12 +87,12 @@ public class DebitCard extends DateAudit {
         this.pin = pin;
     }
 
-    public int getLimit() {
-        return limit;
+    public Integer getTransactionLimit() {
+        return transactionLimit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setTransactionLimit(Integer transactionLimit) {
+        this.transactionLimit = transactionLimit;
     }
 
     public DebitCardStatus getDebitCardStatus() {

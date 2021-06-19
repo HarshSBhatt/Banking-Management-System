@@ -15,7 +15,7 @@ import java.util.Date;
  * @description: This will create term deposit detail table in the database
  */
 @Entity
-@Table(name = "leaves")
+@Table(name = "term_deposit_details")
 public class TermDepositDetail extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
