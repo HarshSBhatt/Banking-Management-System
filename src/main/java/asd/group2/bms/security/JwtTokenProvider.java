@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
@@ -20,18 +22,27 @@ public class JwtTokenProvider {
     private int jwtExpirationInMs;
 
     /**
-     * @description: This will return token.
      * @param authentication: user authentication details
+     * @description: This will return token.
      */
     public String generateToken(Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
+        Collection roles = userPrincipal.getAuthorities();
+        Optional role = roles.stream().findFirst();
+        String userRole = role.get().toString();
+
+        Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
+        claims.put("role", userRole);
+        claims.put("user", userPrincipal);
+
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -39,8 +50,8 @@ public class JwtTokenProvider {
     }
 
     /**
-     * @description: This will return user id.
      * @param token: jwt token
+     * @description: This will return user id.
      */
     public Long getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
@@ -52,8 +63,8 @@ public class JwtTokenProvider {
     }
 
     /**
-     * @description: This will return the token.
      * @param authToken: jwt token
+     * @description: This will return the token.
      */
     public boolean validateToken(String authToken) {
         try {

@@ -1,12 +1,11 @@
-package asd.group2.bms.payload;
+package asd.group2.bms.payload.response;
 
-import java.time.Instant;
 import java.util.Date;
 
 /**
- * @description: This class will be responsible to return user profile.
+ * @description: This class will be responsible to return user summary.
  */
-public class UserProfile {
+public class UserSummary {
     private Long id;
     private String firstName;
     private String lastName;
@@ -15,9 +14,8 @@ public class UserProfile {
     private String email;
     private String phone;
     private String address;
-    private Instant joinedAt;
 
-    public UserProfile(Long id, String firstName, String lastName, String username, Date birthday, String email, String phone, String address, Instant joinedAt) {
+    public UserSummary(Long id, String firstName, String lastName, String username, Date birthday, String email, String phone, String address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,7 +24,6 @@ public class UserProfile {
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.joinedAt = joinedAt;
     }
 
     public Long getId() {
@@ -91,13 +88,5 @@ public class UserProfile {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Instant getJoinedAt() {
-        return joinedAt;
-    }
-
-    public void setJoinedAt(Instant joinedAt) {
-        this.joinedAt = joinedAt;
     }
 }
