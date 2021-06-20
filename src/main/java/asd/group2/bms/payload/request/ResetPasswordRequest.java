@@ -1,8 +1,6 @@
 package asd.group2.bms.payload.request;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
  * @description: Structure of reset password request
