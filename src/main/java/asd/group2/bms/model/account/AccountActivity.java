@@ -1,0 +1,103 @@
+package asd.group2.bms.model.account;
+
+import asd.group2.bms.model.audit.DateAudit;
+import asd.group2.bms.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+/**
+ * @description: This will create users table in the database
+ */
+@Entity
+@Table(name = "account_activities")
+public class AccountActivity extends DateAudit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long activityId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_number", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Account account;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ActivityType activityType;
+
+    @NotNull
+    private Double transactionAmount;
+
+    @NotNull
+    private String comment;
+
+    public AccountActivity() {
+    }
+
+    public AccountActivity(Long activityId, User user, Account account, ActivityType activityType, Double transactionAmount, String comment) {
+        this.activityId = activityId;
+        this.user = user;
+        this.account = account;
+        this.activityType = activityType;
+        this.transactionAmount = transactionAmount;
+        this.comment = comment;
+    }
+
+    public Long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public ActivityType getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
+    }
+
+    public Double getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public void setTransactionAmount(Double transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+}
