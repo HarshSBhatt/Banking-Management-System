@@ -2,7 +2,6 @@ package asd.group2.bms.model.cards.debit;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
