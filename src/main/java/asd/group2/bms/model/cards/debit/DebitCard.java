@@ -21,12 +21,7 @@ public class DebitCard extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long debitCardNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Account account;
@@ -46,9 +41,8 @@ public class DebitCard extends DateAudit {
     public DebitCard() {
     }
 
-    public DebitCard(Long debitCardNumber, User user, Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus) {
+    public DebitCard(Long debitCardNumber, Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus) {
         this.debitCardNumber = debitCardNumber;
-        this.user = user;
         this.account = account;
         this.pin = pin;
         this.transactionLimit = transactionLimit;
@@ -61,14 +55,6 @@ public class DebitCard extends DateAudit {
 
     public void setDebitCardNumber(Long debitCardNumber) {
         this.debitCardNumber = debitCardNumber;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Account getAccount() {

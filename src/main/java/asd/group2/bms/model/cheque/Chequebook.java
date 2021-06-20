@@ -1,7 +1,7 @@
 package asd.group2.bms.model.cheque;
 
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -19,10 +19,10 @@ public class Chequebook extends DateAudit {
     private Long chequebookNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private User user;
+    private Account account;
 
     @Column(name = "is_issued", columnDefinition = "boolean default false")
     private Boolean isIssued;
@@ -30,9 +30,9 @@ public class Chequebook extends DateAudit {
     public Chequebook() {
     }
 
-    public Chequebook(Long chequebookNumber, User user, Boolean isIssued) {
+    public Chequebook(Long chequebookNumber, Account account, Boolean isIssued) {
         this.chequebookNumber = chequebookNumber;
-        this.user = user;
+        this.account = account;
         this.isIssued = isIssued;
     }
 
@@ -44,12 +44,12 @@ public class Chequebook extends DateAudit {
         this.chequebookNumber = chequebookNumber;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Boolean getIssued() {
