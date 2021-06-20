@@ -21,7 +21,7 @@ public class DebitCard extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long debitCardNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Account account;
