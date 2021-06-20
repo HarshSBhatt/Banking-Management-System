@@ -22,11 +22,6 @@ public class TermDepositDetail extends DateAudit {
     private Long termDepositId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Account account;
@@ -59,7 +54,6 @@ public class TermDepositDetail extends DateAudit {
 
     public TermDepositDetail(Long termDepositId, User user, Account account, TermDeposit termDeposit, Date startDate, Double initialAmount, Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
         this.termDepositId = termDepositId;
-        this.user = user;
         this.account = account;
         this.termDeposit = termDeposit;
         this.startDate = startDate;
@@ -75,14 +69,6 @@ public class TermDepositDetail extends DateAudit {
 
     public void setTermDepositId(Long termDepositId) {
         this.termDepositId = termDepositId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Account getAccount() {
