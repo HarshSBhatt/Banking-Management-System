@@ -1,4 +1,4 @@
-package asd.group2.bms.payload;
+package asd.group2.bms.payload.response;
 
 /**
  * @description: Structure of JWT response
