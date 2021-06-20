@@ -1,4 +1,4 @@
-package asd.group2.bms.payload;
+package asd.group2.bms.payload.response;
 
 import java.util.List;
 
