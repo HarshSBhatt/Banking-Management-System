@@ -22,11 +22,6 @@ public class CreditCard extends DateAudit {
     private Long creditCardNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Account account;
@@ -49,9 +44,8 @@ public class CreditCard extends DateAudit {
     public CreditCard() {
     }
 
-    public CreditCard(Long creditCardNumber, User user, Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Boolean isActive) {
+    public CreditCard(Long creditCardNumber, Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Boolean isActive) {
         this.creditCardNumber = creditCardNumber;
-        this.user = user;
         this.account = account;
         this.pin = pin;
         this.transactionLimit = transactionLimit;
@@ -65,14 +59,6 @@ public class CreditCard extends DateAudit {
 
     public void setCreditCardNumber(Long creditCardNumber) {
         this.creditCardNumber = creditCardNumber;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Account getAccount() {

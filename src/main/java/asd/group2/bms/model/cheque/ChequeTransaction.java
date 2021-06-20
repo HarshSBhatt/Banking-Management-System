@@ -20,17 +20,11 @@ public class ChequeTransaction extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chequeTransactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cheque_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Cheque cheque;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sender_account_number", nullable = false)
@@ -54,10 +48,9 @@ public class ChequeTransaction extends DateAudit {
     public ChequeTransaction() {
     }
 
-    public ChequeTransaction(Long chequeTransactionId, Cheque cheque, User user, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
+    public ChequeTransaction(Long chequeTransactionId, Cheque cheque, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
         this.chequeTransactionId = chequeTransactionId;
         this.cheque = cheque;
-        this.user = user;
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.chequeStatus = chequeStatus;
@@ -78,14 +71,6 @@ public class ChequeTransaction extends DateAudit {
 
     public void setCheque(Cheque cheque) {
         this.cheque = cheque;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Account getSenderAccount() {
