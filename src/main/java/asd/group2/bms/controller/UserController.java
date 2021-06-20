@@ -1,19 +1,20 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.exception.ResourceNotFoundException;
-import asd.group2.bms.model.user.User;
-import asd.group2.bms.payload.UserIdentityAvailability;
-import asd.group2.bms.payload.UserProfile;
-import asd.group2.bms.payload.UserSummary;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.payload.request.ChangePasswordRequest;
+import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.payload.response.UserIdentityAvailability;
+import asd.group2.bms.payload.response.UserProfile;
+import asd.group2.bms.payload.response.UserSummary;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
+import asd.group2.bms.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 /**
  * @description: It will handle all the user related requests.
@@ -22,7 +23,7 @@ import javax.annotation.security.RolesAllowed;
 @RequestMapping("/api")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -31,10 +32,9 @@ public class UserController {
      * @description: It will return the current user.
      */
     @GetMapping("/user/me")
-    @RolesAllowed({ "ROLE_USER" })
+    @RolesAllowed({"ROLE_USER"})
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(), currentUser.getAddress());
-        return userSummary;
+        return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(), currentUser.getAddress());
     }
 
     /**
@@ -43,7 +43,7 @@ public class UserController {
      */
     @GetMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        Boolean isAvailable = !userRepository.existsByUsername(username);
+        Boolean isAvailable = userService.isUsernameAvailable(username);
         return new UserIdentityAvailability(isAvailable);
     }
 
@@ -53,7 +53,7 @@ public class UserController {
      */
     @GetMapping("/user/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-        Boolean isAvailable = !userRepository.existsByEmail(email);
+        Boolean isAvailable = userService.isEmailAvailable(email);
         return new UserIdentityAvailability(isAvailable);
     }
 
@@ -62,13 +62,29 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({ "ROLE_USER", "ROLE_MANAGER" })
+    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        return userService.getUserProfileByUsername(username);
+    }
 
-        UserProfile userProfile = new UserProfile(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getBirthday(), user.getEmail(), user.getPhone(), user.getAddress(), user.getCreatedAt());
+    /**
+     * @param changePasswordRequest: new password of user
+     * @description: It will change user's password.
+     */
+    @PostMapping("/users/change-password")
+    public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        String oldPassword = changePasswordRequest.getOldPassword();
+        String newPassword = changePasswordRequest.getNewPassword();
+        String confirmNewPassword = changePasswordRequest.getConfirmNewPassword();
 
-        return userProfile;
+        if (!oldPassword.equals(newPassword)) {
+            if (newPassword.equals(confirmNewPassword)) {
+                return userService.changePassword(oldPassword, newPassword, currentUser);
+            } else {
+                return new ApiResponse(false, "New passwords are not same");
+            }
+        } else {
+            return new ApiResponse(false, "Old password and new password are same");
+        }
     }
 }

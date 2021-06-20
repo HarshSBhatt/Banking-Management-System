@@ -1,4 +1,4 @@
-package asd.group2.bms.payload;
+package asd.group2.bms.payload.response;
 
 /**
  * @description: This class will be responsible to return availability of the user.
