@@ -20,12 +20,6 @@ public class AccountActivity extends DateAudit {
     private Long activityId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -44,9 +38,8 @@ public class AccountActivity extends DateAudit {
     public AccountActivity() {
     }
 
-    public AccountActivity(Long activityId, User user, Account account, ActivityType activityType, Double transactionAmount, String comment) {
+    public AccountActivity(Long activityId, Account account, ActivityType activityType, Double transactionAmount, String comment) {
         this.activityId = activityId;
-        this.user = user;
         this.account = account;
         this.activityType = activityType;
         this.transactionAmount = transactionAmount;
@@ -59,14 +52,6 @@ public class AccountActivity extends DateAudit {
 
     public void setActivityId(Long activityId) {
         this.activityId = activityId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Account getAccount() {
