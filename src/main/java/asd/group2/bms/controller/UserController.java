@@ -71,7 +71,7 @@ public class UserController {
      * @param changePasswordRequest: new password of user
      * @description: It will change user's password.
      */
-    @PostMapping("/users/change_password")
+    @PostMapping("/users/change-password")
     public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         String oldPassword = changePasswordRequest.getOldPassword();
         String newPassword = changePasswordRequest.getNewPassword();
