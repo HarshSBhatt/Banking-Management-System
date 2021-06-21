@@ -1,9 +1,15 @@
 package asd.group2.bms.service;
 
+import asd.group2.bms.exception.BMSException;
 import asd.group2.bms.exception.ResourceNotFoundException;
+import asd.group2.bms.model.user.AccountStatus;
+import asd.group2.bms.model.user.Role;
+import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserProfile;
+import asd.group2.bms.repository.RoleRepository;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +17,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Collections;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -27,6 +40,47 @@ public class UserService {
     public Boolean isUsernameAvailable(String username) {
         return !userRepository.existsByUsername(username);
     }
+
+    public ResponseEntity<?> createUser(SignUpRequest signUpRequest) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        // Creating user's account
+        User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
+                signUpRequest.getBirthday(), signUpRequest.getPhone(), signUpRequest.getPassword(), signUpRequest.getAddress(), AccountStatus.PENDING);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role userRole;
+
+        RoleType role = signUpRequest.getRole();
+
+        if (role == null) {
+            userRole = roleRepository.findByName(RoleType.ROLE_USER)
+                    .orElseThrow(() -> new BMSException("User Role not set."));
+        } else {
+            user.setAccountStatus(AccountStatus.ACTIVE);
+            userRole = roleRepository.findByName(role)
+                    .orElseThrow(() -> new BMSException("User Role not set."));
+        }
+
+        user.setRoles(Collections.singleton(userRole));
+
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
 
     public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
         if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
