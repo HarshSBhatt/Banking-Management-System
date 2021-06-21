@@ -90,7 +90,7 @@ public class UserController {
                 return new ApiResponse(false, "New passwords are not same");
             }
         } else {
-            return new ApiResponse(false, "Old password and new password are same");
+            return new ApiResponse(false, "Current and new password are same");
         }
     }
 

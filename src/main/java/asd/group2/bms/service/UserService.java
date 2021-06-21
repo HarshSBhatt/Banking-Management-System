@@ -89,7 +89,7 @@ public class UserService {
             userRepository.save(user);
             return new ApiResponse(true, "Password changed successfully!");
         } else {
-            return new ApiResponse(false, "Old password is wrong!");
+            return new ApiResponse(false, "Current password is wrong!");
         }
     }
 
