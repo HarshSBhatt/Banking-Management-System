@@ -16,7 +16,6 @@ import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.JwtTokenProvider;
 import asd.group2.bms.service.UserService;
 import asd.group2.bms.util.CustomEmail;
-import asd.group2.bms.util.SiteURL;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -122,7 +121,7 @@ public class AuthController {
         String token = RandomString.make(45);
 
         userService.updateResetForgotPasswordToken(token, email);
-        String forgotPasswordLink = SiteURL.getSiteURL(request) + "/reset-password?token=" + token;
+        String forgotPasswordLink = "http://localhost:3000/reset-password?token=" + token;
         try {
             customEmail.sendResetPasswordEmail(email, forgotPasswordLink);
             return ResponseEntity.ok(new ApiResponse(true, "Email sent successfully"));
