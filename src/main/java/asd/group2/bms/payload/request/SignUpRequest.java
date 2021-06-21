@@ -1,7 +1,11 @@
 package asd.group2.bms.payload.request;
 
+import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.user.RoleType;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.util.Date;
 
@@ -41,6 +45,12 @@ public class SignUpRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 20)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
+
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 
     public String getFirstName() {
         return firstName;
@@ -104,5 +114,21 @@ public class SignUpRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
     }
 }
