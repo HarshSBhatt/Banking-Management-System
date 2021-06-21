@@ -4,8 +4,10 @@ export const ROUTES = {
   LOGIN: "/login",
   LOGOUT: "/logout",
   REGISTER: "/register",
+  ADD_USER: "/bank/user/create",
   FORGET_PASSWORD: "/forget-password",
   RESET_PASSWORD: "/reset-password",
+  CHANGE_PASSWORD: "/change-password",
   USERS_MANAGEMENT: "/users",
 };
 
@@ -21,6 +23,7 @@ export const ACCOUNT_STATUS = {
 export const MODULES = {
   DASHBOARD: "Dashboard",
   USERS_MANAGEMENT: "User Management",
+  ADD_USER: "Add User",
 };
 
 /* Authentication */
@@ -35,8 +38,10 @@ export const ROLE = "ROLE";
 export const SERVER_ERROR = "SERVER_ERROR";
 
 export const ROLES = {
-  SUPER_ADMIN: "Super admin",
-  ADMIN: "Admin",
+  ROLE_MANAGER: "ROLE_MANAGER",
+  ROLE_HR: "ROLE_HR",
+  ROLE_EMPLOYEE: "ROLE_EMPLOYEE",
+  ROLE_USER: "ROLE_USER",
 };
 
 /* Date and time */

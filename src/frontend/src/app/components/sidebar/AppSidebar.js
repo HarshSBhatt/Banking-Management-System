@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 //! Ant Imports
@@ -8,21 +8,37 @@ import Sider from "antd/lib/layout/Sider";
 
 //! Ant Icons
 
-import AppstoreOutlined from "@ant-design/icons/AppstoreOutlined";
-import MenuUnfoldOutlined from "@ant-design/icons/MenuUnfoldOutlined";
-import MenuFoldOutlined from "@ant-design/icons/MenuFoldOutlined";
-import UserOutlined from "@ant-design/icons/UserOutlined";
+import {
+  AppstoreOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+  UsergroupAddOutlined,
+  PlusCircleOutlined,
+  SnippetsOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
 
 //! User Files
 
-import { MODULES, ROUTES } from "common/constants";
+import { MODULES, ROLES, ROUTES } from "common/constants";
+import { AppContext } from "AppContext";
+
+const { SubMenu } = Menu;
 
 function AppSidebar() {
+  const {
+    state: { role },
+  } = useContext(AppContext);
   const {
     push,
     location: { pathname },
   } = useHistory();
+  const [openKeys, setOpenKeys] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+
+  const rootSubMenuKeys = ["user", "leave", "resign"];
+
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -31,11 +47,20 @@ function AppSidebar() {
     push(e.key);
   };
 
+  const onOpenChange = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+    if (rootSubMenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
+
   return (
     <Sider
       trigger={null}
       collapsible
-      width={250}
+      width={280}
       theme="light"
       collapsed={collapsed}
     >
@@ -53,16 +78,46 @@ function AppSidebar() {
         <Menu
           theme="lite"
           mode="inline"
-          selectedKeys={[`/${pathname.split("/")[1]}`]}
+          openKeys={openKeys}
+          onOpenChange={onOpenChange}
+          selectedKeys={[pathname]}
           defaultSelectedKeys={[ROUTES.USERS_MANAGEMENT]}
           onSelect={onMenuSelect}
         >
-          <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-            <span>{MODULES.DASHBOARD}</span>
-          </Menu.Item>
-          <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
-            <span>{MODULES.USERS_MANAGEMENT}</span>
-          </Menu.Item>
+          {role === ROLES.ROLE_USER ? (
+            <>
+              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
+                <span>{MODULES.DASHBOARD}</span>
+              </Menu.Item>
+              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
+                <span>{MODULES.USERS_MANAGEMENT}</span>
+              </Menu.Item>
+            </>
+          ) : (
+            <>
+              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
+                <span>{MODULES.DASHBOARD}</span>
+              </Menu.Item>
+              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
+                <span>{MODULES.USERS_MANAGEMENT}</span>
+              </Menu.Item>
+              <SubMenu key="user" icon={<UsergroupAddOutlined />} title="User">
+                <Menu.Item key={ROUTES.ADD_USER} icon={<PlusCircleOutlined />}>
+                  <span>{MODULES.ADD_USER}</span>
+                </Menu.Item>
+              </SubMenu>
+              <SubMenu key="leave" icon={<SnippetsOutlined />} title="Leave">
+                <Menu.Item key="5">Option 5</Menu.Item>
+                <Menu.Item key="6">Option 6</Menu.Item>
+              </SubMenu>
+              <SubMenu key="resign" icon={<FormOutlined />} title="Resign">
+                <Menu.Item key="9">Option 9</Menu.Item>
+                <Menu.Item key="10">Option 10</Menu.Item>
+                <Menu.Item key="11">Option 11</Menu.Item>
+                <Menu.Item key="12">Option 12</Menu.Item>
+              </SubMenu>
+            </>
+          )}
         </Menu>
       </div>
     </Sider>

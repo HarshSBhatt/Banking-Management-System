@@ -14,18 +14,20 @@ import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 
 import { toast } from "common/utils";
 import { AppContext } from "AppContext";
-import { APP_NAME, REGEX, ROUTES } from "common/constants";
+import { APP_NAME, REGEX, ROLES, ROUTES } from "common/constants";
 import api from "common/api";
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function Signup() {
+function Signup({ isOpenedByManager }) {
   const date = new Date();
   const eligibleYear = date.getFullYear() - 1;
   const {
     state: { authenticated },
   } = useContext(AppContext);
+  const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { push } = useHistory();
   const onFinish = async (values) => {
@@ -38,33 +40,41 @@ function Signup() {
       prefix,
       phone,
       address,
+      role,
       accountType,
       password,
     } = values;
     setLoading(true);
+    let userDetails = {
+      firstName,
+      lastName,
+      username,
+      phone: `${prefix}${phone}`,
+      email,
+      birthday: moment(birthday).format("YYYY-MM-DD"),
+      address,
+      password,
+    };
     try {
-      const userDetails = {
-        firstName,
-        lastName,
-        username,
-        phone: `${prefix}${phone}`,
-        email,
-        birthday: moment(birthday).format("YYYY-MM-DD"),
-        address,
-        accountType,
-        password,
-        role: "ROLE_USER",
-      };
-      const response = await api.post("/auth/signup", userDetails);
+      if (isOpenedByManager) {
+        userDetails.role = role;
+        if (role === ROLES.ROLE_USER) {
+          userDetails.accountType = accountType;
+        }
+      } else {
+        userDetails.accountType = accountType;
+      }
+      const response = await api.post(
+        isOpenedByManager ? "/users/create" : "/auth/signup",
+        userDetails
+      );
       const { data } = response;
       if (data?.success) {
         toast({
           message: data.message,
           type: "success",
         });
-        setTimeout(() => {
-          push(ROUTES.LOGIN);
-        }, 2000);
+        !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
       }
     } catch (err) {
       toast({
@@ -76,11 +86,15 @@ function Signup() {
   };
 
   useEffect(() => {
-    if (authenticated) {
+    if (!isOpenedByManager && authenticated) {
       push("/");
     }
     // eslint-disable-next-line
   }, [authenticated]);
+
+  const handleFormValuesChange = (e) => {
+    e.role && setVisible(e.role === ROLES.ROLE_USER);
+  };
 
   const disabledDate = (current) => {
     let customDate = `${eligibleYear}-01-01`;
@@ -99,12 +113,14 @@ function Signup() {
   return (
     <div className="login">
       <Title level={3} className="sdp-text-strong">
-        {APP_NAME}
+        {isOpenedByManager ? "Create User" : APP_NAME}
       </Title>
       <Form
         name="normal_signup"
         className="signup-form form"
         initialValues={{ prefix: "+91" }}
+        form={form}
+        onValuesChange={handleFormValuesChange}
         onFinish={onFinish}
       >
         <Form.Item
@@ -165,7 +181,11 @@ function Signup() {
             },
           ]}
         >
-          <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
+          <Input
+            placeholder="Phone Number"
+            addonBefore={prefixSelector}
+            style={{ width: "100%" }}
+          />
         </Form.Item>
         <Form.Item
           name="address"
@@ -173,15 +193,42 @@ function Signup() {
         >
           <Input placeholder="Address" />
         </Form.Item>
-        <Form.Item
-          name="accountType"
-          rules={[{ required: true, message: "Account Type is required" }]}
-        >
-          <Select allowClear placeholder="Account Type">
-            <Option value="SAVINGS">SAVINGS</Option>
-            <Option value="CURRENT">CURRENT</Option>
-          </Select>
-        </Form.Item>
+        {isOpenedByManager && (
+          <Form.Item
+            name="role"
+            rules={[{ required: true, message: "User role is required" }]}
+          >
+            <Select allowClear placeholder="User Role">
+              <Option value={ROLES.ROLE_USER}>Customer</Option>
+              <Option value={ROLES.ROLE_MANAGER}>Manager</Option>
+              <Option value={ROLES.ROLE_EMPLOYEE}>Employee</Option>
+              <Option value={ROLES.ROLE_HR}>HR</Option>
+            </Select>
+          </Form.Item>
+        )}
+        {isOpenedByManager ? (
+          visible && (
+            <Form.Item
+              name="accountType"
+              rules={[{ required: true, message: "Account Type is required" }]}
+            >
+              <Select allowClear placeholder="Account Type">
+                <Option value="SAVINGS">Savings</Option>
+                <Option value="CURRENT">Current</Option>
+              </Select>
+            </Form.Item>
+          )
+        ) : (
+          <Form.Item
+            name="accountType"
+            rules={[{ required: true, message: "Account Type is required" }]}
+          >
+            <Select allowClear placeholder="Account Type">
+              <Option value="SAVINGS">Savings</Option>
+              <Option value="CURRENT">Current</Option>
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item
           name="password"
           rules={[
@@ -232,11 +279,13 @@ function Signup() {
             htmlType="submit"
             className="signup-form-button button"
           >
-            Register
+            {isOpenedByManager ? "Create User" : "Register"}
           </Button>
-          <div className="reg-user-actions">
-            <Link to={ROUTES.LOGIN}>Already a user!</Link>
-          </div>
+          {!isOpenedByManager && (
+            <div className="reg-user-actions">
+              <Link to={ROUTES.LOGIN}>Already a user!</Link>
+            </div>
+          )}
         </Form.Item>
       </Form>
     </div>

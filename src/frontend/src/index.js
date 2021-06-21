@@ -12,8 +12,6 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import "./index.css";
 import "./styles/main.less";
 
-
-
 ReactDOM.render(
   <AppContextProvider>
     <Routes />
