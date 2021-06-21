@@ -21,7 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * @description: Security configuration, which is the most important part of this application
+ * @description: Security configuration, which is the most important part of
+ * this application
  */
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -60,7 +61,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js")
-                .permitAll().antMatchers("/api/auth/**").permitAll()
+                .permitAll().antMatchers("/api/auth/**", "/api/forgot-password", "/api/reset-password").permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/banks/**", "/api/users/**").permitAll().anyRequest().authenticated();
 
