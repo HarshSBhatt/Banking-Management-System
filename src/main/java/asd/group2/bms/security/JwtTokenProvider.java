@@ -40,6 +40,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
         claims.put("role", userRole);
         claims.put("user", userPrincipal);
+        claims.put("email", userPrincipal.getEmail());
 
         return Jwts.builder()
                 .setClaims(claims)
