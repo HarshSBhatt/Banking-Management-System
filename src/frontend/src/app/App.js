@@ -6,7 +6,6 @@ import Layout from "antd/lib/layout";
 
 import AppHeader from "./components/header/AppHeader";
 import AppSidebar from "./components/sidebar/AppSidebar";
-import AppFooter from "./components/footer/AppFooter";
 import ContentRoutes from "./ContentRoutes";
 import "./App.less";
 
@@ -23,7 +22,6 @@ const App = () => {
             <ContentRoutes />
           </div>
         </Content>
-        <AppFooter />
       </Layout>
     </Layout>
   );

@@ -34,7 +34,8 @@ function Login() {
       const { data } = response;
       if (data?.accessToken) {
         const decoded = jwtDecode(data.accessToken);
-        const { sub, role, user } = decoded;
+        const { sub, role, user, email } = decoded;
+        user.email = email;
         if (user.accountStatus === ACCOUNT_STATUS.PENDING) {
           toast({
             message: "Your account has not been activated yet",

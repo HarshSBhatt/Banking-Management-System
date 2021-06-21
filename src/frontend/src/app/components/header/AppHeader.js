@@ -1,20 +1,22 @@
-import { Button, Typography } from "antd";
+import { Typography } from "antd";
 import Layout from "antd/lib/layout";
-import { ROUTES } from "common/constants";
-import { useHistory } from "react-router-dom";
+
+//! User Files
+
+import UserProfile from "./UserProfile";
 
 const { Header } = Layout;
 const { Title } = Typography;
 
 const AppHeader = () => {
-  const { push } = useHistory();
-  const handleLogout = () => {
-    push(ROUTES.LOGOUT);
-  };
   return (
     <Header>
-      <Title level={4}>Header</Title>
-      <Button onClick={handleLogout}>Logout</Button>
+      <div className="app-header-left">
+        <Title level={4}>DALHOUSIE BANK</Title>
+      </div>
+      <div className="app-header-right">
+        <UserProfile />
+      </div>
     </Header>
   );
 };
