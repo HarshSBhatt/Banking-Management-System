@@ -47,7 +47,7 @@ public class SignUpRequest {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private AccountType accountType;
+    private AccountType requestedAccountType;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -116,12 +116,12 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
+    public AccountType getRequestedAccountType() {
+        return requestedAccountType;
     }
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
+    public void setRequestedAccountType(AccountType requestedAccountType) {
+        this.requestedAccountType = requestedAccountType;
     }
 
     public RoleType getRole() {

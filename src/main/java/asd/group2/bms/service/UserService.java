@@ -54,7 +54,7 @@ public class UserService {
 
         // Creating user's account
         User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-                signUpRequest.getBirthday(), signUpRequest.getPhone(), signUpRequest.getPassword(), signUpRequest.getAddress(), AccountStatus.PENDING);
+                signUpRequest.getBirthday(), signUpRequest.getPhone(), signUpRequest.getPassword(), signUpRequest.getAddress(), AccountStatus.PENDING, signUpRequest.getRequestedAccountType());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -80,7 +80,6 @@ public class UserService {
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
-
 
     public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
         if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
