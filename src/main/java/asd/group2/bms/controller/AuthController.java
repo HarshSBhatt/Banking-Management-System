@@ -83,7 +83,7 @@ public class AuthController {
      * @description: Send email link to change password.
      */
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(HttpServletRequest request, @Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
         String token = RandomString.make(45);
 
