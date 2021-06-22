@@ -66,7 +66,11 @@ public class UserService {
             userRole = roleRepository.findByName(RoleType.ROLE_USER)
                     .orElseThrow(() -> new BMSException("User Role not set."));
         } else {
-            user.setAccountStatus(AccountStatus.ACTIVE);
+            if (role.equals(RoleType.ROLE_USER)) {
+                user.setAccountStatus(AccountStatus.PENDING);
+            } else {
+                user.setAccountStatus(AccountStatus.ACTIVE);
+            }
             userRole = roleRepository.findByName(role)
                     .orElseThrow(() -> new BMSException("User Role not set."));
         }
@@ -79,6 +83,12 @@ public class UserService {
                 .buildAndExpand(result.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
+    public User setUserAccountStatus(String email, AccountStatus accountStatus) {
+        User user = getUserByEmail(email);
+        user.setAccountStatus(accountStatus);
+        return userRepository.save(user);
     }
 
     public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
