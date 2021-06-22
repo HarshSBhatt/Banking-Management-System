@@ -13,15 +13,13 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
-  UsergroupAddOutlined,
-  SnippetsOutlined,
-  FormOutlined,
 } from "@ant-design/icons";
 
 //! User Files
 
-import { MODULES, ROLES, ROUTES } from "common/constants";
+import { ROUTES } from "common/constants";
 import { AppContext } from "AppContext";
+import { rootSubMenuKeys, siderMenu } from "common/siderRoutes";
 
 const { SubMenu } = Menu;
 
@@ -35,14 +33,6 @@ function AppSidebar() {
   } = useHistory();
   const [openKeys, setOpenKeys] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
-
-  const rootSubMenuKeys = [
-    "user_management",
-    "profile",
-    "account",
-    "leave",
-    "resign",
-  ];
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -60,6 +50,29 @@ function AppSidebar() {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
   };
+
+  const renderSider = Object.keys(siderMenu).map((item) => {
+    const hasSubMenu = siderMenu[item].views;
+    return hasSubMenu
+      ? siderMenu[item].allowedRoles.includes(role) && (
+          <SubMenu key={item} icon={<UserOutlined />} title={item}>
+            {siderMenu[item].views.map((subItem) => {
+              return (
+                subItem.allowedRoles.includes(role) && (
+                  <Menu.Item key={subItem.link}>
+                    <span>{subItem.label}</span>
+                  </Menu.Item>
+                )
+              );
+            })}
+          </SubMenu>
+        )
+      : siderMenu[item].allowedRoles.includes(role) && (
+          <Menu.Item key={siderMenu[item].link} icon={<AppstoreOutlined />}>
+            <span>{siderMenu[item].label}</span>
+          </Menu.Item>
+        );
+  });
 
   return (
     <Sider
@@ -89,63 +102,7 @@ function AppSidebar() {
           defaultSelectedKeys={[ROUTES.USERS_MANAGEMENT]}
           onSelect={onMenuSelect}
         >
-          <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-            <span>{MODULES.DASHBOARD}</span>
-          </Menu.Item>
-          <SubMenu key="profile" icon={<UserOutlined />} title="Profile">
-            <Menu.Item key={ROUTES.PROFILE}>
-              <span>{MODULES.PROFILE}</span>
-            </Menu.Item>
-            <Menu.Item key={ROUTES.UPDATE_PROFILE}>
-              <span>{MODULES.UPDATE_PROFILE}</span>
-            </Menu.Item>
-          </SubMenu>
-          {role === ROLES.ROLE_USER ? (
-            <>
-              <SubMenu key="account" icon={<UserOutlined />} title="Account">
-                <Menu.Item key={ROUTES.MY_ACCOUNT}>
-                  <span>{MODULES.MY_ACCOUNT}</span>
-                </Menu.Item>
-                <Menu.Item key={ROUTES.ACCOUNT_STATEMENT}>
-                  <span>{MODULES.ACCOUNT_STATEMENT}</span>
-                </Menu.Item>
-              </SubMenu>
-            </>
-          ) : (
-            <>
-              <SubMenu
-                key="user_management"
-                icon={<UsergroupAddOutlined />}
-                title="User Management"
-              >
-                <Menu.Item key={ROUTES.ADD_USER}>
-                  <span>{MODULES.ADD_USER}</span>
-                </Menu.Item>
-                <Menu.Item key={ROUTES.ACCOUNT_OPENING_REQUEST}>
-                  <span>{MODULES.ACCOUNT_OPENING_REQUEST}</span>
-                </Menu.Item>
-                <Menu.Item key={ROUTES.CREDIT_CARD_REQUEST}>
-                  <span>{MODULES.CREDIT_CARD_REQUEST}</span>
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="leave" icon={<SnippetsOutlined />} title="Leave">
-                <Menu.Item key={ROUTES.APPLY_LEAVE}>
-                  <span>{MODULES.APPLY_LEAVE}</span>
-                </Menu.Item>
-                <Menu.Item key={ROUTES.LEAVE_REQUEST}>
-                  <span>{MODULES.LEAVE_REQUEST}</span>
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="resign" icon={<FormOutlined />} title="Resign">
-                <Menu.Item key={ROUTES.APPLY_RESIGNATION}>
-                  <span>{MODULES.APPLY_RESIGNATION}</span>
-                </Menu.Item>
-                <Menu.Item key={ROUTES.RESIGNATION_REQUEST}>
-                  <span>{MODULES.RESIGNATION_REQUEST}</span>
-                </Menu.Item>
-              </SubMenu>
-            </>
-          )}
+          {renderSider}
         </Menu>
       </div>
     </Sider>
