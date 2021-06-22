@@ -135,7 +135,7 @@ function Signup({ isOpenedByManager }) {
           rules={[
             { required: true, message: "First name is required" },
             { min: 3, message: "First name at least contain 3 characters" },
-            { min: 15, message: "First name at most contain 15 characters" },
+            { max: 15, message: "First name at most contain 15 characters" },
           ]}
         >
           <Input placeholder="First Name" />
@@ -145,7 +145,7 @@ function Signup({ isOpenedByManager }) {
           rules={[
             { required: true, message: "Last name is required" },
             { min: 3, message: "Last name at least contain 3 characters" },
-            { min: 15, message: "Last name at most contain 15 characters" },
+            { max: 15, message: "Last name at most contain 15 characters" },
           ]}
         >
           <Input placeholder="Last Name" />
@@ -155,7 +155,7 @@ function Signup({ isOpenedByManager }) {
           rules={[
             { required: true, message: "Username is required" },
             { min: 3, message: "Username at least contain 3 characters" },
-            { min: 10, message: "Username at most contain 15 characters" },
+            { max: 10, message: "Username at most contain 15 characters" },
           ]}
         >
           <Input
