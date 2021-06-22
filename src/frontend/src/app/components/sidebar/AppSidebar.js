@@ -37,7 +37,13 @@ function AppSidebar() {
   const [openKeys, setOpenKeys] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
 
-  const rootSubMenuKeys = ["user", "leave", "resign"];
+  const rootSubMenuKeys = [
+    "user_management",
+    "profile",
+    "account",
+    "leave",
+    "resign",
+  ];
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -84,37 +90,60 @@ function AppSidebar() {
           defaultSelectedKeys={[ROUTES.USERS_MANAGEMENT]}
           onSelect={onMenuSelect}
         >
+          <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
+            <span>{MODULES.DASHBOARD}</span>
+          </Menu.Item>
+          <SubMenu key="profile" icon={<UserOutlined />} title="Profile">
+            <Menu.Item key={ROUTES.PROFILE}>
+              <span>{MODULES.PROFILE}</span>
+            </Menu.Item>
+            <Menu.Item key={ROUTES.UPDATE_PROFILE}>
+              <span>{MODULES.UPDATE_PROFILE}</span>
+            </Menu.Item>
+          </SubMenu>
           {role === ROLES.ROLE_USER ? (
             <>
-              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-                <span>{MODULES.DASHBOARD}</span>
-              </Menu.Item>
-              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
-                <span>{MODULES.USERS_MANAGEMENT}</span>
-              </Menu.Item>
+              <SubMenu key="account" icon={<UserOutlined />} title="Account">
+                <Menu.Item key={ROUTES.MY_ACCOUNT}>
+                  <span>{MODULES.MY_ACCOUNT}</span>
+                </Menu.Item>
+                <Menu.Item key={ROUTES.ACCOUNT_STATEMENT}>
+                  <span>{MODULES.ACCOUNT_STATEMENT}</span>
+                </Menu.Item>
+              </SubMenu>
             </>
           ) : (
             <>
-              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-                <span>{MODULES.DASHBOARD}</span>
-              </Menu.Item>
-              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
-                <span>{MODULES.USERS_MANAGEMENT}</span>
-              </Menu.Item>
-              <SubMenu key="user" icon={<UsergroupAddOutlined />} title="User">
-                <Menu.Item key={ROUTES.ADD_USER} icon={<PlusCircleOutlined />}>
+              <SubMenu
+                key="user_management"
+                icon={<UsergroupAddOutlined />}
+                title="User Management"
+              >
+                <Menu.Item key={ROUTES.ADD_USER}>
                   <span>{MODULES.ADD_USER}</span>
+                </Menu.Item>
+                <Menu.Item key={ROUTES.ACCOUNT_OPENING_REQUEST}>
+                  <span>{MODULES.ACCOUNT_OPENING_REQUEST}</span>
+                </Menu.Item>
+                <Menu.Item key={ROUTES.CREDIT_CARD_REQUEST}>
+                  <span>{MODULES.CREDIT_CARD_REQUEST}</span>
                 </Menu.Item>
               </SubMenu>
               <SubMenu key="leave" icon={<SnippetsOutlined />} title="Leave">
-                <Menu.Item key="5">Option 5</Menu.Item>
-                <Menu.Item key="6">Option 6</Menu.Item>
+                <Menu.Item key={ROUTES.APPLY_LEAVE}>
+                  <span>{MODULES.APPLY_LEAVE}</span>
+                </Menu.Item>
+                <Menu.Item key={ROUTES.LEAVE_REQUEST}>
+                  <span>{MODULES.LEAVE_REQUEST}</span>
+                </Menu.Item>
               </SubMenu>
               <SubMenu key="resign" icon={<FormOutlined />} title="Resign">
-                <Menu.Item key="9">Option 9</Menu.Item>
-                <Menu.Item key="10">Option 10</Menu.Item>
-                <Menu.Item key="11">Option 11</Menu.Item>
-                <Menu.Item key="12">Option 12</Menu.Item>
+                <Menu.Item key={ROUTES.APPLY_RESIGNATION}>
+                  <span>{MODULES.APPLY_RESIGNATION}</span>
+                </Menu.Item>
+                <Menu.Item key={ROUTES.RESIGNATION_REQUEST}>
+                  <span>{MODULES.RESIGNATION_REQUEST}</span>
+                </Menu.Item>
               </SubMenu>
             </>
           )}
