@@ -14,7 +14,6 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
   UsergroupAddOutlined,
-  PlusCircleOutlined,
   SnippetsOutlined,
   FormOutlined,
 } from "@ant-design/icons";
