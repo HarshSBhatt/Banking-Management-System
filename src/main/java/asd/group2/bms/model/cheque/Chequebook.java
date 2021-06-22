@@ -30,8 +30,7 @@ public class Chequebook extends DateAudit {
     public Chequebook() {
     }
 
-    public Chequebook(Long chequebookNumber, Account account, Boolean isIssued) {
-        this.chequebookNumber = chequebookNumber;
+    public Chequebook(Account account, Boolean isIssued) {
         this.account = account;
         this.isIssued = isIssued;
     }

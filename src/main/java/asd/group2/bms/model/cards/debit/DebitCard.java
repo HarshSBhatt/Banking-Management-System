@@ -40,8 +40,7 @@ public class DebitCard extends DateAudit {
     public DebitCard() {
     }
 
-    public DebitCard(Long debitCardNumber, Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus) {
-        this.debitCardNumber = debitCardNumber;
+    public DebitCard(Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus) {
         this.account = account;
         this.pin = pin;
         this.transactionLimit = transactionLimit;
