@@ -14,11 +14,11 @@ import java.util.Date;
  */
 public class SignUpRequest {
     @NotBlank(message = "First Name is required")
-    @Size(min = 4, max = 40)
+    @Size(min = 3, max = 40)
     private String firstName;
 
     @NotBlank(message = "Last Name is required")
-    @Size(min = 4, max = 40)
+    @Size(min = 3, max = 40)
     private String lastName;
 
     @NotBlank(message = "Username is required")

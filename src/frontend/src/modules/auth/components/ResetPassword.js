@@ -43,13 +43,20 @@ function ResetPassword() {
         push(ROUTES.LOGIN);
       }
     } catch (err) {
-      toast({
-        message:
-          err.response.data.status === 404
-            ? "Reset token does not exist or it is expired"
-            : err.response.data.message,
-        type: "error",
-      });
+      if (err.response?.data) {
+        toast({
+          message:
+            err.response.data.status === 404
+              ? "Reset token does not exist or it is expired"
+              : err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
     }
     setLoading(false);
   };

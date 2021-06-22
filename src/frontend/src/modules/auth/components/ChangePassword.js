@@ -38,10 +38,17 @@ function ChangePassword() {
         });
       }
     } catch (err) {
-      toast({
-        message: err.response.data.message,
-        type: "error",
-      });
+      if (err.response?.data) {
+        toast({
+          message: err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
     }
     setLoading(false);
   };
