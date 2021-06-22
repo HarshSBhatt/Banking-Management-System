@@ -13,16 +13,13 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
-  UsergroupAddOutlined,
-  PlusCircleOutlined,
-  SnippetsOutlined,
-  FormOutlined,
 } from "@ant-design/icons";
 
 //! User Files
 
-import { MODULES, ROLES, ROUTES } from "common/constants";
+import { ROUTES } from "common/constants";
 import { AppContext } from "AppContext";
+import { rootSubMenuKeys, siderMenu } from "common/siderRoutes";
 
 const { SubMenu } = Menu;
 
@@ -36,8 +33,6 @@ function AppSidebar() {
   } = useHistory();
   const [openKeys, setOpenKeys] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
-
-  const rootSubMenuKeys = ["user", "leave", "resign"];
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -55,6 +50,29 @@ function AppSidebar() {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
   };
+
+  const renderSider = Object.keys(siderMenu).map((item) => {
+    const hasSubMenu = siderMenu[item].views;
+    return hasSubMenu
+      ? siderMenu[item].allowedRoles.includes(role) && (
+          <SubMenu key={item} icon={<UserOutlined />} title={item}>
+            {siderMenu[item].views.map((subItem) => {
+              return (
+                subItem.allowedRoles.includes(role) && (
+                  <Menu.Item key={subItem.link}>
+                    <span>{subItem.label}</span>
+                  </Menu.Item>
+                )
+              );
+            })}
+          </SubMenu>
+        )
+      : siderMenu[item].allowedRoles.includes(role) && (
+          <Menu.Item key={siderMenu[item].link} icon={<AppstoreOutlined />}>
+            <span>{siderMenu[item].label}</span>
+          </Menu.Item>
+        );
+  });
 
   return (
     <Sider
@@ -84,40 +102,7 @@ function AppSidebar() {
           defaultSelectedKeys={[ROUTES.USERS_MANAGEMENT]}
           onSelect={onMenuSelect}
         >
-          {role === ROLES.ROLE_USER ? (
-            <>
-              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-                <span>{MODULES.DASHBOARD}</span>
-              </Menu.Item>
-              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
-                <span>{MODULES.USERS_MANAGEMENT}</span>
-              </Menu.Item>
-            </>
-          ) : (
-            <>
-              <Menu.Item key={ROUTES.MAIN} icon={<AppstoreOutlined />}>
-                <span>{MODULES.DASHBOARD}</span>
-              </Menu.Item>
-              <Menu.Item key={ROUTES.USERS_MANAGEMENT} icon={<UserOutlined />}>
-                <span>{MODULES.USERS_MANAGEMENT}</span>
-              </Menu.Item>
-              <SubMenu key="user" icon={<UsergroupAddOutlined />} title="User">
-                <Menu.Item key={ROUTES.ADD_USER} icon={<PlusCircleOutlined />}>
-                  <span>{MODULES.ADD_USER}</span>
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="leave" icon={<SnippetsOutlined />} title="Leave">
-                <Menu.Item key="5">Option 5</Menu.Item>
-                <Menu.Item key="6">Option 6</Menu.Item>
-              </SubMenu>
-              <SubMenu key="resign" icon={<FormOutlined />} title="Resign">
-                <Menu.Item key="9">Option 9</Menu.Item>
-                <Menu.Item key="10">Option 10</Menu.Item>
-                <Menu.Item key="11">Option 11</Menu.Item>
-                <Menu.Item key="12">Option 12</Menu.Item>
-              </SubMenu>
-            </>
-          )}
+          {renderSider}
         </Menu>
       </div>
     </Sider>

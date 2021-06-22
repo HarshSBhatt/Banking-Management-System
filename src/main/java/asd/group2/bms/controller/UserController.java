@@ -38,9 +38,11 @@ public class UserController {
      * @description: It will return the current user.
      */
     @GetMapping("/user/me")
-    @RolesAllowed({"ROLE_USER"})
+    @RolesAllowed({ "ROLE_USER" })
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
-        return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(), currentUser.getAddress());
+        return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
+                currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
+                currentUser.getAddress());
     }
 
     /**
@@ -68,7 +70,7 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
+    @RolesAllowed({ "ROLE_USER", "ROLE_MANAGER" })
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfileByUsername(username);
     }
@@ -78,7 +80,8 @@ public class UserController {
      * @description: It will change user's password.
      */
     @PostMapping("/users/change-password")
-    public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser,
+            @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         String oldPassword = changePasswordRequest.getOldPassword();
         String newPassword = changePasswordRequest.getNewPassword();
         String confirmNewPassword = changePasswordRequest.getConfirmNewPassword();
@@ -99,7 +102,7 @@ public class UserController {
      * @description: Register the user into the system.
      */
     @PostMapping("/users/create")
-    @RolesAllowed({"ROLE_MANAGER"})
+    @RolesAllowed({ "ROLE_MANAGER", "ROLE_HR" })
     public ResponseEntity<?> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         return userService.createUser(signUpRequest);
     }

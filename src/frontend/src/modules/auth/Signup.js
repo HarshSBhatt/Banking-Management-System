@@ -77,10 +77,17 @@ function Signup({ isOpenedByManager }) {
         !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
       }
     } catch (err) {
-      toast({
-        message: err.response.data.message,
-        type: "error",
-      });
+      if (err.response?.data) {
+        toast({
+          message: err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
     }
     setLoading(false);
   };
@@ -125,19 +132,31 @@ function Signup({ isOpenedByManager }) {
       >
         <Form.Item
           name="firstName"
-          rules={[{ required: true, message: "First name is required" }]}
+          rules={[
+            { required: true, message: "First name is required" },
+            { min: 3, message: "First name at least contain 3 characters" },
+            { min: 15, message: "First name at most contain 15 characters" },
+          ]}
         >
           <Input placeholder="First Name" />
         </Form.Item>
         <Form.Item
           name="lastName"
-          rules={[{ required: true, message: "Last name is required" }]}
+          rules={[
+            { required: true, message: "Last name is required" },
+            { min: 3, message: "Last name at least contain 3 characters" },
+            { min: 15, message: "Last name at most contain 15 characters" },
+          ]}
         >
           <Input placeholder="Last Name" />
         </Form.Item>
         <Form.Item
           name="username"
-          rules={[{ required: true, message: "Username is required" }]}
+          rules={[
+            { required: true, message: "Username is required" },
+            { min: 3, message: "Username at least contain 3 characters" },
+            { min: 10, message: "Username at most contain 15 characters" },
+          ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
