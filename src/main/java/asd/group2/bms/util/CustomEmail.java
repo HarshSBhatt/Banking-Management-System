@@ -31,4 +31,22 @@ public class CustomEmail {
         helper.setText(content, true);
         javaMailSender.send(message);
     }
+
+    public void sendAccountCreationMail(String email, String firstName) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+        helper.setTo(email);
+
+        String subject = "Successful Account Creation";
+        String content = "<p>Dear " + firstName + ",</p>" +
+                "<p>We have successfully created your account.</p>" +
+                "<p>You can use your login credentials to utilise our banking services.</p>" +
+                "<p>Thank you.</p>" +
+                "<p>Happy Banking!</p>";
+        helper.setSubject(subject);
+        helper.setText(content, true);
+        javaMailSender.send(message);
+    }
 }
