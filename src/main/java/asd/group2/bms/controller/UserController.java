@@ -45,7 +45,7 @@ public class UserController {
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
         return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
                 currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
-                currentUser.getAddress());
+                currentUser.getAddress(), currentUser.getCity(), currentUser.getState(), currentUser.getZipCode());
     }
 
     /**

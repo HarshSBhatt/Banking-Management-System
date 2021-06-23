@@ -42,6 +42,18 @@ public class SignUpRequest {
     @Size(max = 200)
     private String address;
 
+    @NotBlank(message = "City is required")
+    @Size(max = 50)
+    private String city;
+
+    @NotBlank(message = "State is required")
+    @Size(max = 50)
+    private String state;
+
+    @NotBlank(message = "Zip Code is required")
+    @Size(min = 6, max = 6)
+    private String zipCode;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 20)
     private String password;
@@ -106,6 +118,30 @@ public class SignUpRequest {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getPassword() {
