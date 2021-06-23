@@ -1,6 +1,6 @@
 package asd.group2.bms.model.user;
 
-import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -62,6 +62,9 @@ public class User extends DateAudit {
 
     private AccountStatus accountStatus;
 
+    @Enumerated(EnumType.STRING)
+    private AccountType requestedAccountType;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -73,7 +76,7 @@ public class User extends DateAudit {
 
     }
 
-    public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, AccountStatus accountStatus) {
+    public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, AccountStatus accountStatus, AccountType requestedAccountType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -83,6 +86,7 @@ public class User extends DateAudit {
         this.password = password;
         this.address = address;
         this.accountStatus = accountStatus;
+        this.requestedAccountType = requestedAccountType;
     }
 
     public Long getId() {
@@ -179,5 +183,13 @@ public class User extends DateAudit {
 
     public void setForgotPasswordToken(String forgotPasswordToken) {
         this.forgotPasswordToken = forgotPasswordToken;
+    }
+
+    public AccountType getRequestedAccountType() {
+        return requestedAccountType;
+    }
+
+    public void setRequestedAccountType(AccountType requestedAccountType) {
+        this.requestedAccountType = requestedAccountType;
     }
 }

@@ -2,7 +2,6 @@ package asd.group2.bms.model.cards.credit;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -44,8 +43,7 @@ public class CreditCard extends DateAudit {
     public CreditCard() {
     }
 
-    public CreditCard(Long creditCardNumber, Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Boolean isActive) {
-        this.creditCardNumber = creditCardNumber;
+    public CreditCard(Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Boolean isActive) {
         this.account = account;
         this.pin = pin;
         this.transactionLimit = transactionLimit;

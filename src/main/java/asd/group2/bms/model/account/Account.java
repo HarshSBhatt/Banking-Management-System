@@ -36,8 +36,7 @@ public class Account extends DateAudit {
     public Account() {
     }
 
-    public Account(Long accountNumber, AccountType accountType, Double balance, int creditScore) {
-        this.accountNumber = accountNumber;
+    public Account(AccountType accountType, Double balance, int creditScore) {
         this.accountType = accountType;
         this.balance = balance;
         this.creditScore = creditScore;

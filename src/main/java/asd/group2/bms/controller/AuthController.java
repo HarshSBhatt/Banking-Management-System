@@ -24,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 
@@ -83,7 +82,7 @@ public class AuthController {
      * @description: Send email link to change password.
      */
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(HttpServletRequest request, @Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
         String token = RandomString.make(45);
 

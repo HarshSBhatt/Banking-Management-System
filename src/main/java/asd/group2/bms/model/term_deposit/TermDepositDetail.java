@@ -52,8 +52,7 @@ public class TermDepositDetail extends DateAudit {
     public TermDepositDetail() {
     }
 
-    public TermDepositDetail(Long termDepositId, User user, Account account, TermDeposit termDeposit, Date startDate, Double initialAmount, Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
-        this.termDepositId = termDepositId;
+    public TermDepositDetail(User user, Account account, TermDeposit termDeposit, Date startDate, Double initialAmount, Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
         this.account = account;
         this.termDeposit = termDeposit;
         this.startDate = startDate;

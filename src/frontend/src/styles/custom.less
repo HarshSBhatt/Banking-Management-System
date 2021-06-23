@@ -135,3 +135,86 @@
   width: 24px;
   height: 24px;
 }
+
+//! Table Search
+
+.bank-user-table {
+  .ant-pagination {
+    padding: 0 1rem;
+  }
+  table {
+    tbody {
+      tr {
+        td:first-child {
+          letter-spacing: 1px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+.user-list-card {
+  .ant-card-head {
+    padding: 0 1rem;
+  }
+  .ant-card-body {
+    padding: 0;
+    .user-pagination {
+      display: flex;
+      justify-content: flex-end;
+      .custom-pagination {
+        padding: 1rem;
+      }
+    }
+  }
+}
+
+.cb-table-search-filter-icon {
+  color: @primary-color;
+}
+
+.cb-table-search {
+  width: 300px;
+  padding: 8px;
+  &-input {
+    margin-bottom: 8px;
+  }
+}
+
+//! Font
+
+.cb-text-strong {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.cb-font-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: horizontal;
+  overflow: hidden;
+}
+
+//! Scrollbar
+
+.cb-scrollbar {
+  ::-webkit-scrollbar {
+    width: @scrollbar-width;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: @scrollbar-track-background;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: @scrollbar-color;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: @scrollbar-hover-color;
+  }
+}
