@@ -45,7 +45,7 @@ public class UserController {
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
         return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
                 currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
-                currentUser.getAddress());
+                currentUser.getAddress(), currentUser.getCity(), currentUser.getState(), currentUser.getZipCode());
     }
 
     /**
@@ -73,7 +73,6 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfileByUsername(username);
     }

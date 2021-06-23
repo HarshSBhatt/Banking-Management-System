@@ -39,9 +39,12 @@ function Signup({ isOpenedByManager }) {
       birthday,
       prefix,
       phone,
+      city,
+      state,
+      zipCode,
       address,
       role,
-      accountType,
+      requestedAccountType,
       password,
     } = values;
     setLoading(true);
@@ -52,6 +55,9 @@ function Signup({ isOpenedByManager }) {
       phone: `${prefix}${phone}`,
       email,
       birthday: moment(birthday).format("YYYY-MM-DD"),
+      city,
+      state,
+      zipCode,
       address,
       password,
     };
@@ -59,10 +65,10 @@ function Signup({ isOpenedByManager }) {
       if (isOpenedByManager) {
         userDetails.role = role;
         if (role === ROLES.ROLE_USER) {
-          userDetails.accountType = accountType;
+          userDetails.requestedAccountType = requestedAccountType;
         }
       } else {
-        userDetails.accountType = accountType;
+        userDetails.requestedAccountType = requestedAccountType;
       }
       const response = await api.post(
         isOpenedByManager ? "/users/create" : "/auth/signup",
@@ -74,7 +80,7 @@ function Signup({ isOpenedByManager }) {
           message: data.message,
           type: "success",
         });
-        !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
+        // !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
       }
     } catch (err) {
       if (err.response?.data) {
@@ -134,8 +140,14 @@ function Signup({ isOpenedByManager }) {
           name="firstName"
           rules={[
             { required: true, message: "First name is required" },
-            { min: 3, message: "First name at least contain 3 characters" },
-            { max: 15, message: "First name at most contain 15 characters" },
+            {
+              min: 3,
+              message: "First name contains at least 3 characters",
+            },
+            {
+              max: 15,
+              message: "First name contains at most 15 characters",
+            },
           ]}
         >
           <Input placeholder="First Name" />
@@ -144,8 +156,8 @@ function Signup({ isOpenedByManager }) {
           name="lastName"
           rules={[
             { required: true, message: "Last name is required" },
-            { min: 3, message: "Last name at least contain 3 characters" },
-            { max: 15, message: "Last name at most contain 15 characters" },
+            { min: 3, message: "Last name contains at least 3 characters" },
+            { max: 15, message: "Last name contains at most 15 characters" },
           ]}
         >
           <Input placeholder="Last Name" />
@@ -154,8 +166,8 @@ function Signup({ isOpenedByManager }) {
           name="username"
           rules={[
             { required: true, message: "Username is required" },
-            { min: 3, message: "Username at least contain 3 characters" },
-            { max: 10, message: "Username at most contain 15 characters" },
+            { min: 3, message: "Username contains at least 3 characters" },
+            { max: 10, message: "Username contains at most 15 characters" },
           ]}
         >
           <Input
@@ -207,6 +219,35 @@ function Signup({ isOpenedByManager }) {
           />
         </Form.Item>
         <Form.Item
+          name="city"
+          rules={[
+            { required: true, message: "City name is required" },
+            { min: 3, message: "City name at contains at least 3 characters" },
+            { max: 50, message: "City name contains at most 50 characters" },
+          ]}
+        >
+          <Input placeholder="City" />
+        </Form.Item>
+        <Form.Item
+          name="state"
+          rules={[
+            { required: true, message: "State name is required" },
+            { min: 3, message: "State name contains at least 3 characters" },
+            { max: 50, message: "State name contains at most 50 characters" },
+          ]}
+        >
+          <Input placeholder="State" />
+        </Form.Item>
+        <Form.Item
+          name="zipCode"
+          rules={[
+            { required: true, message: "Zip code is required" },
+            { pattern: REGEX.ZIPCODE, message: "Enter valid zip code" },
+          ]}
+        >
+          <Input placeholder="Zip Code" />
+        </Form.Item>
+        <Form.Item
           name="address"
           rules={[{ required: true, message: "Address name is required" }]}
         >
@@ -228,7 +269,7 @@ function Signup({ isOpenedByManager }) {
         {isOpenedByManager ? (
           visible && (
             <Form.Item
-              name="accountType"
+              name="requestedAccountType"
               rules={[{ required: true, message: "Account Type is required" }]}
             >
               <Select allowClear placeholder="Account Type">

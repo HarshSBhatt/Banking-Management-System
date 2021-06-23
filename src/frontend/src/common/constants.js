@@ -36,6 +36,7 @@ export const ACCOUNT_STATUS = {
   PENDING: "PENDING",
   ACTIVE: "ACTIVE",
   REJECTED: "REJECTED",
+  CLOSED: "CLOSED",
 };
 
 /*  Modules */

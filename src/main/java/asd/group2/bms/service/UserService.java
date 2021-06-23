@@ -53,8 +53,21 @@ public class UserService {
         }
 
         // Creating user's account
-        User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-                signUpRequest.getBirthday(), signUpRequest.getPhone(), signUpRequest.getPassword(), signUpRequest.getAddress(), AccountStatus.PENDING, signUpRequest.getRequestedAccountType());
+        User user = new User(
+                signUpRequest.getFirstName(),
+                signUpRequest.getLastName(),
+                signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                signUpRequest.getBirthday(),
+                signUpRequest.getPhone(),
+                signUpRequest.getPassword(),
+                signUpRequest.getAddress(),
+                signUpRequest.getCity(),
+                signUpRequest.getState(),
+                signUpRequest.getZipCode(),
+                AccountStatus.PENDING,
+                signUpRequest.getRequestedAccountType()
+        );
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -130,6 +143,19 @@ public class UserService {
     public UserProfile getUserProfileByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        return new UserProfile(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getBirthday(), user.getEmail(), user.getPhone(), user.getAddress(), user.getCreatedAt());
+        return new UserProfile(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getBirthday(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress(),
+                user.getCity(),
+                user.getState(),
+                user.getZipCode(),
+                user.getCreatedAt()
+        );
     }
 }
