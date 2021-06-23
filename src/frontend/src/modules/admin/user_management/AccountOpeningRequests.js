@@ -64,6 +64,9 @@ function AccountOpeningRequests() {
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps("id"),
+      render: (id) => {
+        return <span>{`DAL${id}`}</span>;
+      },
     },
     {
       title: "First Name",
