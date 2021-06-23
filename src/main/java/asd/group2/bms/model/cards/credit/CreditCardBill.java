@@ -38,8 +38,7 @@ public class CreditCardBill extends DateAudit {
     public CreditCardBill() {
     }
 
-    public CreditCardBill(Long billId, CreditCard creditCard, Double amount, Date dueDate, BillStatus billStatus) {
-        this.billId = billId;
+    public CreditCardBill(CreditCard creditCard, Double amount, Date dueDate, BillStatus billStatus) {
         this.creditCard = creditCard;
         this.amount = amount;
         this.dueDate = dueDate;

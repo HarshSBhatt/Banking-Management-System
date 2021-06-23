@@ -38,8 +38,7 @@ public class AccountActivity extends DateAudit {
     public AccountActivity() {
     }
 
-    public AccountActivity(Long activityId, Account account, ActivityType activityType, Double transactionAmount, String comment) {
-        this.activityId = activityId;
+    public AccountActivity(Account account, ActivityType activityType, Double transactionAmount, String comment) {
         this.account = account;
         this.activityType = activityType;
         this.transactionAmount = transactionAmount;

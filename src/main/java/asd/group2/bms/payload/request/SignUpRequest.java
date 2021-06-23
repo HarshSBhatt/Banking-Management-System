@@ -14,11 +14,11 @@ import java.util.Date;
  */
 public class SignUpRequest {
     @NotBlank(message = "First Name is required")
-    @Size(min = 4, max = 40)
+    @Size(min = 3, max = 40)
     private String firstName;
 
     @NotBlank(message = "Last Name is required")
-    @Size(min = 4, max = 40)
+    @Size(min = 3, max = 40)
     private String lastName;
 
     @NotBlank(message = "Username is required")
@@ -42,12 +42,24 @@ public class SignUpRequest {
     @Size(max = 200)
     private String address;
 
+    @NotBlank(message = "City is required")
+    @Size(max = 50)
+    private String city;
+
+    @NotBlank(message = "State is required")
+    @Size(max = 50)
+    private String state;
+
+    @NotBlank(message = "Zip Code is required")
+    @Size(min = 6, max = 6)
+    private String zipCode;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 20)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private AccountType accountType;
+    private AccountType requestedAccountType;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -108,6 +120,30 @@ public class SignUpRequest {
         this.address = address;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -116,12 +152,12 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
+    public AccountType getRequestedAccountType() {
+        return requestedAccountType;
     }
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
+    public void setRequestedAccountType(AccountType requestedAccountType) {
+        this.requestedAccountType = requestedAccountType;
     }
 
     public RoleType getRole() {

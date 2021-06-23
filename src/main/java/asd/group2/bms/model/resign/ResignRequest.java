@@ -40,8 +40,7 @@ public class ResignRequest extends DateAudit {
     public ResignRequest() {
     }
 
-    public ResignRequest(Long resignId, User user, Date date, String reason, RequestStatus requestStatus) {
-        this.resignId = resignId;
+    public ResignRequest(User user, Date date, String reason, RequestStatus requestStatus) {
         this.user = user;
         this.date = date;
         this.reason = reason;

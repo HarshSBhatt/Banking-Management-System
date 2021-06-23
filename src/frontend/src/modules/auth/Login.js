@@ -46,6 +46,11 @@ function Login() {
             message: "Sorry! Your account opening request has been rejected",
             type: "info",
           });
+        } else if (user.accountStatus === ACCOUNT_STATUS.CLOSED) {
+          toast({
+            message: "Unable to login! Your account has been closed",
+            type: "info",
+          });
         } else {
           dispatch({ type: ActionTypes.SET_TOKEN, data: data.accessToken });
           dispatch({ type: ActionTypes.SET_CURRENT_USER, data: user });
@@ -55,13 +60,20 @@ function Login() {
         }
       }
     } catch (err) {
-      toast({
-        message:
-          err.response.data.message === "Bad credentials"
-            ? "Please check your credentials"
-            : err.response.data.message,
-        type: "error",
-      });
+      if (err.response?.data) {
+        toast({
+          message:
+            err.response.data.message === "Bad credentials"
+              ? "Please check your credentials"
+              : err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
     }
     setLoading(false);
   };
