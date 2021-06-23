@@ -60,7 +60,7 @@ function AccountReject({ record, handleUserListUpdate }) {
   return (
     <>
       <Button
-        type="primary"
+        type="dashed"
         shape="circle"
         icon={<CloseOutlined />}
         onClick={() => {
