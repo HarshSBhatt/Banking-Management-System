@@ -44,8 +44,7 @@ public class LeaveRequest extends DateAudit {
     public LeaveRequest() {
     }
 
-    public LeaveRequest(Long leaveId, User user, Date fromDate, Date toDate, String reason, RequestStatus requestStatus) {
-        this.leaveId = leaveId;
+    public LeaveRequest(User user, Date fromDate, Date toDate, String reason, RequestStatus requestStatus) {
         this.user = user;
         this.fromDate = fromDate;
         this.toDate = toDate;

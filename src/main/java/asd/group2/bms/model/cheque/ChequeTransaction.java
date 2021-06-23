@@ -2,7 +2,6 @@ package asd.group2.bms.model.cheque;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -48,8 +47,7 @@ public class ChequeTransaction extends DateAudit {
     public ChequeTransaction() {
     }
 
-    public ChequeTransaction(Long chequeTransactionId, Cheque cheque, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
-        this.chequeTransactionId = chequeTransactionId;
+    public ChequeTransaction(Cheque cheque, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
         this.cheque = cheque;
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;

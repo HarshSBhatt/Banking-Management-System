@@ -1,7 +1,9 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.ChangePasswordRequest;
 import asd.group2.bms.payload.request.SignUpRequest;
+import asd.group2.bms.payload.request.UpdateAccountStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserIdentityAvailability;
 import asd.group2.bms.payload.response.UserProfile;
@@ -13,6 +15,7 @@ import asd.group2.bms.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +41,7 @@ public class UserController {
      * @description: It will return the current user.
      */
     @GetMapping("/user/me")
-    @RolesAllowed({ "ROLE_USER" })
+    @RolesAllowed({"ROLE_USER"})
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
         return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
                 currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
@@ -70,7 +73,7 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({ "ROLE_USER", "ROLE_MANAGER" })
+    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfileByUsername(username);
     }
@@ -81,7 +84,7 @@ public class UserController {
      */
     @PostMapping("/users/change-password")
     public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser,
-            @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+                                      @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         String oldPassword = changePasswordRequest.getOldPassword();
         String newPassword = changePasswordRequest.getNewPassword();
         String confirmNewPassword = changePasswordRequest.getConfirmNewPassword();
@@ -102,8 +105,23 @@ public class UserController {
      * @description: Register the user into the system.
      */
     @PostMapping("/users/create")
-    @RolesAllowed({ "ROLE_MANAGER", "ROLE_HR" })
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
     public ResponseEntity<?> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         return userService.createUser(signUpRequest);
+    }
+
+    /**
+     * @param updateAccountStatus: email and account status
+     * @description: Register the user into the system.
+     */
+    @PutMapping("/users/account/status")
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+    public ResponseEntity<?> updateUserAccountStatus(@Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) {
+        User user = userService.setUserAccountStatus(updateAccountStatus.getEmail(), updateAccountStatus.getAccountStatus());
+        if (user != null) {
+            return ResponseEntity.ok(new ApiResponse(true, "Account status changed successfully!"));
+        } else {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"), HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -26,8 +26,7 @@ public class Cheque extends DateAudit {
     public Cheque() {
     }
 
-    public Cheque(Long chequeNumber, Chequebook chequebook) {
-        this.chequeNumber = chequeNumber;
+    public Cheque(Chequebook chequebook) {
         this.chequebook = chequebook;
     }
 
