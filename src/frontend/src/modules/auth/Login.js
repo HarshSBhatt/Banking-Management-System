@@ -46,6 +46,11 @@ function Login() {
             message: "Sorry! Your account opening request has been rejected",
             type: "info",
           });
+        } else if (user.accountStatus === ACCOUNT_STATUS.CLOSED) {
+          toast({
+            message: "Unable to login! Your account has been closed",
+            type: "info",
+          });
         } else {
           dispatch({ type: ActionTypes.SET_TOKEN, data: data.accessToken });
           dispatch({ type: ActionTypes.SET_CURRENT_USER, data: user });

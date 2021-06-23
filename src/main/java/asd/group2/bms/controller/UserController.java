@@ -73,7 +73,6 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfileByUsername(username);
     }
