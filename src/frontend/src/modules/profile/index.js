@@ -39,6 +39,7 @@ function Profile() {
   const lastName = userData?.lastName;
   const address = userData?.address;
   const phone = userData?.phone;
+  const email = userData?.email;
   const birthday = userData?.birthday;
   const zipCode = userData?.zipCode;
   const city = userData?.city;
@@ -101,6 +102,13 @@ function Profile() {
         </Card>
         <Card type="inner" bordered={false} title={<InnerTitle title="Name" />}>
           <span>{`${firstName} ${lastName}`}</span>
+        </Card>
+        <Card
+          type="inner"
+          bordered={false}
+          title={<InnerTitle title="Email" />}
+        >
+          <span>{email}</span>
         </Card>
         <Card
           type="inner"
