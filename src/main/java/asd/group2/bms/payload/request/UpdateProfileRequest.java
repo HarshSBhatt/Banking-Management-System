@@ -1,18 +1,16 @@
 package asd.group2.bms.payload.request;
 
-import asd.group2.bms.model.account.AccountType;
-import asd.group2.bms.model.user.RoleType;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * @description: Structure of signup request
+ * @description: Structure of update profile request
  */
-public class SignUpRequest {
+public class UpdateProfileRequest {
     @NotBlank(message = "First Name is required")
     @Size(min = 3, max = 40)
     private String firstName;
@@ -20,15 +18,6 @@ public class SignUpRequest {
     @NotBlank(message = "Last Name is required")
     @Size(min = 3, max = 40)
     private String lastName;
-
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 15)
-    private String username;
-
-    @NotBlank(message = "Email is required")
-    @Size(max = 40)
-    @Email(message = "Please enter a valid email")
-    private String email;
 
     @NotNull(message = "Birthdate is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -54,16 +43,6 @@ public class SignUpRequest {
     @Size(min = 6, max = 6)
     private String zipCode;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 20)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private AccountType requestedAccountType;
-
-    @Enumerated(EnumType.STRING)
-    private RoleType role;
-
     public String getFirstName() {
         return firstName;
     }
@@ -78,22 +57,6 @@ public class SignUpRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Date getBirthday() {
@@ -142,29 +105,5 @@ public class SignUpRequest {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public AccountType getRequestedAccountType() {
-        return requestedAccountType;
-    }
-
-    public void setRequestedAccountType(AccountType requestedAccountType) {
-        this.requestedAccountType = requestedAccountType;
-    }
-
-    public RoleType getRole() {
-        return role;
-    }
-
-    public void setRole(RoleType role) {
-        this.role = role;
     }
 }
