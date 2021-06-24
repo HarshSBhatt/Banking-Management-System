@@ -7,6 +7,7 @@ import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.SignUpRequest;
+import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.repository.RoleRepository;
@@ -143,6 +144,7 @@ public class UserService {
     public UserProfile getUserProfileByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
         return new UserProfile(
                 user.getId(),
                 user.getFirstName(),
@@ -157,5 +159,24 @@ public class UserService {
                 user.getZipCode(),
                 user.getCreatedAt()
         );
+    }
+
+    public Boolean updateUserProfileByUsername(UserPrincipal currentUser, UpdateProfileRequest updateProfileRequest) {
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));
+
+        user.setFirstName(updateProfileRequest.getFirstName());
+        user.setLastName(updateProfileRequest.getLastName());
+        user.setBirthday(updateProfileRequest.getBirthday());
+        user.setPhone(updateProfileRequest.getPhone());
+        user.setAddress(updateProfileRequest.getAddress());
+        user.setCity(updateProfileRequest.getCity());
+        user.setState(updateProfileRequest.getState());
+        user.setZipCode(updateProfileRequest.getZipCode());
+
+        if (userRepository.save(user).getId().equals(currentUser.getId())) {
+            return true;
+        }
+        return false;
     }
 }
