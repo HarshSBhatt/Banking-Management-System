@@ -60,6 +60,18 @@ public class User extends DateAudit {
     @Size(max = 200)
     private String address;
 
+    @NotBlank
+    @Size(max = 50)
+    private String city;
+
+    @NotBlank
+    @Size(max = 50)
+    private String state;
+
+    @NotBlank
+    @Size(min = 6, max = 6)
+    private String zipCode;
+
     private AccountStatus accountStatus;
 
     @Enumerated(EnumType.STRING)
@@ -76,7 +88,7 @@ public class User extends DateAudit {
 
     }
 
-    public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, AccountStatus accountStatus, AccountType requestedAccountType) {
+    public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, String city, String state, String zipCode, AccountStatus accountStatus, AccountType requestedAccountType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -85,6 +97,9 @@ public class User extends DateAudit {
         this.phone = phone;
         this.password = password;
         this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
         this.accountStatus = accountStatus;
         this.requestedAccountType = requestedAccountType;
     }
@@ -151,6 +166,30 @@ public class User extends DateAudit {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public AccountStatus getAccountStatus() {

@@ -4,6 +4,7 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.ChangePasswordRequest;
 import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.request.UpdateAccountStatusRequest;
+import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserIdentityAvailability;
 import asd.group2.bms.payload.response.UserProfile;
@@ -41,11 +42,24 @@ public class UserController {
      * @description: It will return the current user.
      */
     @GetMapping("/user/me")
-    @RolesAllowed({"ROLE_USER"})
     public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
         return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
                 currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
-                currentUser.getAddress());
+                currentUser.getAddress(), currentUser.getCity(), currentUser.getState(), currentUser.getZipCode());
+    }
+
+    /**
+     * @description: It will update the user profile.
+     */
+    @PutMapping("/user/me")
+    public ResponseEntity<?> updateUserProfile(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
+        Boolean isUserProfileUpdated = userService.updateUserProfileByUsername(currentUser, updateProfileRequest);
+        if (isUserProfileUpdated) {
+            return ResponseEntity.ok(new ApiResponse(true, "Profile updated successfully!"));
+        } else {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while updating user profile"),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -73,7 +87,7 @@ public class UserController {
      * @description: It will return user profile.
      */
     @GetMapping("/users/{username}")
-    @RolesAllowed({"ROLE_USER", "ROLE_MANAGER"})
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_USER", "ROLE_EMPLOYEE"})
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfileByUsername(username);
     }
@@ -116,12 +130,15 @@ public class UserController {
      */
     @PutMapping("/users/account/status")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> updateUserAccountStatus(@Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) {
-        User user = userService.setUserAccountStatus(updateAccountStatus.getEmail(), updateAccountStatus.getAccountStatus());
+    public ResponseEntity<?> updateUserAccountStatus(
+            @Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) {
+        User user = userService.setUserAccountStatus(updateAccountStatus.getEmail(),
+                updateAccountStatus.getAccountStatus());
         if (user != null) {
             return ResponseEntity.ok(new ApiResponse(true, "Account status changed successfully!"));
         } else {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }
