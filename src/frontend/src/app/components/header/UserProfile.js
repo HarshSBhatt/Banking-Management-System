@@ -23,6 +23,9 @@ function UserProfile() {
     state: { currentUser },
   } = useContext(AppContext);
   const history = useHistory();
+  const {
+    location: { pathname },
+  } = history;
   const [clicked, setClicked] = useState(false);
 
   const firstName = currentUser?.firstName;
@@ -50,7 +53,7 @@ function UserProfile() {
         </Menu.Item>
       </Menu>
       <Divider className="cb-divider" />
-      <Menu>
+      <Menu selectedKeys={pathname}>
         <Menu.Item
           icon={<LockIcon className="cb-svg" />}
           onClick={handleHide}
@@ -82,6 +85,7 @@ function UserProfile() {
       <Card className="app-header-user-profile">
         <div className="app-header-user-avatar">
           <Avatar
+            style={{ backgroundColor: "#f56a00" }}
             size={{
               xs: 30,
               sm: 30,

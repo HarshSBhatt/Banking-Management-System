@@ -7,21 +7,25 @@ import Card from "antd/lib/card";
 import Table from "antd/lib/table";
 import Pagination from "antd/lib/pagination";
 import Space from "antd/lib/space";
+import Button from "antd/lib/button";
+import Dropdown from "antd/lib/dropdown";
+import Menu from "antd/lib/menu";
+import { DownOutlined, LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 
 //! User Files
 
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { ACCOUNT_STATUS, TOKEN } from "common/constants";
-import AccountAccept from "./components/AccountAccept";
-import AccountReject from "./components/AccountReject";
+import AccountAccept from "./components/account/AccountAccept";
+import AccountReject from "./components/account/AccountReject";
 
 function AccountOpeningRequests() {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [accountStatus] = useState(ACCOUNT_STATUS.PENDING);
+  const [accountStatus, setAccountStatus] = useState(ACCOUNT_STATUS.PENDING);
   const [getColumnSearchProps] = useTableSearch();
 
   const pageSize = 6;
@@ -56,7 +60,7 @@ function AccountOpeningRequests() {
   useEffect(() => {
     fetchAccountList(currentPage);
     // eslint-disable-next-line
-  }, []);
+  }, [accountStatus]);
 
   const columns = [
     {
@@ -64,6 +68,9 @@ function AccountOpeningRequests() {
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps("id"),
+      render: (id) => {
+        return <span>{`DAL${id}`}</span>;
+      },
     },
     {
       title: "First Name",
@@ -123,10 +130,12 @@ function AccountOpeningRequests() {
             record={record}
             handleUserListUpdate={handleUserListUpdate}
           />
-          <AccountReject
-            record={record}
-            handleUserListUpdate={handleUserListUpdate}
-          />
+          {accountStatus !== ACCOUNT_STATUS.REJECTED && (
+            <AccountReject
+              record={record}
+              handleUserListUpdate={handleUserListUpdate}
+            />
+          )}
         </Space>
       ),
     },
@@ -137,11 +146,41 @@ function AccountOpeningRequests() {
     fetchAccountList(page - 1);
   };
 
-  const title = <span className="cb-text-strong">Users List</span>;
+  const handleMenuClick = ({ key }) => {
+    setCurrentPage(0);
+    setAccountStatus(key);
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key={ACCOUNT_STATUS.PENDING}>Pending</Menu.Item>
+      <Menu.Item key={ACCOUNT_STATUS.REJECTED}>Rejected</Menu.Item>
+    </Menu>
+  );
+
+  const title = (
+    <div className="cb-flex-sb">
+      <span className="cb-text-strong">Users List</span>
+      <span className="cb-flex-sb">
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<RedoOutlined spin={loading} />}
+          onClick={() => fetchAccountList(currentPage)}
+        />
+        <Dropdown overlay={menu}>
+          <Button>
+            {accountStatus} <DownOutlined />
+          </Button>
+        </Dropdown>
+      </span>
+    </div>
+  );
+
   return (
     <Card title={title} className="user-list-card">
       <Table
-        loading={loading}
+        loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
         className="bank-user-table"
         columns={columns}
         pagination={false}
