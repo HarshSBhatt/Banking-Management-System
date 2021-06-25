@@ -17,10 +17,10 @@ import { DownOutlined, LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { ACCOUNT_STATUS, TOKEN } from "common/constants";
-import CreditCardAccept from "./components/credit_card/CreditCardAccept";
-import CreditCardReject from "./components/credit_card/CreditCardReject";
+import ResignAccept from "./components/ResignAccept";
+import ResignReject from "./components/ResignReject";
 
-function CreditCardRequests() {
+function ResignationRequests() {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -33,7 +33,6 @@ function CreditCardRequests() {
   const handleUserListUpdate = (email) => {
     setUsers(users.filter((user) => user.email !== email));
   };
-
   const fetchAccountList = async (page) => {
     setLoading(true);
     try {
@@ -126,12 +125,12 @@ function CreditCardRequests() {
       fixed: "right",
       render: (record) => (
         <Space size="middle">
-          <CreditCardAccept
+          <ResignAccept
             record={record}
             handleUserListUpdate={handleUserListUpdate}
           />
           {accountStatus !== ACCOUNT_STATUS.REJECTED && (
-            <CreditCardReject
+            <ResignReject
               record={record}
               handleUserListUpdate={handleUserListUpdate}
             />
@@ -204,4 +203,4 @@ function CreditCardRequests() {
   );
 }
 
-export default CreditCardRequests;
+export default ResignationRequests;
