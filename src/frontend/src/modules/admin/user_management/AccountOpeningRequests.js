@@ -10,15 +10,15 @@ import Space from "antd/lib/space";
 import Button from "antd/lib/button";
 import Dropdown from "antd/lib/dropdown";
 import Menu from "antd/lib/menu";
-import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { DownOutlined, LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 
 //! User Files
 
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { ACCOUNT_STATUS, TOKEN } from "common/constants";
-import AccountAccept from "./components/AccountAccept";
-import AccountReject from "./components/AccountReject";
+import AccountAccept from "./components/account/AccountAccept";
+import AccountReject from "./components/account/AccountReject";
 
 function AccountOpeningRequests() {
   const [loading, setLoading] = useState(false);
@@ -147,6 +147,7 @@ function AccountOpeningRequests() {
   };
 
   const handleMenuClick = ({ key }) => {
+    setCurrentPage(0);
     setAccountStatus(key);
   };
 
@@ -160,7 +161,13 @@ function AccountOpeningRequests() {
   const title = (
     <div className="cb-flex-sb">
       <span className="cb-text-strong">Users List</span>
-      <span>
+      <span className="cb-flex-sb">
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<RedoOutlined spin={loading} />}
+          onClick={() => fetchAccountList(currentPage)}
+        />
         <Dropdown overlay={menu}>
           <Button>
             {accountStatus} <DownOutlined />
