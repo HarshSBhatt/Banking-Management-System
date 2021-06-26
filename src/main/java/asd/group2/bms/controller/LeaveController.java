@@ -2,7 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.payload.request.LeaveBodyRequest;
+import asd.group2.bms.payload.request.UpdateLeaveStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
@@ -32,14 +32,14 @@ public class LeaveController {
     }
 
     /**
-     * @param leaveBodyRequest: leave id and request status
-     * @description: Register the user into the system.
+     * @param updateLeaveStatusRequest: leave id and request status
+     * @description: Update the leave status.
      */
-    @PutMapping("/staff/leaves/status")
+    @PutMapping("/staff/leaves")
     @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
     public ResponseEntity<?> updateLeaveRequestStatus(
-            @Valid @RequestBody LeaveBodyRequest leaveBodyRequest) {
-        LeaveRequest leaveRequest = leaveService.setLeaveRequestStatus(leaveBodyRequest.getLeaveId(), leaveBodyRequest.getRequestStatus());
+            @Valid @RequestBody UpdateLeaveStatusRequest updateLeaveStatusRequest) {
+        LeaveRequest leaveRequest = leaveService.setLeaveRequestStatus(updateLeaveStatusRequest.getLeaveId(), updateLeaveStatusRequest.getRequestStatus());
         if (leaveRequest != null) {
             return ResponseEntity.ok(new ApiResponse(true, "Leave request status changed successfully!"));
         } else {

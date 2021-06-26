@@ -42,7 +42,7 @@ public class LeaveService {
                     leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
         }
 
-        List<LeaveListResponse> leaveListResponses = leaves.map(leave -> ModelMapper.mapLeavesToLeaveListResponse(leave)).getContent();
+        List<LeaveListResponse> leaveListResponses = leaves.map(ModelMapper::mapLeavesToLeaveListResponse).getContent();
 
         return new PagedResponse<>(leaveListResponses, leaves.getNumber(),
                 leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());

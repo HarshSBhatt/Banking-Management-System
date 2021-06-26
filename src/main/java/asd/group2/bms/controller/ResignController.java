@@ -1,18 +1,22 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.request.UpdateLeaveStatusRequest;
 import asd.group2.bms.payload.request.ResignRequest;
+import asd.group2.bms.payload.request.UpdateResignStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.payload.response.UserSummary;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ResignService;
 import asd.group2.bms.service.UserService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -28,18 +32,6 @@ public class ResignController {
     @Autowired
     UserService userService;
 
-    /**
-     * @param currentUser: logged in user
-     * @description: It will return the current user.
-     */
-    @GetMapping("/staff/me")
-    @RolesAllowed({"ROLE_USER"})
-    public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
-        return new UserSummary(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(),
-                currentUser.getUsername(), currentUser.getBirthday(), currentUser.getEmail(), currentUser.getPhone(),
-                currentUser.getAddress(), currentUser.getCity(), currentUser.getState(), currentUser.getZipCode());
-    }
-
     @GetMapping("/staff/resignation")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
     public PagedResponse<ResignListResponse> getResignationByStatus(
@@ -54,13 +46,31 @@ public class ResignController {
      * @description: It will create a resign request
      */
     @PostMapping("/staff/resignation")
-    public ApiResponse resign(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ResignRequest resignRequest) {
-
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+    public ResponseEntity<?> makeResignRequest(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ResignRequest resignRequest) {
         String email = currentUser.getEmail();
         User user = userService.getUserByEmail(email);
         Date date = resignRequest.getDate();
         String reason = resignRequest.getReason();
 
-        return resignService.resign(user, date, reason);
+        return resignService.makeResignRequest(user, date, reason);
     }
+
+    /**
+     * @param updateResignStatusRequest: resign id and request status
+     * @description: Update the resign status.
+     */
+    @PutMapping("/staff/resignation")
+    @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
+    public ResponseEntity<?> updateResignRequestStatus(
+            @Valid @RequestBody UpdateResignStatusRequest updateResignStatusRequest) {
+        asd.group2.bms.model.resign.ResignRequest resignRequest = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
+        if (resignRequest != null) {
+            return ResponseEntity.ok(new ApiResponse(true, "Resign request status changed successfully!"));
+        } else {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing resign request status!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
