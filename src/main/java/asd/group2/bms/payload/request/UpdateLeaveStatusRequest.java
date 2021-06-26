@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @description: Structure of leave body request
  */
-public class LeaveBodyRequest {
+public class UpdateLeaveStatusRequest {
     @NotNull(message = "Leave id is required")
     private Long leaveId;
 

@@ -1,13 +1,14 @@
 package asd.group2.bms.payload.request;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class LeaveRequest {
-    @NotBlank(message = "From date cant be empty!")
+    @NotNull(message = "From date cant be empty!")
     private Date fromDate;
 
-    @NotBlank(message = "To date cant be empty!")
+    @NotNull(message = "To date cant be empty!")
     private Date toDate;
 
     @NotBlank(message = "Reason cant be empty!")
