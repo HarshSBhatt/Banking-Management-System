@@ -36,7 +36,7 @@ public class AccountController {
     @Autowired
     CustomEmail customEmail;
 
-    @GetMapping("/account/list")
+    @GetMapping("/account/user")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
     public PagedResponse<User> getUserAccountListByStatus(
             @RequestParam(value = "accountStatus") AccountStatus accountStatus,
@@ -45,7 +45,7 @@ public class AccountController {
         return accountService.getUserAccountListByStatus(accountStatus, page, size);
     }
 
-    @PostMapping("/account/create")
+    @PostMapping("/account/user")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
     public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) {
         String email = accountRequest.getEmail();
