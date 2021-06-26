@@ -1,7 +1,6 @@
 package asd.group2.bms.service;
 
 import asd.group2.bms.exception.ResourceNotFoundException;
-import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;

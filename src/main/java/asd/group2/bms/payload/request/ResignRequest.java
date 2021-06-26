@@ -1,14 +1,7 @@
 package asd.group2.bms.payload.request;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import asd.group2.bms.model.account.AccountType;
-import asd.group2.bms.model.resign.RequestStatus;
-import asd.group2.bms.model.user.User;
 import java.util.Date;
 
 /**
