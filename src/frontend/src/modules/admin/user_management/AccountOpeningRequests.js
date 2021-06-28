@@ -37,7 +37,7 @@ function AccountOpeningRequests() {
   const fetchAccountList = async (page) => {
     setLoading(true);
     try {
-      const response = await api.get("/account/list", {
+      const response = await api.get("/account/user", {
         params: {
           accountStatus,
           page,

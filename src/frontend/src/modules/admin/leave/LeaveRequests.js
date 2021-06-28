@@ -16,29 +16,31 @@ import { DownOutlined, LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
-import { ACCOUNT_STATUS, TOKEN } from "common/constants";
+import { LEAVE_STATUS, TOKEN } from "common/constants";
 import LeaveAccept from "./components/LeaveAccept";
 import LeaveReject from "./components/LeaveReject";
 
 function LeaveRequests() {
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [leaveRequestData, setLeaveRequestData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [accountStatus, setAccountStatus] = useState(ACCOUNT_STATUS.PENDING);
+  const [leaveStatus, setLeaveStatus] = useState(LEAVE_STATUS.PENDING);
   const [getColumnSearchProps] = useTableSearch();
 
   const pageSize = 6;
 
-  const handleUserListUpdate = (email) => {
-    setUsers(users.filter((user) => user.email !== email));
+  const handleLeaveListUpdate = (leaveId) => {
+    setLeaveRequestData(
+      leaveRequestData.filter((data) => data.leaveId !== leaveId)
+    );
   };
-  const fetchAccountList = async (page) => {
+  const fetchLeavesList = async (page) => {
     setLoading(true);
     try {
-      const response = await api.get("/account/list", {
+      const response = await api.get("/staff/leave", {
         params: {
-          accountStatus,
+          requestStatus: leaveStatus,
           page,
           size: pageSize,
         },
@@ -48,7 +50,20 @@ function LeaveRequests() {
       });
       const { data } = response;
       setTotalElements(data.totalElements);
-      setUsers(data.content);
+      let leaveData = [];
+      data?.content?.forEach((leave) => {
+        leaveData.push({
+          leaveId: leave.leaveId,
+          toDate: leave.toDate,
+          fromDate: leave.fromDate,
+          reason: leave.reason,
+          firstName: leave.userMetaResponse.firstName,
+          lastName: leave.userMetaResponse.lastName,
+          phone: leave.userMetaResponse.phone,
+          email: leave.userMetaResponse.email,
+        });
+      });
+      setLeaveRequestData(leaveData);
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,20 +72,11 @@ function LeaveRequests() {
   };
 
   useEffect(() => {
-    fetchAccountList(currentPage);
+    fetchLeavesList(currentPage);
     // eslint-disable-next-line
-  }, [accountStatus]);
+  }, [leaveStatus]);
 
   const columns = [
-    {
-      title: "Customer ID",
-      dataIndex: "id",
-      key: "id",
-      ...getColumnSearchProps("id"),
-      render: (id) => {
-        return <span>{`DAL${id}`}</span>;
-      },
-    },
     {
       title: "First Name",
       dataIndex: "firstName",
@@ -84,18 +90,34 @@ function LeaveRequests() {
       ...getColumnSearchProps("lastName"),
     },
     {
+      title: "From",
+      dataIndex: "fromDate",
+      key: "fromDate",
+      ...getColumnSearchProps("fromDate"),
+      render: (fromDate) => {
+        return <span>{moment(fromDate).format("Do MMM YYYY")}</span>;
+      },
+    },
+    {
+      title: "To",
+      dataIndex: "toDate",
+      key: "toDate",
+      ...getColumnSearchProps("toDate"),
+      render: (toDate) => {
+        return <span>{moment(toDate).format("Do MMM YYYY")}</span>;
+      },
+    },
+    {
+      title: "Reason",
+      dataIndex: "reason",
+      key: "reason",
+      ...getColumnSearchProps("reason"),
+    },
+    {
       title: "Email",
       dataIndex: "email",
       key: "email",
       ...getColumnSearchProps("email"),
-    },
-    {
-      title: "Requested Account Type",
-      dataIndex: "requestedAccountType",
-      key: "requestedAccountType",
-      sorter: (a, b) =>
-        a.requestedAccountType.localeCompare(b.requestedAccountType),
-      ...getColumnSearchProps("requestedAccountType"),
     },
     {
       title: "Phone",
@@ -104,35 +126,21 @@ function LeaveRequests() {
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      ellipsis: { showTitle: true },
-      ...getColumnSearchProps("address"),
-    },
-    {
-      title: "Birthday",
-      dataIndex: "birthday",
-      key: "birthday",
-      ...getColumnSearchProps("birthday"),
-      render: (birthday) => {
-        return <span>{moment(birthday).format("Do MMM YYYY")}</span>;
-      },
-    },
-    {
       title: "Action",
       key: "action",
       fixed: "right",
       render: (record) => (
         <Space size="middle">
-          <LeaveAccept
-            record={record}
-            handleUserListUpdate={handleUserListUpdate}
-          />
-          {accountStatus !== ACCOUNT_STATUS.REJECTED && (
+          {leaveStatus !== LEAVE_STATUS.APPROVED && (
+            <LeaveAccept
+              record={record}
+              handleLeaveListUpdate={handleLeaveListUpdate}
+            />
+          )}
+          {leaveStatus !== LEAVE_STATUS.REJECTED && (
             <LeaveReject
               record={record}
-              handleUserListUpdate={handleUserListUpdate}
+              handleLeaveListUpdate={handleLeaveListUpdate}
             />
           )}
         </Space>
@@ -142,34 +150,35 @@ function LeaveRequests() {
 
   const onPageChange = (page) => {
     setCurrentPage(page - 1);
-    fetchAccountList(page - 1);
+    fetchLeavesList(page - 1);
   };
 
   const handleMenuClick = ({ key }) => {
     setCurrentPage(0);
-    setAccountStatus(key);
+    setLeaveStatus(key);
   };
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key={ACCOUNT_STATUS.PENDING}>Pending</Menu.Item>
-      <Menu.Item key={ACCOUNT_STATUS.REJECTED}>Rejected</Menu.Item>
+      <Menu.Item key={LEAVE_STATUS.PENDING}>Pending</Menu.Item>
+      <Menu.Item key={LEAVE_STATUS.APPROVED}>Approved</Menu.Item>
+      <Menu.Item key={LEAVE_STATUS.REJECTED}>Rejected</Menu.Item>
     </Menu>
   );
 
   const title = (
     <div className="cb-flex-sb">
-      <span className="cb-text-strong">Users List</span>
+      <span className="cb-text-strong">Leaves List</span>
       <span className="cb-flex-sb">
         <Button
           type="primary"
           shape="circle"
           icon={<RedoOutlined spin={loading} />}
-          onClick={() => fetchAccountList(currentPage)}
+          onClick={() => fetchLeavesList(currentPage)}
         />
         <Dropdown overlay={menu}>
           <Button>
-            {accountStatus} <DownOutlined />
+            {leaveStatus} <DownOutlined />
           </Button>
         </Dropdown>
       </span>
@@ -183,10 +192,10 @@ function LeaveRequests() {
         className="bank-user-table"
         columns={columns}
         pagination={false}
-        dataSource={users}
+        dataSource={leaveRequestData}
         scroll={{ x: 1500 }}
         sticky
-        rowKey="email"
+        rowKey="leaveId"
       />
       <div className="user-pagination">
         <Pagination

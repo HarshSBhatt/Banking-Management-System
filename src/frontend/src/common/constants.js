@@ -39,6 +39,18 @@ export const ACCOUNT_STATUS = {
   CLOSED: "CLOSED",
 };
 
+export const LEAVE_STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+};
+
+export const RESIGN_STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+};
+
 /*  Modules */
 export const MODULES = {
   DASHBOARD: "Dashboard",
