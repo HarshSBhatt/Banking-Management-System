@@ -31,10 +31,10 @@ public class ModelMapper {
 
     public static ResignListResponse mapResignsToResignListResponse(ResignRequest resignRequest) {
         ResignListResponse resignListResponse = new ResignListResponse();
-        resignListResponse.setResign_id(resignRequest.getResignId());
+        resignListResponse.setResignId(resignRequest.getResignId());
         resignListResponse.setDate(resignRequest.getDate());
         resignListResponse.setReason(resignRequest.getReason());
-        resignListResponse.setRequest_status(resignRequest.getRequestStatus());
+        resignListResponse.setRequestStatus(resignRequest.getRequestStatus());
 
         User user = resignRequest.getUser();
         UserMetaResponse userMetaResponse = new UserMetaResponse(

@@ -14,7 +14,7 @@ import api from "common/api";
 import { toast } from "common/utils";
 import ResignAcceptModal from "./ResignAcceptModal";
 
-function ResignAccept({ record, handleUserListUpdate }) {
+function ResignAccept({ record, handleResignListUpdate }) {
   const [modalState, setModalState] = useState({
     visible: false,
     confirmLoading: false,
@@ -22,60 +22,41 @@ function ResignAccept({ record, handleUserListUpdate }) {
 
   const [form] = Form.useForm();
 
-  const onCreate = (values) => {
-    console.log("Received values of form: ", values);
-    form
-      .validateFields()
-      .then(async (values) => {
-        const { balance, creditScore } = values;
-        if (!Number(balance) || !Number(creditScore)) {
-          toast({
-            message: "Please enter number only",
-            type: "error",
-          });
-        } else {
-          const accountData = {
-            email: record.email,
-            balance,
-            creditScore,
-          };
-          setModalState({
-            ...modalState,
-            confirmLoading: true,
-          });
-          try {
-            const response = await api.post("/account/create", accountData);
-            const { data } = response;
-            console.log(data);
-            handleUserListUpdate(record.email);
-            toast({
-              message: data.message,
-              type: "success",
-            });
-            form.resetFields();
-          } catch (err) {
-            if (err.response?.data) {
-              toast({
-                message: err.response.data.message,
-                type: "error",
-              });
-            } else {
-              toast({
-                message: "Something went wrong!",
-                type: "error",
-              });
-            }
-          } finally {
-            setModalState({
-              visible: false,
-              confirmLoading: false,
-            });
-          }
-        }
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
+  const onCreate = async () => {
+    setModalState({
+      ...modalState,
+      confirmLoading: true,
+    });
+    try {
+      const updateData = {
+        resignId: record.resignId,
+        requestStatus: "APPROVED",
+      };
+      const response = await api.put("/staff/resignation", updateData);
+      const { data } = response;
+      handleResignListUpdate(record.resignId);
+      toast({
+        message: data.message,
+        type: "success",
       });
+    } catch (err) {
+      if (err.response?.data) {
+        toast({
+          message: err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
+    } finally {
+      setModalState({
+        visible: false,
+        confirmLoading: false,
+      });
+    }
   };
 
   return (
