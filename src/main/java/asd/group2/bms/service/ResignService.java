@@ -52,6 +52,15 @@ public class ResignService {
     public ResponseEntity<?> makeResignRequest(User user, Date date, String reason) {
         try {
             ResignRequest resignRequest = new ResignRequest(user, date, reason, RequestStatus.PENDING);
+            List<ResignRequest> resignList = resignRepository.findByUserOrderByCreatedAtDesc(user);
+            if (resignList.size() > 0) {
+                ResignRequest lastRequest = resignList.get(0);
+                RequestStatus lastStatus = lastRequest.getRequestStatus();
+                if (lastStatus == RequestStatus.PENDING || lastStatus == RequestStatus.APPROVED) {
+                    return new ResponseEntity<>(new ApiResponse(false, "Resign request already " + lastStatus),
+                            HttpStatus.NOT_ACCEPTABLE);
+                }
+            }
             resignRepository.save(resignRequest);
             return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
         } catch (Exception e) {
