@@ -3,6 +3,7 @@ package asd.group2.bms.service;
 import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
+import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LeaveService {
@@ -70,6 +72,17 @@ public class LeaveService {
     public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
         try {
             LeaveRequest resignRequest = new LeaveRequest(user, fromDate, toDate, reason, RequestStatus.PENDING);
+            List<LeaveRequest> leavesList = leaveRepository.findByUser(user);
+            if (leavesList.size() > 0) {
+                for (int i = 0; i < leavesList.size(); i++) {
+                    if (leavesList.get(i).getRequestStatus() == RequestStatus.PENDING || leavesList.get(i).getRequestStatus() == RequestStatus.APPROVED) {
+                        if ((!fromDate.before(leavesList.get(i).getFromDate()) && !fromDate.after(leavesList.get(i).getToDate())) || (!toDate.before(leavesList.get(i).getFromDate()) && !toDate.after(leavesList.get(i).getToDate()))) {
+                            return new ResponseEntity<>(new ApiResponse(false, "Dates overlapping with existing requests."),
+                                    HttpStatus.NOT_ACCEPTABLE);
+                        }
+                    }
+                }
+            }
             leaveRepository.save(resignRequest);
             return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
         } catch (Exception e) {
