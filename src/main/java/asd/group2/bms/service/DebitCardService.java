@@ -1,7 +1,6 @@
 package asd.group2.bms.service;
 
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.repository.DebitCardRepository;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
@@ -29,11 +26,11 @@ public class DebitCardService {
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        int currentYear = localDate.getYear();
         int month = localDate.getMonthValue();
+        int currentYear = localDate.getYear();
 
-        Month expiryMonth = Month.of(month);
-        Year expiryYear = Year.of(currentYear + 4);
+        String expiryMonth = String.valueOf(month);
+        String expiryYear = String.valueOf(currentYear + 4);
 
         String pin = String.format("%04d", random.nextInt(10000));
         String cvv = String.format("%06d", random.nextInt(1000000));
