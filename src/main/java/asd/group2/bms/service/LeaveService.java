@@ -3,13 +3,13 @@ package asd.group2.bms.service;
 import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.LeaveRepository;
 import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LeaveService {
@@ -59,6 +56,19 @@ public class LeaveService {
                 leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
     }
 
+    /**
+     * @param userId: id of the user
+     * @description: This will return all the leaves having user id userId
+     */
+    public List<LeaveListResponse> getLeaveListByUserId(Long userId) {
+        List<LeaveRequest> leaves = leaveRepository.findByUser_Id(userId);
+        List<LeaveListResponse> leaveRequests = new ArrayList<>();
+        leaves.forEach(leave -> {
+            leaveRequests.add(ModelMapper.mapLeavesToLeaveListResponse(leave));
+        });
+        return leaveRequests;
+    }
+
     public LeaveRequest getLeaveById(Long leaveId) {
         return leaveRepository.findById(leaveId).orElseThrow(() -> new ResourceNotFoundException("Leave ID", "leaveId", leaveId));
     }
@@ -67,6 +77,21 @@ public class LeaveService {
         LeaveRequest leaveRequest = getLeaveById(leaveId);
         leaveRequest.setRequestStatus(requestStatus);
         return leaveRepository.save(leaveRequest);
+    }
+
+    public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
+        try {
+            LeaveRequest leaveRequest = getLeaveById(leaveId);
+            if (leaveRequest.getUser().getId() != currentUser.getId()) {
+                return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+                        HttpStatus.FORBIDDEN);
+            }
+            leaveRepository.delete(leaveRequest);
+            return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
