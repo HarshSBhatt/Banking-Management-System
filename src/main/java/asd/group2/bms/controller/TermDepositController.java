@@ -15,7 +15,7 @@ public class TermDepositController {
     @Autowired
     TermDepositService termDepositService;
 
-    @GetMapping("/termdeposit")
+    @GetMapping("/services/termdeposit")
     public List<TermDeposit> getTermDeposit() {
         return termDepositService.getTermDeposit();
     }
