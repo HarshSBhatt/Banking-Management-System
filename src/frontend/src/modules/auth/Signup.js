@@ -167,7 +167,7 @@ function Signup({ isOpenedByManager }) {
           rules={[
             { required: true, message: "Username is required" },
             { min: 3, message: "Username contains at least 3 characters" },
-            { max: 10, message: "Username contains at most 15 characters" },
+            { max: 10, message: "Username contains at most 10 characters" },
           ]}
         >
           <Input

@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 public class CustomEmail {
     @Autowired
     JavaMailSender javaMailSender;
-
+    
     public void sendResetPasswordEmail(String email, String forgotPasswordLink) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -43,6 +43,47 @@ public class CustomEmail {
         String content = "<p>Dear " + firstName + ",</p>" +
                 "<p>We have successfully created your account.</p>" +
                 "<p>You can use your login credentials to utilise our banking services.</p>" +
+                "<p>Thank you.</p>" +
+                "<p>Happy Banking!</p>";
+        helper.setSubject(subject);
+        helper.setText(content, true);
+        javaMailSender.send(message);
+    }
+
+    public void sendUserAccountStatusChangeMail(String email, String firstName, String accountStatus) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+        helper.setTo(email);
+
+        String subject = "Account Status Changed";
+        String content = "<p>Dear " + firstName + ",</p>" +
+                "<p>Your account status has been changed.</p>" +
+                "<p>Current status: " + accountStatus + ".</p>" +
+                "<p>If you think this is a mistake, email us at dalbank07@gmail.com</p>" +
+                "<p>Thank you.</p>" +
+                "<p>Happy Banking!</p>";
+        helper.setSubject(subject);
+        helper.setText(content, true);
+        javaMailSender.send(message);
+    }
+
+    public void sendDebitCardGenerationMail(String email, String firstName, Long debitCardNumber, String debitCardPin, String expiryMonth, String expiryYear, String cvv) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+        helper.setTo(email);
+
+        String subject = "Debit Card Generated";
+        String content = "<p>Dear " + firstName + ",</p>" +
+                "<p>Your debit card is generated successfully</p>" +
+                "<p>Debit Card Number: " + debitCardNumber + ".</p>" +
+                "<p>Debit Card Pin: " + debitCardPin + ".</p>" +
+                "<p>Debit Card Month: " + expiryMonth + ".</p>" +
+                "<p>Debit Card Year: " + expiryYear + ".</p>" +
+                "<p>Debit Card CVV: " + cvv + ".</p>" +
                 "<p>Thank you.</p>" +
                 "<p>Happy Banking!</p>";
         helper.setSubject(subject);

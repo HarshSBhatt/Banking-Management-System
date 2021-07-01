@@ -14,7 +14,7 @@ import api from "common/api";
 import { toast } from "common/utils";
 import LeaveRejectModal from "./LeaveRejectModal";
 
-function LeaveReject({ record, handleUserListUpdate }) {
+function LeaveReject({ record, handleLeaveListUpdate }) {
   const [modalState, setModalState] = useState({
     visible: false,
     confirmLoading: false,
@@ -27,12 +27,12 @@ function LeaveReject({ record, handleUserListUpdate }) {
     });
     try {
       const updateData = {
-        email: record.email,
-        accountStatus: "REJECTED",
+        leaveId: record.leaveId,
+        requestStatus: "REJECTED",
       };
-      const response = await api.put("/users/account/status", updateData);
+      const response = await api.put("/staff/leave", updateData);
       const { data } = response;
-      handleUserListUpdate(record.email);
+      handleLeaveListUpdate(record.leaveId);
       toast({
         message: data.message,
         type: "success",

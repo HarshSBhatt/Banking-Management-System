@@ -22,8 +22,7 @@ function CreditCardAccept({ record, handleUserListUpdate }) {
 
   const [form] = Form.useForm();
 
-  const onCreate = (values) => {
-    console.log("Received values of form: ", values);
+  const onCreate = () => {
     form
       .validateFields()
       .then(async (values) => {
@@ -46,7 +45,6 @@ function CreditCardAccept({ record, handleUserListUpdate }) {
           try {
             const response = await api.post("/account/create", accountData);
             const { data } = response;
-            console.log(data);
             handleUserListUpdate(record.email);
             toast({
               message: data.message,

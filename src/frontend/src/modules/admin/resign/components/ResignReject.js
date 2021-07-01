@@ -14,7 +14,7 @@ import api from "common/api";
 import { toast } from "common/utils";
 import ResignRejectModal from "./ResignRejectModal";
 
-function ResignReject({ record, handleUserListUpdate }) {
+function ResignReject({ record, handleResignListUpdate }) {
   const [modalState, setModalState] = useState({
     visible: false,
     confirmLoading: false,
@@ -27,12 +27,12 @@ function ResignReject({ record, handleUserListUpdate }) {
     });
     try {
       const updateData = {
-        email: record.email,
-        accountStatus: "REJECTED",
+        resignId: record.resignId,
+        requestStatus: "REJECTED",
       };
-      const response = await api.put("/users/account/status", updateData);
+      const response = await api.put("/staff/resignation", updateData);
       const { data } = response;
-      handleUserListUpdate(record.email);
+      handleResignListUpdate(record.resignId);
       toast({
         message: data.message,
         type: "success",
