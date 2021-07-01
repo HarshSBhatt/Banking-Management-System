@@ -9,8 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.Month;
-import java.time.Year;
 
 /**
  * @description: This will create credit cards table in the database
@@ -39,11 +37,13 @@ public class CreditCard extends DateAudit {
     @NotNull
     private CreditCardStatus creditCardStatus;
 
-    @NotNull
-    private Year expiryYear;
+    @NotBlank
+    @Size(max = 4)
+    private String expiryYear;
 
-    @NotNull
-    private Month expiryMonth;
+    @NotBlank
+    @Size(max = 2)
+    private String expiryMonth;
 
     @NotBlank
     @Size(max = 6)
@@ -55,7 +55,7 @@ public class CreditCard extends DateAudit {
     public CreditCard() {
     }
 
-    public CreditCard(Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, Year expiryYear, Month expiryMonth, String cvv, Boolean isActive) {
+    public CreditCard(Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, String expiryYear, String expiryMonth, String cvv, Boolean isActive) {
         this.account = account;
         this.pin = pin;
         this.transactionLimit = transactionLimit;
@@ -106,19 +106,19 @@ public class CreditCard extends DateAudit {
         this.creditCardStatus = creditCardStatus;
     }
 
-    public Year getExpiryYear() {
+    public String getExpiryYear() {
         return expiryYear;
     }
 
-    public void setExpiryYear(Year expiryYear) {
+    public void setExpiryYear(String expiryYear) {
         this.expiryYear = expiryYear;
     }
 
-    public Month getExpiryMonth() {
+    public String getExpiryMonth() {
         return expiryMonth;
     }
 
-    public void setExpiryMonth(Month expiryMonth) {
+    public void setExpiryMonth(String expiryMonth) {
         this.expiryMonth = expiryMonth;
     }
 
