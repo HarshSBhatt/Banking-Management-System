@@ -9,10 +9,10 @@ import java.util.Date;
  * @description: This class will be responsible to return resignation list.
  */
 public class ResignListResponse {
-    private Long resign_id;
+    private Long resignId;
     private Date date;
     private String reason;
-    private RequestStatus request_status;
+    private RequestStatus requestStatus;
     private UserMetaResponse userMetaResponse;
 
 
@@ -32,20 +32,20 @@ public class ResignListResponse {
         this.reason = reason;
     }
 
-    public Long getResign_id() {
-        return resign_id;
+    public Long getResignId() {
+        return resignId;
     }
 
-    public void setResign_id(Long resign_id) {
-        this.resign_id = resign_id;
+    public void setResignId(Long resignId) {
+        this.resignId = resignId;
     }
 
-    public RequestStatus getRequest_status() {
-        return request_status;
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setRequest_status(RequestStatus request_status) {
-        this.request_status = request_status;
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public UserMetaResponse getUserMetaResponse() {

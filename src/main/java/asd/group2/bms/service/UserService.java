@@ -13,6 +13,7 @@ import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.repository.RoleRepository;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.UserPrincipal;
+import asd.group2.bms.util.CustomEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Collections;
 
@@ -33,6 +36,9 @@ public class UserService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    CustomEmail customEmail;
 
     public Boolean isEmailAvailable(String email) {
         return !userRepository.existsByEmail(email);
@@ -99,9 +105,10 @@ public class UserService {
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 
-    public User setUserAccountStatus(String email, AccountStatus accountStatus) {
+    public User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
         User user = getUserByEmail(email);
         user.setAccountStatus(accountStatus);
+        customEmail.sendUserAccountStatusChangeMail(email, user.getFirstName(), accountStatus.toString());
         return userRepository.save(user);
     }
 

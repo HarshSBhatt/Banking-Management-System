@@ -21,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @description: It will handle all the user related requests.
@@ -131,7 +133,7 @@ public class UserController {
     @PutMapping("/users/account/status")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
     public ResponseEntity<?> updateUserAccountStatus(
-            @Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) {
+            @Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) throws MessagingException, UnsupportedEncodingException {
         User user = userService.setUserAccountStatus(updateAccountStatus.getEmail(),
                 updateAccountStatus.getAccountStatus());
         if (user != null) {

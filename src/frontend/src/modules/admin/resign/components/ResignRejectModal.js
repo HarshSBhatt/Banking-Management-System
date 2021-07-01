@@ -8,7 +8,7 @@ function ResignRejectModal({ record, modalState, onCreate, onCancel }) {
   return (
     <Modal
       visible={visible}
-      title={`Reject customer request: ${record.firstName} ${record.lastName}`}
+      title={`Reject staff request: ${record.firstName} ${record.lastName}`}
       okText="Reject"
       cancelText="Cancel"
       onCancel={onCancel}

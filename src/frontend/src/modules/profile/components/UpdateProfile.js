@@ -86,7 +86,6 @@ function UpdateProfile() {
     try {
       const response = await api.put("/user/me", userDetails);
       const { data } = response;
-      console.log(data);
       const updatedUserData = {
         ...currentUser,
         ...userDetails,
@@ -97,7 +96,6 @@ function UpdateProfile() {
         type: "success",
       });
     } catch (err) {
-      console.log({ err });
       if (err.response?.data) {
         toast({
           message: err.response.data.message,
