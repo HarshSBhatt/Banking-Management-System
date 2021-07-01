@@ -76,7 +76,7 @@ public class AccountController {
 
     @PostMapping("/account/user")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) throws MessagingException, UnsupportedEncodingException {
         String email = accountRequest.getEmail();
         Double balance = accountRequest.getBalance();
         int creditScore = accountRequest.getCreditScore();

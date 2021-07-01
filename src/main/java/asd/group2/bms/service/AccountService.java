@@ -3,11 +3,13 @@ package asd.group2.bms.service;
 import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.util.CustomEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+import java.time.Month;
+import java.time.Year;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +31,12 @@ public class AccountService {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    DebitCardService debitCardService;
+
+    @Autowired
+    CustomEmail customEmail;
 
     /**
      * @param accountStatus: Account Status (PENDING, APPROVED, REJECTED)
@@ -56,15 +68,24 @@ public class AccountService {
      * @param creditScore: credit score of customer
      * @description: This will return all the user having status accountStatus
      */
-    public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) {
+    public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) throws MessagingException, UnsupportedEncodingException {
         Account account = new Account(accountType, balance, creditScore);
         account.setUser(user);
+        DebitCard debitCard = debitCardService.createDebitCard(account);
+        String email = user.getEmail();
+        String firstName = user.getFirstName();
+        Long debitCardNumber = debitCard.getDebitCardNumber();
+        String pin = debitCard.getPin();
+        Year expiryYear = debitCard.getExpiryYear();
+        Month expiryMonth = debitCard.getExpiryMonth();
+        String cvv = debitCard.getCvv();
+
+        customEmail.sendDebitCardGenerationMail(email, firstName, debitCardNumber, pin, expiryMonth.toString(), expiryYear.toString(), cvv);
         return accountRepository.save(account);
     }
 
-
     /**
-     * @param user: User whose account detail is requested
+     * @param userId: User id of user whose account detail is requested
      * @description: This will return the account details of the user based on user id
      */
     public Account getAccountByUserId(Long userId) {
