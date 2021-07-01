@@ -8,6 +8,7 @@ import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.repository.ResignRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +51,46 @@ public class ResignService {
                 resigns.getSize(), resigns.getTotalElements(), resigns.getTotalPages(), resigns.isLast());
     }
 
+    /**
+     * @param userId: id of the user
+     * @description: This will return all the resignations having user id userId
+     */
+    public List<ResignListResponse> getResignListByUserId(Long userId) {
+        /** Making list in ascending order */
+        List<ResignRequest> resigns = resignRepository.findByUser_Id(userId);
+        List<ResignListResponse> resignRequests = new ArrayList<>();
+        resigns.forEach(resign -> {
+            resignRequests.add(ModelMapper.mapResignsToResignListResponse(resign));
+        });
+        return resignRequests;
+    }
+
+
+    public ResignRequest getResignById(Long resignId) {
+        return resignRepository.findById(resignId).orElseThrow(() -> new ResourceNotFoundException("Resign ID", "resignId", resignId));
+    }
+
+    public ResignRequest setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
+        ResignRequest resignRequest = getResignById(resignId);
+        resignRequest.setRequestStatus(requestStatus);
+        return resignRepository.save(resignRequest);
+    }
+
+    public ResponseEntity<?> deleteResignationRequestById(UserPrincipal currentUser, Long resignId) {
+        try {
+            ResignRequest resignRequest = getResignById(resignId);
+            if (resignRequest.getUser().getId() != currentUser.getId()) {
+                return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+                        HttpStatus.FORBIDDEN);
+            }
+            resignRepository.delete(resignRequest);
+            return ResponseEntity.ok(new ApiResponse(true, "Resignation request deleted successfully"));
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
     public ResponseEntity<?> makeResignRequest(User user, Date date, String reason) {
         try {
             ResignRequest resignRequest = new ResignRequest(user, date, reason, RequestStatus.PENDING);
@@ -67,15 +109,5 @@ public class ResignService {
             return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
                     HttpStatus.BAD_REQUEST);
         }
-    }
-
-    public ResignRequest getResignById(Long resignId) {
-        return resignRepository.findById(resignId).orElseThrow(() -> new ResourceNotFoundException("Resign ID", "resignId", resignId));
-    }
-
-    public ResignRequest setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
-        ResignRequest resignRequest = getResignById(resignId);
-        resignRequest.setRequestStatus(requestStatus);
-        return resignRepository.save(resignRequest);
     }
 }

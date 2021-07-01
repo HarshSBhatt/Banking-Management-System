@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -30,12 +31,36 @@ public class LeaveController {
     @Autowired
     LeaveService leaveService;
 
+    /**
+     * @param requestStatus: leave request status
+     * @description: Return all the request having status requestStatus
+     */
     @GetMapping("/staff/leave")
     @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
     public PagedResponse<LeaveListResponse> getLeavesByStatus(@RequestParam(value = "requestStatus") RequestStatus requestStatus,
                                                               @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return leaveService.getLeavesByStatus(requestStatus, page, size);
+    }
+
+    /**
+     * @param userId: id of the user
+     * @description: Return all the request having user id - userId
+     */
+    @GetMapping("/staff/leave/user/{userId}")
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+    public List<LeaveListResponse> getLeavesByUserId(@PathVariable(value = "userId") Long userId) {
+        return leaveService.getLeaveListByUserId(userId);
+    }
+
+    /**
+     * @param leaveId: leave id to be deleted
+     * @description: Delete leave request having leave id - leaveId
+     */
+    @DeleteMapping("/staff/leave/{leaveId}")
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+    public ResponseEntity<?> deleteLeaveRequestById(@CurrentLoggedInUser UserPrincipal currentUser, @PathVariable(value = "leaveId") Long leaveId) {
+        return leaveService.deleteLeaveRequestById(currentUser, leaveId);
     }
 
     @PostMapping("/staff/leave")
