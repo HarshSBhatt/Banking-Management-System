@@ -1,12 +1,17 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.AccountRequest;
+import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
+import asd.group2.bms.payload.response.UserMetaResponse;
 import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.security.CurrentLoggedInUser;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.AccountService;
 import asd.group2.bms.service.UserService;
 import asd.group2.bms.util.AppConstants;
@@ -43,6 +48,30 @@ public class AccountController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return accountService.getUserAccountListByStatus(accountStatus, page, size);
+    }
+
+    @GetMapping("/account/me")
+    @RolesAllowed({"ROLE_USER"})
+    public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
+        Account account = accountService.getAccountByUserId(currentUser.getId());
+        AccountDetailResponse accountDetailResponse = new AccountDetailResponse();
+        accountDetailResponse.setAccountNumber(account.getAccountNumber());
+        accountDetailResponse.setAccountType(account.getAccountType());
+        accountDetailResponse.setBalance(account.getBalance());
+        accountDetailResponse.setCreditScore(account.getCreditScore());
+        accountDetailResponse.setAccountCreatedAt(account.getCreatedAt());
+        accountDetailResponse.setLastActivityAt(account.getUpdatedAt());
+        User user = account.getUser();
+        UserMetaResponse userMetaResponse = new UserMetaResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone()
+        );
+        accountDetailResponse.setUserMetaResponse(userMetaResponse);
+        return accountDetailResponse;
     }
 
     @PostMapping("/account/user")

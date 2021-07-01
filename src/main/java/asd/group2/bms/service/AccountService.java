@@ -1,5 +1,6 @@
 package asd.group2.bms.service;
 
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.user.AccountStatus;
@@ -59,5 +60,14 @@ public class AccountService {
         Account account = new Account(accountType, balance, creditScore);
         account.setUser(user);
         return accountRepository.save(account);
+    }
+
+
+    /**
+     * @param user: User whose account detail is requested
+     * @description: This will return the account details of the user based on user id
+     */
+    public Account getAccountByUserId(Long userId) {
+        return accountRepository.findAccountByUser_Id(userId).orElseThrow(() -> new ResourceNotFoundException("Account", "account", "this user"));
     }
 }
