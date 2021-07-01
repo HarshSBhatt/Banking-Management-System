@@ -57,7 +57,7 @@ public class ResignService {
                 ResignRequest lastRequest = resignList.get(0);
                 RequestStatus lastStatus = lastRequest.getRequestStatus();
                 if (lastStatus == RequestStatus.PENDING || lastStatus == RequestStatus.APPROVED) {
-                    return new ResponseEntity<>(new ApiResponse(false, "Resign request already " + lastStatus),
+                    return new ResponseEntity<>(new ApiResponse(false, "Resign request already " + lastStatus.toString().toLowerCase()),
                             HttpStatus.NOT_ACCEPTABLE);
                 }
             }
