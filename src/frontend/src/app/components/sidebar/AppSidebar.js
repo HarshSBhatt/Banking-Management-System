@@ -8,7 +8,12 @@ import Sider from "antd/lib/layout/Sider";
 
 //! Ant Icons
 
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 //! User Files
 
@@ -50,7 +55,7 @@ function AppSidebar() {
     const hasSubMenu = siderMenu[item].views;
     return hasSubMenu
       ? siderMenu[item].allowedRoles.includes(role) && (
-          <SubMenu key={item} title={item}>
+          <SubMenu key={item} icon={<UserOutlined />} title={item}>
             {siderMenu[item].views.map((subItem) => {
               return (
                 subItem.allowedRoles.includes(role) && (
@@ -63,7 +68,7 @@ function AppSidebar() {
           </SubMenu>
         )
       : siderMenu[item].allowedRoles.includes(role) && (
-          <Menu.Item key={siderMenu[item].link}>
+          <Menu.Item key={siderMenu[item].link} icon={<AppstoreOutlined />}>
             <span>{siderMenu[item].label}</span>
           </Menu.Item>
         );
