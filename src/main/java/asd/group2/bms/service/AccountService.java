@@ -76,11 +76,11 @@ public class AccountService {
         String firstName = user.getFirstName();
         Long debitCardNumber = debitCard.getDebitCardNumber();
         String pin = debitCard.getPin();
-        Year expiryYear = debitCard.getExpiryYear();
-        Month expiryMonth = debitCard.getExpiryMonth();
+        String expiryYear = debitCard.getExpiryYear();
+        String expiryMonth = debitCard.getExpiryMonth();
         String cvv = debitCard.getCvv();
 
-        customEmail.sendDebitCardGenerationMail(email, firstName, debitCardNumber, pin, expiryMonth.toString(), expiryYear.toString(), cvv);
+        customEmail.sendDebitCardGenerationMail(email, firstName, debitCardNumber, pin, expiryMonth, expiryYear, cvv);
         return accountRepository.save(account);
     }
 

@@ -27,4 +27,10 @@ public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
 
     List<LeaveRequest> findByUser(User user);
 
+    /**
+     * @param userId: Id of user
+     * @descriptions: This will return the resign records by user id.
+     */
+    List<LeaveRequest> findByUser_Id(Long userId);
+
 }
