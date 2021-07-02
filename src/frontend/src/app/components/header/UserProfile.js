@@ -16,11 +16,13 @@ import Text from "antd/lib/typography/Text";
 import { AppContext } from "AppContext";
 import { ReactComponent as LogoutIcon } from "assets/svg/logout.svg";
 import { ReactComponent as LockIcon } from "assets/svg/lock.svg";
-import { ROUTES } from "common/constants";
+import { ReactComponent as ResignIcon } from "assets/svg/resign.svg";
+import { ReactComponent as LeaveIcon } from "assets/svg/leave.svg";
+import { ROLES, ROUTES } from "common/constants";
 
 function UserProfile() {
   const {
-    state: { currentUser },
+    state: { currentUser, role },
   } = useContext(AppContext);
   const history = useHistory();
   const {
@@ -62,6 +64,26 @@ function UserProfile() {
         >
           Change Password
         </Menu.Item>
+        {role !== ROLES.ROLE_USER && (
+          <>
+            <Menu.Item
+              icon={<LeaveIcon className="cb-svg" />}
+              onClick={handleHide}
+              key={ROUTES.MY_LEAVES}
+              className="cb-menu-item"
+            >
+              My Leaves
+            </Menu.Item>
+            <Menu.Item
+              icon={<ResignIcon className="cb-svg" />}
+              onClick={handleHide}
+              key={ROUTES.MY_RESIGN}
+              className="cb-menu-item"
+            >
+              My Resign
+            </Menu.Item>
+          </>
+        )}
         <Menu.Item
           icon={<LogoutIcon className="cb-svg" />}
           onClick={handleHide}
