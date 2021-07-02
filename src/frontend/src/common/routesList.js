@@ -2,8 +2,10 @@ import Error404 from "Error404";
 import Account from "modules/account";
 import AccountStatement from "modules/account/components/AccountStatement";
 import ApplyLeave from "modules/admin/leave/ApplyLeave";
+import MyLeaves from "modules/admin/leave/components/MyLeaves";
 import LeaveRequests from "modules/admin/leave/LeaveRequests";
 import ApplyResignation from "modules/admin/resign/ApplyResignation";
+import MyResign from "modules/admin/resign/components/MyResign";
 import ResignationRequests from "modules/admin/resign/ResignationRequests";
 import AccountOpeningRequests from "modules/admin/user_management/AccountOpeningRequests";
 import AddUser from "modules/admin/user_management/AddUser";
@@ -120,6 +122,18 @@ export const routesList = [
     label: "Resign Requests",
     view: ResignationRequests,
     allowedRoles: ["ROLE_MANAGER", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.MY_LEAVES,
+    label: "My Leaves",
+    view: MyLeaves,
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.MY_RESIGN,
+    label: "My Resign",
+    view: MyResign,
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
   },
   {
     link: "*",

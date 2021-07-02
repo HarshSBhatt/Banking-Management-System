@@ -28,6 +28,8 @@ export const ROUTES = {
   RESIGN: "/bank/resign",
   APPLY_RESIGNATION: "/bank/resign/apply",
   RESIGNATION_REQUEST: "/bank/resign/requests",
+  MY_LEAVES: "/my-leaves",
+  MY_RESIGN: "/my-resign",
 };
 
 export const APP_NAME = "DAL BMS";
