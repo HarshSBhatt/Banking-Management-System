@@ -3,6 +3,7 @@ package asd.group2.bms.model.term_deposit;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
 import asd.group2.bms.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,11 +25,13 @@ public class TermDepositDetail extends DateAudit {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_number", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "term_duration", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TermDeposit termDeposit;
 
     @NotNull
