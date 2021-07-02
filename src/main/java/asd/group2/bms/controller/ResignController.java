@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -30,6 +31,10 @@ public class ResignController {
     @Autowired
     UserService userService;
 
+    /**
+     * @param requestStatus: resign request status
+     * @description: Return all the request having status requestStatus
+     */
     @GetMapping("/staff/resignation")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
     public PagedResponse<ResignListResponse> getResignationByStatus(
@@ -37,6 +42,26 @@ public class ResignController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return resignService.getResignListByStatus(requestStatus, page, size);
+    }
+
+    /**
+     * @param userId: id of the user
+     * @description: Return all the request having user id - userId
+     */
+    @GetMapping("/staff/resignation/user/{userId}")
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+    public List<ResignListResponse> getResignationsByUserId(@PathVariable(value = "userId") Long userId) {
+        return resignService.getResignListByUserId(userId);
+    }
+
+    /**
+     * @param resignId: resign id to be deleted
+     * @description: Delete resign request having resign id - resignId
+     */
+    @DeleteMapping("/staff/resignation/{resignId}")
+    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+    public ResponseEntity<?> deleteResignationRequestById(@CurrentLoggedInUser UserPrincipal currentUser, @PathVariable(value = "resignId") Long resignId) {
+        return resignService.deleteResignationRequestById(currentUser, resignId);
     }
 
     /**
