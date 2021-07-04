@@ -20,7 +20,7 @@ public class DebitCardService {
 
   /**
    * @param account: Account of user whose debit card is being created
-   * @description: This will return the debit card details
+   * @return This will return the debit card details
    */
   public DebitCard createDebitCard(Account account) {
     Random random = new Random();

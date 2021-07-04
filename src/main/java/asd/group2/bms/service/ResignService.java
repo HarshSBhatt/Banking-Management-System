@@ -34,10 +34,10 @@ public class ResignService {
    * @param requestStatus: Resign Status (PENDING, APPROVED, REJECTED)
    * @param page:          Page Number
    * @param size:          Size of the response data
-   * @description: This will return all the resignations having status resignStatus
+   * @return This will return all the resignations having status resignStatus
    */
   public PagedResponse<ResignListResponse> getResignListByStatus(RequestStatus requestStatus, int page, int size) {
-    /** Making list in ascending order */
+    // Making list in ascending order
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
     Page<ResignRequest> resigns = resignRepository.findByRequestStatusEquals(requestStatus, pageable);
 
@@ -54,27 +54,42 @@ public class ResignService {
 
   /**
    * @param userId: id of the user
-   * @description: This will return all the resignations having user id userId
+   * @return This will return all the resignations having user id userId
    */
   public List<ResignListResponse> getResignListByUserId(Long userId) {
-    /** Making list in ascending order */
+    // Making list in ascending order
     List<ResignRequest> resigns = resignRepository.findByUser_Id(userId);
     List<ResignListResponse> resignRequests = new ArrayList<>();
     resigns.forEach(resign -> resignRequests.add(ModelMapper.mapResignsToResignListResponse(resign)));
     return resignRequests;
   }
 
-
+  /**
+   * Get the resign request by resign id
+   *
+   * @param resignId: id of the resign
+   * @return a resign based on id
+   */
   public ResignRequest getResignById(Long resignId) {
     return resignRepository.findById(resignId).orElseThrow(() -> new ResourceNotFoundException("Resign ID", "resignId", resignId));
   }
 
+  /**
+   * @param resignId:      id of the resign
+   * @param requestStatus: Status of the resign (APPROVED, REJECTED, PENDING)
+   * @return the updated status of the resign having id - leaveId
+   */
   public ResignRequest setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
     ResignRequest resignRequest = getResignById(resignId);
     resignRequest.setRequestStatus(requestStatus);
     return resignRepository.save(resignRequest);
   }
 
+  /**
+   * @param currentUser: current logged in user
+   * @param resignId:    id of the resign
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> deleteResignationRequestById(UserPrincipal currentUser, Long resignId) {
     try {
       ResignRequest resignRequest = getResignById(resignId);
@@ -90,6 +105,14 @@ public class ResignService {
     }
   }
 
+  /**
+   * This will create a resign request based on the field received from the frontend
+   *
+   * @param user:   User model object
+   * @param date:   resign date
+   * @param reason: reason of the resign
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> makeResignRequest(User user, Date date, String reason) {
     try {
       ResignRequest resignRequest = new ResignRequest(user, date, reason, RequestStatus.PENDING);

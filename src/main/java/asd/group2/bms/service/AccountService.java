@@ -41,11 +41,11 @@ public class AccountService {
    * @param accountStatus: Account Status (PENDING, APPROVED, REJECTED)
    * @param page:          Page Number
    * @param size:          Size of the response data
-   * @description: This will return all the user having status accountStatus
+   * @return This will return all the user having status accountStatus
    */
   public PagedResponse<User> getUserAccountListByStatus(AccountStatus accountStatus, int page, int size) {
 
-    /** Making list in ascending order to get early applied application first */
+    // Making list in ascending order to get early applied application first
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
     Page<User> users = userRepository.findByAccountStatusEquals(accountStatus, pageable);
 
@@ -60,12 +60,15 @@ public class AccountService {
         users.getSize(), users.getTotalElements(), users.getTotalPages(), users.isLast());
   }
 
+
   /**
    * @param user:        User whose account is being created
    * @param accountType: Type of account (SAVINGS, CURRENT)
    * @param balance:     balance deposited while account approval
    * @param creditScore: credit score of customer
-   * @description: This will return all the user having status accountStatus
+   * @return This will return all the user having status accountStatus
+   * @throws MessagingException:           This will throw MessagingException
+   * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
    */
   public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) throws MessagingException, UnsupportedEncodingException {
     Account account = new Account(accountType, balance, creditScore);
@@ -85,7 +88,7 @@ public class AccountService {
 
   /**
    * @param userId: User id of user whose account detail is requested
-   * @description: This will return the account details of the user based on user id
+   * @return This will return the account details of the user based on user id
    */
   public Account getAccountByUserId(Long userId) {
     return accountRepository.findAccountByUser_Id(userId).orElseThrow(() -> new ResourceNotFoundException("Account", "account", "this user"));

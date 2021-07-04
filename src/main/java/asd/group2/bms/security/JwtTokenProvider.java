@@ -24,7 +24,7 @@ public class JwtTokenProvider {
 
   /**
    * @param authentication: user authentication details
-   * @description: This will return token.
+   * @return This will return token.
    */
   public String generateToken(Authentication authentication) {
 
@@ -53,7 +53,7 @@ public class JwtTokenProvider {
 
   /**
    * @param token: jwt token
-   * @description: This will return user id.
+   * @return This will return user id.
    */
   public Long getUserIdFromJWT(String token) {
     Claims claims = Jwts.parser()
@@ -66,7 +66,7 @@ public class JwtTokenProvider {
 
   /**
    * @param authToken: jwt token
-   * @description: This will return the token.
+   * @return This will return the token.
    */
   public boolean validateToken(String authToken) {
     try {

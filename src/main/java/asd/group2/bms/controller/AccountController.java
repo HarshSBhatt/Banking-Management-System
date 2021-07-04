@@ -42,6 +42,14 @@ public class AccountController {
   @Autowired
   CustomEmail customEmail;
 
+  /**
+   * Users list based on the account status of the users
+   *
+   * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
+   * @param page:          number of the page
+   * @param size:          page size
+   * @return User data of size N having page number "page"
+   */
   @GetMapping("/account/user")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public PagedResponse<User> getUserAccountListByStatus(
@@ -51,6 +59,12 @@ public class AccountController {
     return accountService.getUserAccountListByStatus(accountStatus, page, size);
   }
 
+  /**
+   * This will fetch user account based on login detail (jwt)
+   *
+   * @param currentUser: current logged in user
+   * @return account detail of logged in user
+   */
   @GetMapping("/account/me")
   @RolesAllowed({"ROLE_USER"})
   public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
@@ -75,6 +89,14 @@ public class AccountController {
     return accountDetailResponse;
   }
 
+  /**
+   * This will create user account based on the payload received (balance, credit score)
+   *
+   * @param accountRequest: Request body containing all necessary data
+   * @return success or failure response with appropriate message
+   * @throws MessagingException:           This will throw MessagingException
+   * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
+   */
   @PostMapping("/account/user")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) throws MessagingException, UnsupportedEncodingException {

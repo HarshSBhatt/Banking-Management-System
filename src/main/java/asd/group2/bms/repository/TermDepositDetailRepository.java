@@ -13,7 +13,7 @@ public interface TermDepositDetailRepository extends JpaRepository<TermDepositDe
 
   /**
    * @param accountNumber: bank account number of the user
-   * @descriptions: This will return the user's bank account number.
+   * @return This will return the user's bank account number.
    */
   List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber);
 

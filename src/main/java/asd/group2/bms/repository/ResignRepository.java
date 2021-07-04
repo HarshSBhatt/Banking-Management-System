@@ -13,16 +13,20 @@ public interface ResignRepository extends JpaRepository<ResignRequest, Long> {
 
   /**
    * @param requestStatus: request status
-   * @descriptions: This will return the resign records by status.
+   * @return This will return the resign records by status.
    */
   Page<ResignRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable);
 
   /**
    * @param userId: Id of user
-   * @descriptions: This will return the resign records by user id.
+   * @return This will return the resign records by user id.
    */
   List<ResignRequest> findByUser_Id(Long userId);
 
+  /**
+   * @param user: User model object
+   * @return This will return the resign records by user.
+   */
   List<ResignRequest> findByUserOrderByCreatedAtDesc(User user);
 
 }

@@ -16,21 +16,36 @@ public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
 
   /**
    * @param requestStatus: request status
-   * @descriptions: This will return list of leaves having request status of param - requestStatus.
+   * @return This will return list of leaves having request status of param - requestStatus.
    */
   Page<LeaveRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable);
 
+  /**
+   * @param leaveIds: Leave Ids
+   * @return This will return the leaves records by leave ids.
+   */
   List<LeaveRequest> findByLeaveIdIn(List<Long> leaveIds);
 
+  /**
+   * @return This will return the leaves records
+   */
   List<LeaveRequest> findAll();
 
+  /**
+   * @param leaveId: Leave Id
+   * @return This will return the leave request by leave id.
+   */
   Optional<LeaveRequest> findByLeaveId(Long leaveId);
 
+  /**
+   * @param user: User model object
+   * @return This will return the leave record by user.
+   */
   List<LeaveRequest> findByUser(User user);
 
   /**
    * @param userId: Id of user
-   * @descriptions: This will return the resign records by user id.
+   * @return This will return the leave records by user id.
    */
   List<LeaveRequest> findByUser_Id(Long userId);
 
