@@ -13,75 +13,77 @@ import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
-    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${app.jwtSecret}")
-    private String jwtSecret;
+  private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${app.jwtExpirationInMs}")
-    private int jwtExpirationInMs;
+  @Value("${app.jwtSecret}")
+  private String jwtSecret;
 
-    /**
-     * @param authentication: user authentication details
-     * @description: This will return token.
-     */
-    public String generateToken(Authentication authentication) {
+  @Value("${app.jwtExpirationInMs}")
+  private int jwtExpirationInMs;
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+  /**
+   * @param authentication: user authentication details
+   * @description: This will return token.
+   */
+  public String generateToken(Authentication authentication) {
+
+    UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
-        Collection roles = userPrincipal.getAuthorities();
-        Optional role = roles.stream().findFirst();
-        String userRole = role.get().toString();
+    Collection roles = userPrincipal.getAuthorities();
+    Optional role = roles.stream().findFirst();
+    String userRole = role.get().toString();
 
-        Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
-        claims.put("role", userRole);
-        claims.put("user", userPrincipal);
-        claims.put("email", userPrincipal.getEmail());
+    Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
+    claims.put("role", userRole);
+    claims.put("user", userPrincipal);
+    claims.put("email", userPrincipal.getEmail());
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+    return Jwts.builder()
+        .setClaims(claims)
+        .setIssuedAt(new Date())
+        .setExpiration(expiryDate)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .compact();
+  }
+
+  /**
+   * @param token: jwt token
+   * @description: This will return user id.
+   */
+  public Long getUserIdFromJWT(String token) {
+    Claims claims = Jwts.parser()
+        .setSigningKey(jwtSecret)
+        .parseClaimsJws(token)
+        .getBody();
+
+    return Long.parseLong(claims.getSubject());
+  }
+
+  /**
+   * @param authToken: jwt token
+   * @description: This will return the token.
+   */
+  public boolean validateToken(String authToken) {
+    try {
+      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+      return true;
+    } catch (SignatureException ex) {
+      logger.error("Invalid JWT signature");
+    } catch (MalformedJwtException ex) {
+      logger.error("Invalid JWT token");
+    } catch (ExpiredJwtException ex) {
+      logger.error("Expired JWT token");
+    } catch (UnsupportedJwtException ex) {
+      logger.error("Unsupported JWT token");
+    } catch (IllegalArgumentException ex) {
+      logger.error("JWT claims string is empty.");
     }
+    return false;
+  }
 
-    /**
-     * @param token: jwt token
-     * @description: This will return user id.
-     */
-    public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
-    }
-
-    /**
-     * @param authToken: jwt token
-     * @description: This will return the token.
-     */
-    public boolean validateToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-            return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
-        } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            logger.error("JWT claims string is empty.");
-        }
-        return false;
-    }
 }

@@ -25,75 +25,76 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ResignController {
-    @Autowired
-    ResignService resignService;
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  ResignService resignService;
 
-    /**
-     * @param requestStatus: resign request status
-     * @description: Return all the request having status requestStatus
-     */
-    @GetMapping("/staff/resignation")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
-    public PagedResponse<ResignListResponse> getResignationByStatus(
-            @RequestParam(value = "requestStatus") RequestStatus requestStatus,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return resignService.getResignListByStatus(requestStatus, page, size);
+  @Autowired
+  UserService userService;
+
+  /**
+   * @param requestStatus: resign request status
+   * @description: Return all the request having status requestStatus
+   */
+  @GetMapping("/staff/resignation")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
+  public PagedResponse<ResignListResponse> getResignationByStatus(
+      @RequestParam(value = "requestStatus") RequestStatus requestStatus,
+      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+    return resignService.getResignListByStatus(requestStatus, page, size);
+  }
+
+  /**
+   * @param userId: id of the user
+   * @description: Return all the request having user id - userId
+   */
+  @GetMapping("/staff/resignation/user/{userId}")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+  public List<ResignListResponse> getResignationsByUserId(@PathVariable(value = "userId") Long userId) {
+    return resignService.getResignListByUserId(userId);
+  }
+
+  /**
+   * @param resignId: resign id to be deleted
+   * @description: Delete resign request having resign id - resignId
+   */
+  @DeleteMapping("/staff/resignation/{resignId}")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> deleteResignationRequestById(@CurrentLoggedInUser UserPrincipal currentUser, @PathVariable(value = "resignId") Long resignId) {
+    return resignService.deleteResignationRequestById(currentUser, resignId);
+  }
+
+  /**
+   * @param resignRequest: resign request of user
+   * @description: It will create a resign request
+   */
+  @PostMapping("/staff/resignation")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> makeResignRequest(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ResignRequest resignRequest) {
+    String email = currentUser.getEmail();
+    User user = userService.getUserByEmail(email);
+    Date date = resignRequest.getDate();
+    String reason = resignRequest.getReason();
+
+    return resignService.makeResignRequest(user, date, reason);
+  }
+
+  /**
+   * @param updateResignStatusRequest: resign id and request status
+   * @description: Update the resign status.
+   */
+  @PutMapping("/staff/resignation")
+  @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
+  public ResponseEntity<?> updateResignRequestStatus(
+      @Valid @RequestBody UpdateResignStatusRequest updateResignStatusRequest) {
+    asd.group2.bms.model.resign.ResignRequest resignRequest = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
+    if (resignRequest != null) {
+      return ResponseEntity.ok(new ApiResponse(true, "Resign request status changed successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing resign request status!"),
+          HttpStatus.BAD_REQUEST);
     }
-
-    /**
-     * @param userId: id of the user
-     * @description: Return all the request having user id - userId
-     */
-    @GetMapping("/staff/resignation/user/{userId}")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
-    public List<ResignListResponse> getResignationsByUserId(@PathVariable(value = "userId") Long userId) {
-        return resignService.getResignListByUserId(userId);
-    }
-
-    /**
-     * @param resignId: resign id to be deleted
-     * @description: Delete resign request having resign id - resignId
-     */
-    @DeleteMapping("/staff/resignation/{resignId}")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> deleteResignationRequestById(@CurrentLoggedInUser UserPrincipal currentUser, @PathVariable(value = "resignId") Long resignId) {
-        return resignService.deleteResignationRequestById(currentUser, resignId);
-    }
-
-    /**
-     * @param resignRequest: resign request of user
-     * @description: It will create a resign request
-     */
-    @PostMapping("/staff/resignation")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> makeResignRequest(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody ResignRequest resignRequest) {
-        String email = currentUser.getEmail();
-        User user = userService.getUserByEmail(email);
-        Date date = resignRequest.getDate();
-        String reason = resignRequest.getReason();
-
-        return resignService.makeResignRequest(user, date, reason);
-    }
-
-    /**
-     * @param updateResignStatusRequest: resign id and request status
-     * @description: Update the resign status.
-     */
-    @PutMapping("/staff/resignation")
-    @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
-    public ResponseEntity<?> updateResignRequestStatus(
-            @Valid @RequestBody UpdateResignStatusRequest updateResignStatusRequest) {
-        asd.group2.bms.model.resign.ResignRequest resignRequest = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
-        if (resignRequest != null) {
-            return ResponseEntity.ok(new ApiResponse(true, "Resign request status changed successfully!"));
-        } else {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing resign request status!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
+  }
 
 }
