@@ -12,27 +12,29 @@ import javax.validation.constraints.NotNull;
  * @description: Structure of update account request
  */
 public class UpdateAccountStatusRequest {
-    @NotBlank(message = "User email is required")
-    @Email(message = "Please enter a valid email")
-    private String email;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private AccountStatus accountStatus;
+  @NotBlank(message = "User email is required")
+  @Email(message = "Please enter a valid email")
+  private String email;
 
-    public String getEmail() {
-        return email;
-    }
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private AccountStatus accountStatus;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public AccountStatus getAccountStatus() {
-        return accountStatus;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
-        this.accountStatus = accountStatus;
-    }
+  public AccountStatus getAccountStatus() {
+    return accountStatus;
+  }
+
+  public void setAccountStatus(AccountStatus accountStatus) {
+    this.accountStatus = accountStatus;
+  }
+
 }

@@ -11,33 +11,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
 
-    /**
-     * @descriptions: This will return user details.
-     * @param usernameOrEmail: username or email of the user
-     */
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        // Let people login with either username or email
-        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User not found with username or email : " + usernameOrEmail));
+  @Autowired
+  UserRepository userRepository;
 
-        return UserPrincipal.create(user);
-    }
+  /**
+   * @param usernameOrEmail: username or email of the user
+   * @descriptions: This will return user details.
+   */
+  @Override
+  @Transactional
+  public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+    // Let people login with either username or email
+    User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        .orElseThrow(() -> new UsernameNotFoundException(
+            "User not found with username or email : " + usernameOrEmail));
 
-    /**
-     * @descriptions: This method is used by JWTAuthenticationFilter.
-     * @param id: user id
-     */
-    @Transactional
-    public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
+    return UserPrincipal.create(user);
+  }
 
-        return UserPrincipal.create(user);
-    }
+  /**
+   * @param id: user id
+   * @descriptions: This method is used by JWTAuthenticationFilter.
+   */
+  @Transactional
+  public UserDetails loadUserById(Long id) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
+
+    return UserPrincipal.create(user);
+  }
+
 }

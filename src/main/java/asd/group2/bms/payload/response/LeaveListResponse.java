@@ -8,58 +8,65 @@ import java.util.Date;
  * @description: Structure of leave list response
  */
 public class LeaveListResponse {
-    private Long leaveId;
-    private Date fromDate;
-    private Date toDate;
-    private String reason;
-    private UserMetaResponse userMetaResponse;
-    private RequestStatus requestStatus;
 
-    public Long getLeaveId() {
-        return leaveId;
-    }
+  private Long leaveId;
 
-    public void setLeaveId(Long leaveId) {
-        this.leaveId = leaveId;
-    }
+  private Date fromDate;
 
-    public Date getFromDate() {
-        return fromDate;
-    }
+  private Date toDate;
 
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
+  private String reason;
 
-    public Date getToDate() {
-        return toDate;
-    }
+  private UserMetaResponse userMetaResponse;
 
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
+  private RequestStatus requestStatus;
 
-    public String getReason() {
-        return reason;
-    }
+  public Long getLeaveId() {
+    return leaveId;
+  }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+  public void setLeaveId(Long leaveId) {
+    this.leaveId = leaveId;
+  }
 
-    public UserMetaResponse getUserMetaResponse() {
-        return userMetaResponse;
-    }
+  public Date getFromDate() {
+    return fromDate;
+  }
 
-    public void setUserMetaResponse(UserMetaResponse userMetaResponse) {
-        this.userMetaResponse = userMetaResponse;
-    }
+  public void setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+  }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
+  public Date getToDate() {
+    return toDate;
+  }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+  public void setToDate(Date toDate) {
+    this.toDate = toDate;
+  }
+
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
+
+  public UserMetaResponse getUserMetaResponse() {
+    return userMetaResponse;
+  }
+
+  public void setUserMetaResponse(UserMetaResponse userMetaResponse) {
+    this.userMetaResponse = userMetaResponse;
+  }
+
+  public RequestStatus getRequestStatus() {
+    return requestStatus;
+  }
+
+  public void setRequestStatus(RequestStatus requestStatus) {
+    this.requestStatus = requestStatus;
+  }
+
 }

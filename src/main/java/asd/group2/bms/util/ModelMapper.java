@@ -8,44 +8,46 @@ import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.payload.response.UserMetaResponse;
 
 public class ModelMapper {
-    public static LeaveListResponse mapLeavesToLeaveListResponse(LeaveRequest leaveRequest) {
-        LeaveListResponse leaveListResponse = new LeaveListResponse();
-        leaveListResponse.setLeaveId(leaveRequest.getLeaveId());
-        leaveListResponse.setFromDate(leaveRequest.getFromDate());
-        leaveListResponse.setToDate(leaveRequest.getToDate());
-        leaveListResponse.setReason(leaveRequest.getReason());
-        leaveListResponse.setRequestStatus(leaveRequest.getRequestStatus());
 
-        User user = leaveRequest.getUser();
-        UserMetaResponse userMetaResponse = new UserMetaResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhone()
-        );
-        leaveListResponse.setUserMetaResponse(userMetaResponse);
-        return leaveListResponse;
-    }
+  public static LeaveListResponse mapLeavesToLeaveListResponse(LeaveRequest leaveRequest) {
+    LeaveListResponse leaveListResponse = new LeaveListResponse();
+    leaveListResponse.setLeaveId(leaveRequest.getLeaveId());
+    leaveListResponse.setFromDate(leaveRequest.getFromDate());
+    leaveListResponse.setToDate(leaveRequest.getToDate());
+    leaveListResponse.setReason(leaveRequest.getReason());
+    leaveListResponse.setRequestStatus(leaveRequest.getRequestStatus());
 
-    public static ResignListResponse mapResignsToResignListResponse(ResignRequest resignRequest) {
-        ResignListResponse resignListResponse = new ResignListResponse();
-        resignListResponse.setResignId(resignRequest.getResignId());
-        resignListResponse.setDate(resignRequest.getDate());
-        resignListResponse.setReason(resignRequest.getReason());
-        resignListResponse.setRequestStatus(resignRequest.getRequestStatus());
+    User user = leaveRequest.getUser();
+    UserMetaResponse userMetaResponse = new UserMetaResponse(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getPhone()
+    );
+    leaveListResponse.setUserMetaResponse(userMetaResponse);
+    return leaveListResponse;
+  }
 
-        User user = resignRequest.getUser();
-        UserMetaResponse userMetaResponse = new UserMetaResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhone()
-        );
-        resignListResponse.setUserMetaResponse(userMetaResponse);
-        return resignListResponse;
-    }
+  public static ResignListResponse mapResignsToResignListResponse(ResignRequest resignRequest) {
+    ResignListResponse resignListResponse = new ResignListResponse();
+    resignListResponse.setResignId(resignRequest.getResignId());
+    resignListResponse.setDate(resignRequest.getDate());
+    resignListResponse.setReason(resignRequest.getReason());
+    resignListResponse.setRequestStatus(resignRequest.getRequestStatus());
+
+    User user = resignRequest.getUser();
+    UserMetaResponse userMetaResponse = new UserMetaResponse(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getPhone()
+    );
+    resignListResponse.setUserMetaResponse(userMetaResponse);
+    return resignListResponse;
+  }
+
 }

@@ -13,36 +13,38 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cheques")
 public class Cheque extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chequeNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "chequebook_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Chequebook chequebook;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long chequeNumber;
 
-    public Cheque() {
-    }
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "chequebook_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Chequebook chequebook;
 
-    public Cheque(Chequebook chequebook) {
-        this.chequebook = chequebook;
-    }
+  public Cheque() {
+  }
 
-    public Long getChequeNumber() {
-        return chequeNumber;
-    }
+  public Cheque(Chequebook chequebook) {
+    this.chequebook = chequebook;
+  }
 
-    public void setChequeNumber(Long chequeNumber) {
-        this.chequeNumber = chequeNumber;
-    }
+  public Long getChequeNumber() {
+    return chequeNumber;
+  }
 
-    public Chequebook getChequebook() {
-        return chequebook;
-    }
+  public void setChequeNumber(Long chequeNumber) {
+    this.chequeNumber = chequeNumber;
+  }
 
-    public void setChequebook(Chequebook chequebook) {
-        this.chequebook = chequebook;
-    }
+  public Chequebook getChequebook() {
+    return chequebook;
+  }
+
+  public void setChequebook(Chequebook chequebook) {
+    this.chequebook = chequebook;
+  }
+
 }
