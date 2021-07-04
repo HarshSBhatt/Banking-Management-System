@@ -53,8 +53,10 @@ public class AuthController {
   CustomEmail customEmail;
 
   /**
+   * Authenticate the user's login request.
+   *
    * @param loginRequest: username and password
-   * @description: Authenticate the user's login request.
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/auth/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -70,8 +72,10 @@ public class AuthController {
   }
 
   /**
+   * Register the user into the system.
+   *
    * @param signUpRequest: username, email, password and related information
-   * @description: Register the user into the system.
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/auth/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
@@ -79,8 +83,10 @@ public class AuthController {
   }
 
   /**
+   * Send email link to change password.
+   *
    * @param forgotPasswordRequest: email of the user
-   * @description: Send email link to change password.
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/forgot-password")
   public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
@@ -98,6 +104,12 @@ public class AuthController {
     }
   }
 
+  /**
+   * Reset the user password based on reset token received via mail
+   *
+   * @param resetPasswordRequest: email of the user
+   * @return success or failure response with appropriate message
+   */
   @PostMapping("/reset-password")
   public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
     String token = resetPasswordRequest.getToken();

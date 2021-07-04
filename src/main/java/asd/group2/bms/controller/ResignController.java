@@ -34,7 +34,9 @@ public class ResignController {
 
   /**
    * @param requestStatus: resign request status
-   * @description: Return all the request having status requestStatus
+   * @param page:          number of the page
+   * @param size:page      size
+   * @return all the request having status requestStatus
    */
   @GetMapping("/staff/resignation")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
@@ -47,7 +49,7 @@ public class ResignController {
 
   /**
    * @param userId: id of the user
-   * @description: Return all the request having user id - userId
+   * @return Return all the request having user id - userId
    */
   @GetMapping("/staff/resignation/user/{userId}")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
@@ -56,8 +58,10 @@ public class ResignController {
   }
 
   /**
+   * Delete resign request having resign id - resignId
+   *
    * @param resignId: resign id to be deleted
-   * @description: Delete resign request having resign id - resignId
+   * @return success or failure response with appropriate message
    */
   @DeleteMapping("/staff/resignation/{resignId}")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
@@ -66,8 +70,10 @@ public class ResignController {
   }
 
   /**
+   * It will create a resign request
+   *
    * @param resignRequest: resign request of user
-   * @description: It will create a resign request
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/staff/resignation")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_EMPLOYEE"})
@@ -81,8 +87,10 @@ public class ResignController {
   }
 
   /**
+   * Update the resign status
+   *
    * @param updateResignStatusRequest: resign id and request status
-   * @description: Update the resign status.
+   * @return success or failure response with appropriate message
    */
   @PutMapping("/staff/resignation")
   @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})

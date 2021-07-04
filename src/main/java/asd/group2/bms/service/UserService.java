@@ -41,14 +41,26 @@ public class UserService {
   @Autowired
   CustomEmail customEmail;
 
+  /**
+   * @param email: email
+   * @return true or false based on email availability
+   */
   public Boolean isEmailAvailable(String email) {
     return !userRepository.existsByEmail(email);
   }
 
+  /**
+   * @param username: username
+   * @return true or false based on username availability
+   */
   public Boolean isUsernameAvailable(String username) {
     return !userRepository.existsByUsername(username);
   }
 
+  /**
+   * @param signUpRequest: Signup related data (username, email, name, phone etc.)
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> createUser(SignUpRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
@@ -106,6 +118,11 @@ public class UserService {
     return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
   }
 
+  /**
+   * @param email:         email id of the user
+   * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
+   * @return the updated status of the user having email - email
+   */
   public User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
     User user = getUserByEmail(email);
     user.setAccountStatus(accountStatus);
@@ -113,6 +130,12 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  /**
+   * @param oldPassword: old password of the user account
+   * @param newPassword: new password of the user account
+   * @param currentUser: current logged in user
+   * @return success or failure response with appropriate message
+   */
   public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
     if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
       User user = getUserByEmail(currentUser.getEmail());
@@ -124,6 +147,12 @@ public class UserService {
     }
   }
 
+  /**
+   * @param newPassword:        new password to be replaced
+   * @param confirmNewPassword: new password to be replaced
+   * @param user:               User model object
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> resetPassword(String newPassword, String confirmNewPassword, User user) {
     if (newPassword.equals(confirmNewPassword)) {
       user.setPassword(passwordEncoder.encode(newPassword));
@@ -135,20 +164,42 @@ public class UserService {
     }
   }
 
+  /**
+   * @param token: Reset token received via email
+   * @param email: email of the user
+   */
   public void updateResetForgotPasswordToken(String token, String email) {
     User user = getUserByEmail(email);
     user.setForgotPasswordToken(token);
     userRepository.save(user);
   }
 
+  /**
+   * Get the user by user email
+   *
+   * @param email: email of the user
+   * @return a user based on email
+   */
   public User getUserByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Email", "email", email));
   }
 
+  /**
+   * Get the user by user token
+   *
+   * @param token: token of the user
+   * @return a user based on token
+   */
   public User getUserByToken(String token) {
     return userRepository.findByForgotPasswordToken(token).orElseThrow(() -> new ResourceNotFoundException("Reset Password Token", "token", token));
   }
 
+  /**
+   * Get the user profile by username
+   *
+   * @param username: username of the user
+   * @return a user profile based on username
+   */
   public UserProfile getUserProfileByUsername(String username) {
     User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -169,6 +220,11 @@ public class UserService {
     );
   }
 
+  /**
+   * @param currentUser:          current logged in user
+   * @param updateProfileRequest: required foields to update the data of the user
+   * @return true or false based on update status
+   */
   public Boolean updateUserProfileByUsername(UserPrincipal currentUser, UpdateProfileRequest updateProfileRequest) {
     User user = userRepository.findById(currentUser.getId())
         .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));

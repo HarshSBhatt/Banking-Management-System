@@ -42,7 +42,7 @@ public class UserController {
 
   /**
    * @param currentUser: logged in user
-   * @description: It will return the current user.
+   * @return It will return the current user.
    */
   @GetMapping("/user/me")
   public UserSummary getCurrentUser(@CurrentLoggedInUser UserPrincipal currentUser) {
@@ -51,8 +51,13 @@ public class UserController {
         currentUser.getAddress(), currentUser.getCity(), currentUser.getState(), currentUser.getZipCode());
   }
 
+
   /**
-   * @description: It will update the user profile.
+   * It will update the user profile
+   *
+   * @param currentUser:          current logged in user
+   * @param updateProfileRequest: updated data field
+   * @return success or failure response with appropriate message
    */
   @PutMapping("/user/me")
   public ResponseEntity<?> updateUserProfile(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
@@ -67,7 +72,7 @@ public class UserController {
 
   /**
    * @param username: username of the user
-   * @description: It will return true or false.
+   * @return It will return true or false.
    */
   @GetMapping("/user/checkUsernameAvailability")
   public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
@@ -77,7 +82,7 @@ public class UserController {
 
   /**
    * @param email: email of the user
-   * @description: It will return true or false.
+   * @return It will return true or false.
    */
   @GetMapping("/user/checkEmailAvailability")
   public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
@@ -87,7 +92,7 @@ public class UserController {
 
   /**
    * @param username: username of the user
-   * @description: It will return user profile.
+   * @return It will return user profile.
    */
   @GetMapping("/users/{username}")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR", "ROLE_USER", "ROLE_EMPLOYEE"})
@@ -96,8 +101,9 @@ public class UserController {
   }
 
   /**
+   * @param currentUser:           current logged in user
    * @param changePasswordRequest: new password of user
-   * @description: It will change user's password.
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/users/change-password")
   public ApiResponse changePassword(@CurrentLoggedInUser UserPrincipal currentUser,
@@ -118,8 +124,10 @@ public class UserController {
   }
 
   /**
+   * Register the user into the system
+   *
    * @param signUpRequest: username, email, password and related information
-   * @description: Register the user into the system.
+   * @return success or failure response with appropriate message
    */
   @PostMapping("/users/create")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_HR"})
@@ -128,8 +136,12 @@ public class UserController {
   }
 
   /**
+   * Updates the status of the user account
+   *
    * @param updateAccountStatus: email and account status
-   * @description: Register the user into the system.
+   * @return success or failure response with appropriate message
+   * @throws MessagingException:           This will throw MessagingException
+   * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
    */
   @PutMapping("/users/account/status")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})

@@ -12,7 +12,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
   /**
    * @param roleName: role of the user
-   * @descriptions: This will return the role of the user
+   * @return This will return the role of the user
    */
   Optional<Role> findByName(RoleType roleName);
 

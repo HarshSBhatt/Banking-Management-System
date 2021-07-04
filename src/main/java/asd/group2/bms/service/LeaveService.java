@@ -38,11 +38,10 @@ public class LeaveService {
    * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
    * @param page:          Page Number
    * @param size:          Size of the response data
-   * @description: This will return all the leave request having status requestStatus
+   * @return This will return all the leave request having status requestStatus
    */
-
   public PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size) {
-    /** Making list in ascending order to get early applied application first */
+    // Making list in ascending order to get early applied application first
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
     Page<LeaveRequest> leaves = leaveRepository.findByRequestStatusEquals(requestStatus, pageable);
 
@@ -59,7 +58,7 @@ public class LeaveService {
 
   /**
    * @param userId: id of the user
-   * @description: This will return all the leaves having user id userId
+   * @return This will return all the leaves having user id userId
    */
   public List<LeaveListResponse> getLeaveListByUserId(Long userId) {
     List<LeaveRequest> leaves = leaveRepository.findByUser_Id(userId);
@@ -68,16 +67,32 @@ public class LeaveService {
     return leaveRequests;
   }
 
+  /**
+   * Get the leave by leave id
+   *
+   * @param leaveId: id of the leave
+   * @return a leave based on id
+   */
   public LeaveRequest getLeaveById(Long leaveId) {
     return leaveRepository.findById(leaveId).orElseThrow(() -> new ResourceNotFoundException("Leave ID", "leaveId", leaveId));
   }
 
+  /**
+   * @param leaveId:       id of the leave
+   * @param requestStatus: Status of the leave (APPROVED, REJECTED, PENDING)
+   * @return the updated status of the leave having id - leaveId
+   */
   public LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
     LeaveRequest leaveRequest = getLeaveById(leaveId);
     leaveRequest.setRequestStatus(requestStatus);
     return leaveRepository.save(leaveRequest);
   }
 
+  /**
+   * @param currentUser: current logged in user
+   * @param leaveId:     id of the leave
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
     try {
       LeaveRequest leaveRequest = getLeaveById(leaveId);
@@ -93,6 +108,15 @@ public class LeaveService {
     }
   }
 
+  /**
+   * This will create a leave request based on the field received from the frontend
+   *
+   * @param user:     User model object
+   * @param fromDate: from date
+   * @param toDate:   to date
+   * @param reason:   reason of the leave
+   * @return success or failure response with appropriate message
+   */
   public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
     try {
       LeaveRequest resignRequest = new LeaveRequest(user, fromDate, toDate, reason, RequestStatus.PENDING);

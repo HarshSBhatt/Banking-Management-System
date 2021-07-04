@@ -17,7 +17,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   /**
    * @param usernameOrEmail: username or email of the user
-   * @descriptions: This will return user details.
+   * @return This will return user details.
+   * @throws UsernameNotFoundException: return UsernameNotFoundException error
    */
   @Override
   @Transactional
@@ -32,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   /**
    * @param id: user id
-   * @descriptions: This method is used by JWTAuthenticationFilter.
+   * @return This method is used by JWTAuthenticationFilter.
    */
   @Transactional
   public UserDetails loadUserById(Long id) {
