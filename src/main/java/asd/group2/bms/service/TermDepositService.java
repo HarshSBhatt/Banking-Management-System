@@ -4,7 +4,6 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDeposit;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
-import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.TermDepositDetailRepository;

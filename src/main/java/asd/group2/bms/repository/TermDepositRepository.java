@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TermDepositRepository extends JpaRepository<TermDeposit, Long> {
+
 }

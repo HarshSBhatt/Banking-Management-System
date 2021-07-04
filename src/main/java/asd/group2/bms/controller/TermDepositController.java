@@ -1,8 +1,6 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.model.term_deposit.TermDeposit;
-import asd.group2.bms.model.term_deposit.TermDepositDetail;
-import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.TermDepositRequest;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
@@ -25,6 +23,7 @@ public class TermDepositController {
     @Autowired
     TermDepositService termDepositService;
 
+
     @GetMapping("/services/termdeposit")
     public List<TermDeposit> getTermDeposit() {
         return termDepositService.getTermDeposit();
@@ -32,9 +31,7 @@ public class TermDepositController {
 
     @PostMapping("/services/termdeposit")
     public ResponseEntity<?> postTermDeposit(@CurrentLoggedInUser UserPrincipal currentUser,@RequestBody TermDepositRequest termDepositRequest) {
-        //TODO: process POST request
         Long currentUserId = currentUser.getId();
-        System.out.println("User id is: "+currentUserId);
         return termDepositService.makeTermDepositRequest(currentUserId, termDepositRequest.getInitialAmount(), new Date(), termDepositRequest.getYears());
     }
     
