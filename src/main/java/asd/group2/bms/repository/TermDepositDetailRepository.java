@@ -1,8 +1,10 @@
 package asd.group2.bms.repository;
 
-import org.springframework.stereotype.Repository;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
+
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

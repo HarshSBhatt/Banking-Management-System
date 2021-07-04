@@ -23,68 +23,69 @@ import java.util.Optional;
 @Service
 public class TermDepositService {
 
-    @Autowired
-    AccountRepository accountRepository;
+  @Autowired
+  AccountRepository accountRepository;
 
-    @Autowired
-    TermDepositDetailRepository termDepositDetailRepository;
+  @Autowired
+  TermDepositDetailRepository termDepositDetailRepository;
 
-    @Autowired
-    UserRepository userRepository;
-    
-    @Autowired
-    TermDepositRepository termDepositRepository;
+  @Autowired
+  UserRepository userRepository;
+
+  @Autowired
+  TermDepositRepository termDepositRepository;
 
 
   public List<TermDeposit> getTermDeposit() {
     return termDepositRepository.findAll();
   }
 
-    public ResponseEntity<?> makeTermDepositRequest(Long userId, Double amount, Date currentDate, int years) {
-        try {
-            Optional<Account> account = accountRepository.findAccountByUser_Id(userId);
-            if (account.isPresent() && account.get().getBalance() < amount) {
-                return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
-                        HttpStatus.BAD_REQUEST);
-            }
-            if (!account.isPresent()) {
-                return new ResponseEntity<>(new ApiResponse(false, "No account is there!"), HttpStatus.BAD_REQUEST);
-            }
+  public ResponseEntity<?> makeTermDepositRequest(Long userId, Double amount, Date currentDate, int years) {
+    try {
+      Optional<Account> account = accountRepository.findAccountByUser_Id(userId);
+      if (account.isPresent() && account.get().getBalance() < amount) {
+        return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
+            HttpStatus.BAD_REQUEST);
+      }
+      if (!account.isPresent()) {
+        return new ResponseEntity<>(new ApiResponse(false, "No account is there!"), HttpStatus.BAD_REQUEST);
+      }
 
-            // Balance Updated
-            account.get().setBalance(account.get().getBalance() - amount);
-            accountRepository.save(account.get());
+      // Balance Updated
+      account.get().setBalance(account.get().getBalance() - amount);
+      accountRepository.save(account.get());
 
-            // Maturity Date calculation
-            Calendar c = Calendar.getInstance();
-            float interestRate = (float) 0.06;
-            c.setTime(currentDate);
-            c.add(Calendar.YEAR, years);
-            Date maturityDate = c.getTime();
+      // Maturity Date calculation
+      Calendar c = Calendar.getInstance();
+      float interestRate = (float) 0.06;
+      c.setTime(currentDate);
+      c.add(Calendar.YEAR, years);
+      Date maturityDate = c.getTime();
 
-            // New TermDeposit
-            TermDeposit termDeposit = new TermDeposit(String.valueOf(years), interestRate);
-            Double maturityAmount = amount * Math.pow((1 + (interestRate / 12)), 12 * years);
+      // New TermDeposit
+      TermDeposit termDeposit = new TermDeposit(String.valueOf(years), interestRate);
+      Double maturityAmount = amount * Math.pow((1 + (interestRate / 12)), 12 * years);
 
-            // New TermDepositDetail
-            TermDepositDetail termDepositDetail = new TermDepositDetail();
-            termDepositDetail.setAccount(account.get());
-            termDepositDetail.setTermDeposit(termDeposit);
-            termDepositDetail.setStartDate(currentDate);
-            termDepositDetail.setInitialAmount(amount);
-            termDepositDetail.setMaturityDate(maturityDate);
-            termDepositDetail.setMaturityAmount(maturityAmount);
-            termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+      // New TermDepositDetail
+      TermDepositDetail termDepositDetail = new TermDepositDetail();
+      termDepositDetail.setAccount(account.get());
+      termDepositDetail.setTermDeposit(termDeposit);
+      termDepositDetail.setStartDate(currentDate);
+      termDepositDetail.setInitialAmount(amount);
+      termDepositDetail.setMaturityDate(maturityDate);
+      termDepositDetail.setMaturityAmount(maturityAmount);
+      termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
 
-            // Saving TermDepositDetail & TermDeposit
-            termDepositRepository.save(termDeposit);
-            termDepositDetailRepository.save(termDepositDetail);
+      // Saving TermDepositDetail & TermDeposit
+      termDepositRepository.save(termDeposit);
+      termDepositDetailRepository.save(termDepositDetail);
 
-            return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
-        }
-
+      return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
     }
+
+  }
+
 }

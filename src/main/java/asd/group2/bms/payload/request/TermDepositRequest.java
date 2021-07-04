@@ -1,34 +1,34 @@
 package asd.group2.bms.payload.request;
 
-
 import javax.validation.constraints.NotNull;
 
 public class TermDepositRequest {
-    @NotNull
-    private Double initialAmount;
 
-    @NotNull
-    private int years;
+  @NotNull
+  private Double initialAmount;
 
-    public TermDepositRequest(Double initialAmount,int years) {
-        this.initialAmount = initialAmount;
-        this.years = years;
-    }
+  @NotNull
+  private int years;
 
-    public Double getInitialAmount() {
-        return initialAmount;
-    }
+  public TermDepositRequest(Double initialAmount, int years) {
+    this.initialAmount = initialAmount;
+    this.years = years;
+  }
 
-    public void setInitialAmount(Double initialAmount) {
-        this.initialAmount = initialAmount;
-    }
+  public Double getInitialAmount() {
+    return initialAmount;
+  }
 
-    public int getYears() {
-        return years;
-    }
+  public void setInitialAmount(Double initialAmount) {
+    this.initialAmount = initialAmount;
+  }
 
-    public void setYears(int years) {
-        this.years = years;
-    }
+  public int getYears() {
+    return years;
+  }
+
+  public void setYears(int years) {
+    this.years = years;
+  }
 
 }
