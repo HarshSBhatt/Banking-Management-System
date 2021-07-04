@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -25,12 +24,10 @@ public class TermDepositDetailController {
      * @description: Return all the term deposits of current user
      */
     @GetMapping("/services/termdepositdetail")
-    public ResponseEntity<Object> getTermDepositDetail(@CurrentLoggedInUser UserPrincipal currentUser) {
-
+    public ResponseEntity<?> getTermDepositDetail(@CurrentLoggedInUser UserPrincipal currentUser) {
         List<TermDepositDetail> termDepositDetailList = termDepositDetailService.getTermDepositDetail(currentUser.getId());
         if (termDepositDetailList != null) {
-
-            return new ResponseEntity<Object>(termDepositDetailList, HttpStatus.OK);
+            return ResponseEntity.ok(termDepositDetailList);
         } else {
             return new ResponseEntity<>(new ApiResponse(false, "No term deposits found!"),
                     HttpStatus.BAD_REQUEST);
