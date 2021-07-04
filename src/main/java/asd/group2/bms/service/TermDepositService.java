@@ -22,8 +22,6 @@ import java.util.Optional;
 
 @Service
 public class TermDepositService {
-    @Autowired
-    TermDepositRepository termDepositRepository;
 
     @Autowired
     AccountRepository accountRepository;
@@ -33,10 +31,14 @@ public class TermDepositService {
 
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    TermDepositRepository termDepositRepository;
 
-    public List<TermDeposit> getTermDeposit() {
-        return termDepositRepository.findAll();
-    }
+
+  public List<TermDeposit> getTermDeposit() {
+    return termDepositRepository.findAll();
+  }
 
     public ResponseEntity<?> makeTermDepositRequest(Long userId, Double amount, Date currentDate, int years) {
         try {

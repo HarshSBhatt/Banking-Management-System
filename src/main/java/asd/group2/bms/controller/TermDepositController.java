@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api")
 public class TermDepositController {
-    @Autowired
-    TermDepositService termDepositService;
 
+  @Autowired
+  TermDepositService termDepositService;
 
     @GetMapping("/services/termdeposit")
     public List<TermDeposit> getTermDeposit() {

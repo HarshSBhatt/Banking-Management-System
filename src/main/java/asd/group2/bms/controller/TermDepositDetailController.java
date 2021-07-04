@@ -18,22 +18,21 @@ import java.util.List;
 @RequestMapping("/api")
 public class TermDepositDetailController {
 
-    @Autowired
-    TermDepositDetailService termDepositDetailService;
+  @Autowired
+  TermDepositDetailService termDepositDetailService;
 
-    /**
-     * @description: Return all the term deposits of current user
-     */
-    @GetMapping("/services/termdepositdetail")
-    public ResponseEntity<Object> getTermDepositDetail(@CurrentLoggedInUser UserPrincipal currentUser) {
-
-        List<TermDepositDetail> termDepositDetailList = termDepositDetailService.getTermDepositDetail(currentUser.getId());
-        if (termDepositDetailList != null) {
-
-            return new ResponseEntity<Object>(termDepositDetailList, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ApiResponse(false, "No term deposits found!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+  /**
+   * @description: Return all the term deposits of current user
+   */
+  @GetMapping("/services/termdepositdetail")
+  public ResponseEntity<?> getTermDepositDetail(@CurrentLoggedInUser UserPrincipal currentUser) {
+    List<TermDepositDetail> termDepositDetailList = termDepositDetailService.getTermDepositDetail(currentUser.getId());
+    if (termDepositDetailList != null) {
+      return ResponseEntity.ok(termDepositDetailList);
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "No term deposits found!"),
+          HttpStatus.BAD_REQUEST);
     }
+  }
+
 }

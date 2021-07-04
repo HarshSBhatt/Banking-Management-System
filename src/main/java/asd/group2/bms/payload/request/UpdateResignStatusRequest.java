@@ -10,25 +10,27 @@ import javax.validation.constraints.NotNull;
  * @description: Structure of resign body request
  */
 public class UpdateResignStatusRequest {
-    @NotNull(message = "Resign id is required")
-    private Long resignId;
 
-    @Enumerated(EnumType.STRING)
-    private RequestStatus requestStatus;
+  @NotNull(message = "Resign id is required")
+  private Long resignId;
 
-    public Long getResignId() {
-        return resignId;
-    }
+  @Enumerated(EnumType.STRING)
+  private RequestStatus requestStatus;
 
-    public void setResignId(Long resignId) {
-        this.resignId = resignId;
-    }
+  public Long getResignId() {
+    return resignId;
+  }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
+  public void setResignId(Long resignId) {
+    this.resignId = resignId;
+  }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+  public RequestStatus getRequestStatus() {
+    return requestStatus;
+  }
+
+  public void setRequestStatus(RequestStatus requestStatus) {
+    this.requestStatus = requestStatus;
+  }
+
 }

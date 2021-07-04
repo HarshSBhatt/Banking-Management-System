@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 @Repository
-public interface TermDepositDetailRepository extends JpaRepository<TermDepositDetail,Long> {
+public interface TermDepositDetailRepository extends JpaRepository<TermDepositDetail, Long> {
 
-    /**
-     * @param accountNumber: bank account number of the user
-     * @descriptions: This will return the user's bank account number.
-     */
-    List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber);
+  /**
+   * @param accountNumber: bank account number of the user
+   * @descriptions: This will return the user's bank account number.
+   */
+  List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber);
+
 }

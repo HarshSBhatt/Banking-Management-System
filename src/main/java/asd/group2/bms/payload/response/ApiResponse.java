@@ -4,27 +4,30 @@ package asd.group2.bms.payload.response;
  * @description: Structure of api response
  */
 public class ApiResponse {
-    private Boolean success;
-    private String message;
 
-    public ApiResponse(Boolean success, String message) {
-        this.success = success;
-        this.message = message;
-    }
+  private Boolean success;
 
-    public Boolean getSuccess() {
-        return success;
-    }
+  private String message;
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
+  public ApiResponse(Boolean success, String message) {
+    this.success = success;
+    this.message = message;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public Boolean getSuccess() {
+    return success;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public void setSuccess(Boolean success) {
+    this.success = success;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
 }
