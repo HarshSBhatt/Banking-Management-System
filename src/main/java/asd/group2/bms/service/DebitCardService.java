@@ -4,6 +4,7 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.repository.DebitCardRepository;
+import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,10 @@ public class DebitCardService {
     String pin = String.format("%04d", random.nextInt(10000));
     String cvv = String.format("%06d", random.nextInt(1000000));
 
-    DebitCard debitCard = new DebitCard(account, pin, 50000, DebitCardStatus.ACTIVE, expiryYear, expiryMonth, cvv);
+    String debitCardNumber = new Helper().generateRandomDigits(16);
+    DebitCard debitCard = new DebitCard(Long.parseLong(debitCardNumber),
+        account, pin, 50000, DebitCardStatus.ACTIVE, expiryYear, expiryMonth, cvv);
+
     return debitCardRepository.save(debitCard);
   }
 

@@ -10,6 +10,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.util.CustomEmail;
+import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,8 +72,11 @@ public class AccountService {
    * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
    */
   public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) throws MessagingException, UnsupportedEncodingException {
-    Account account = new Account(accountType, balance, creditScore);
+    String accountNumber = new Helper().generateRandomDigits(10);
+    Account account = new Account(Long.parseLong(accountNumber), accountType, balance,
+        creditScore);
     account.setUser(user);
+
     DebitCard debitCard = debitCardService.createDebitCard(account);
     String email = user.getEmail();
     String firstName = user.getFirstName();
