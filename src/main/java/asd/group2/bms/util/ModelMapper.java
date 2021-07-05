@@ -9,6 +9,12 @@ import asd.group2.bms.payload.response.*;
 
 public class ModelMapper {
 
+    /**
+     *
+     * @param leaveRequest
+     * @return leaveListResponse
+     * @description returns list of leave requests
+     */
     public static LeaveListResponse mapLeavesToLeaveListResponse(LeaveRequest leaveRequest) {
         LeaveListResponse leaveListResponse = new LeaveListResponse();
         leaveListResponse.setLeaveId(leaveRequest.getLeaveId());
@@ -30,6 +36,12 @@ public class ModelMapper {
         return leaveListResponse;
     }
 
+    /**
+     *
+     * @param resignRequest
+     * @return resignListResponse
+     * @description returns list of resign requests
+     */
     public static ResignListResponse mapResignsToResignListResponse(ResignRequest resignRequest) {
         ResignListResponse resignListResponse = new ResignListResponse();
         resignListResponse.setResignId(resignRequest.getResignId());
@@ -51,6 +63,11 @@ public class ModelMapper {
     }
 
 
+    /**
+     * @param creditCard
+     * @return creditCardListResponse
+     * @description returns list of credit cards
+     */
     public static CreditCardListResponse mapCreditCardToCreditCardListResponse(CreditCard creditCard) {
         CreditCardListResponse creditCardListResponse = new CreditCardListResponse();
         creditCardListResponse.setCreditCardNumber(creditCard.getCreditCardNumber());
