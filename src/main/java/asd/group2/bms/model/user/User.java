@@ -19,216 +19,218 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"})})
+    @UniqueConstraint(columnNames = {"email"})})
 
 public class User extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @NotBlank
-    @Size(max = 40)
-    private String firstName;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotBlank
-    @Size(max = 40)
-    private String lastName;
+  @NotBlank
+  @Size(max = 40)
+  private String firstName;
 
-    @NotBlank
-    @Size(max = 15)
-    private String username;
+  @NotBlank
+  @Size(max = 40)
+  private String lastName;
 
-    @NaturalId
-    @NotBlank
-    @Size(max = 40)
-    @Email
-    private String email;
+  @NotBlank
+  @Size(max = 15)
+  private String username;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthday;
+  @NaturalId
+  @NotBlank
+  @Size(max = 40)
+  @Email
+  private String email;
 
-    @NotBlank
-    @Size(max = 15)
-    private String phone;
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date birthday;
 
-    @NotBlank
-    @Size(max = 100)
-    private String password;
+  @NotBlank
+  @Size(max = 15)
+  private String phone;
 
-    @NotBlank
-    @Size(max = 200)
-    private String address;
+  @NotBlank
+  @Size(max = 100)
+  private String password;
 
-    @NotBlank
-    @Size(max = 50)
-    private String city;
+  @NotBlank
+  @Size(max = 200)
+  private String address;
 
-    @NotBlank
-    @Size(max = 50)
-    private String state;
+  @NotBlank
+  @Size(max = 50)
+  private String city;
 
-    @NotBlank
-    @Size(min = 6, max = 6)
-    private String zipCode;
+  @NotBlank
+  @Size(max = 50)
+  private String state;
 
-    private AccountStatus accountStatus;
+  @NotBlank
+  @Size(min = 6, max = 6)
+  private String zipCode;
 
-    @Enumerated(EnumType.STRING)
-    private AccountType requestedAccountType;
+  private AccountStatus accountStatus;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+  @Enumerated(EnumType.STRING)
+  private AccountType requestedAccountType;
 
-    private String forgotPasswordToken;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles = new HashSet<>();
+
+  private String forgotPasswordToken;
 
 
-    public User() {
+  public User() {
 
-    }
+  }
 
-    public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, String city, String state, String zipCode, AccountStatus accountStatus, AccountType requestedAccountType) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.birthday = birthday;
-        this.phone = phone;
-        this.password = password;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.accountStatus = accountStatus;
-        this.requestedAccountType = requestedAccountType;
-    }
+  public User(String firstName, String lastName, String username, String email, Date birthday, String phone, String password, String address, String city, String state, String zipCode, AccountStatus accountStatus, AccountType requestedAccountType) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.email = email;
+    this.birthday = birthday;
+    this.phone = phone;
+    this.password = password;
+    this.address = address;
+    this.city = city;
+    this.state = state;
+    this.zipCode = zipCode;
+    this.accountStatus = accountStatus;
+    this.requestedAccountType = requestedAccountType;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public Date getBirthday() {
-        return birthday;
-    }
+  public Date getBirthday() {
+    return birthday;
+  }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+  public void setBirthday(Date birthday) {
+    this.birthday = birthday;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public void setState(String state) {
-        this.state = state;
-    }
+  public void setState(String state) {
+    this.state = state;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
 
-    public AccountStatus getAccountStatus() {
-        return accountStatus;
-    }
+  public AccountStatus getAccountStatus() {
+    return accountStatus;
+  }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
-        this.accountStatus = accountStatus;
-    }
+  public void setAccountStatus(AccountStatus accountStatus) {
+    this.accountStatus = accountStatus;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+  public Set<Role> getRoles() {
+    return roles;
+  }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
 
-    public String getForgotPasswordToken() {
-        return forgotPasswordToken;
-    }
+  public String getForgotPasswordToken() {
+    return forgotPasswordToken;
+  }
 
-    public void setForgotPasswordToken(String forgotPasswordToken) {
-        this.forgotPasswordToken = forgotPasswordToken;
-    }
+  public void setForgotPasswordToken(String forgotPasswordToken) {
+    this.forgotPasswordToken = forgotPasswordToken;
+  }
 
-    public AccountType getRequestedAccountType() {
-        return requestedAccountType;
-    }
+  public AccountType getRequestedAccountType() {
+    return requestedAccountType;
+  }
 
-    public void setRequestedAccountType(AccountType requestedAccountType) {
-        this.requestedAccountType = requestedAccountType;
-    }
+  public void setRequestedAccountType(AccountType requestedAccountType) {
+    this.requestedAccountType = requestedAccountType;
+  }
+
 }

@@ -13,24 +13,40 @@ import java.util.Optional;
 
 @Repository
 public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
-    /**
-     * @param requestStatus: request status
-     * @descriptions: This will return list of leaves having request status of param - requestStatus.
-     */
-    Page<LeaveRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable);
 
-    List<LeaveRequest> findByLeaveIdIn(List<Long> leaveIds);
+  /**
+   * @param requestStatus: request status
+   * @return This will return list of leaves having request status of param - requestStatus.
+   */
+  Page<LeaveRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable);
 
-    List<LeaveRequest> findAll();
+  /**
+   * @param leaveIds: Leave Ids
+   * @return This will return the leaves records by leave ids.
+   */
+  List<LeaveRequest> findByLeaveIdIn(List<Long> leaveIds);
 
-    Optional<LeaveRequest> findByLeaveId(Long leaveId);
+  /**
+   * @return This will return the leaves records
+   */
+  List<LeaveRequest> findAll();
 
-    List<LeaveRequest> findByUser(User user);
+  /**
+   * @param leaveId: Leave Id
+   * @return This will return the leave request by leave id.
+   */
+  Optional<LeaveRequest> findByLeaveId(Long leaveId);
 
-    /**
-     * @param userId: Id of user
-     * @descriptions: This will return the resign records by user id.
-     */
-    List<LeaveRequest> findByUser_Id(Long userId);
+  /**
+   * @param user: User model object
+   * @return This will return the leave record by user.
+   */
+  List<LeaveRequest> findByUser(User user);
+
+  /**
+   * @param userId: Id of user
+   * @return This will return the leave records by user id.
+   */
+  List<LeaveRequest> findByUser_Id(Long userId);
 
 }
