@@ -17,7 +17,6 @@ import java.io.Serializable;
 public class Account extends DateAudit implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long accountNumber;
 
   @OneToOne
@@ -38,7 +37,9 @@ public class Account extends DateAudit implements Serializable {
   public Account() {
   }
 
-  public Account(AccountType accountType, Double balance, int creditScore) {
+  public Account(Long accountNumber, AccountType accountType, Double balance,
+                 int creditScore) {
+    this.accountNumber = accountNumber;
     this.accountType = accountType;
     this.balance = balance;
     this.creditScore = creditScore;
