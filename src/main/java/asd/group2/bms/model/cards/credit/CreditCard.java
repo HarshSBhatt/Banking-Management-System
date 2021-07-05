@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 public class CreditCard extends DateAudit {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long creditCardNumber;
 
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -56,7 +55,10 @@ public class CreditCard extends DateAudit {
   public CreditCard() {
   }
 
-  public CreditCard(Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, String expiryYear, String expiryMonth, String cvv, Boolean isActive) {
+  public CreditCard(Long creditCardNumber, Account account, String pin,
+                    Integer transactionLimit,
+                    CreditCardStatus creditCardStatus, String expiryYear, String expiryMonth, String cvv, Boolean isActive) {
+    this.creditCardNumber = creditCardNumber;
     this.account = account;
     this.pin = pin;
     this.transactionLimit = transactionLimit;
