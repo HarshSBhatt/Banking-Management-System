@@ -10,25 +10,27 @@ import javax.validation.constraints.NotNull;
  * @description: Structure of leave body request
  */
 public class UpdateLeaveStatusRequest {
-    @NotNull(message = "Leave id is required")
-    private Long leaveId;
 
-    @Enumerated(EnumType.STRING)
-    private RequestStatus requestStatus;
+  @NotNull(message = "Leave id is required")
+  private Long leaveId;
 
-    public Long getLeaveId() {
-        return leaveId;
-    }
+  @Enumerated(EnumType.STRING)
+  private RequestStatus requestStatus;
 
-    public void setLeaveId(Long leaveId) {
-        this.leaveId = leaveId;
-    }
+  public Long getLeaveId() {
+    return leaveId;
+  }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
+  public void setLeaveId(Long leaveId) {
+    this.leaveId = leaveId;
+  }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+  public RequestStatus getRequestStatus() {
+    return requestStatus;
+  }
+
+  public void setRequestStatus(RequestStatus requestStatus) {
+    this.requestStatus = requestStatus;
+  }
+
 }

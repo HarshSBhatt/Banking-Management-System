@@ -3,86 +3,93 @@ package asd.group2.bms.payload.response;
 import asd.group2.bms.model.account.AccountType;
 
 import java.time.Instant;
-import java.util.Date;
 
 /**
  * @description: This class will be responsible to return accoint details.
  */
 public class AccountDetailResponse {
-    private Long accountNumber;
-    private AccountType accountType;
-    private Double balance;
-    private int creditScore;
-    private Instant accountCreatedAt;
-    private Instant lastActivityAt;
-    private UserMetaResponse userMetaResponse;
 
-    public AccountDetailResponse() {
-    }
+  private Long accountNumber;
 
-    public AccountDetailResponse(Long accountNumber, AccountType accountType, Double balance, int creditScore, Instant accountCreatedAt, Instant lastActivityAt, UserMetaResponse userMetaResponse) {
-        this.accountNumber = accountNumber;
-        this.accountType = accountType;
-        this.balance = balance;
-        this.creditScore = creditScore;
-        this.accountCreatedAt = accountCreatedAt;
-        this.lastActivityAt = lastActivityAt;
-        this.userMetaResponse = userMetaResponse;
-    }
+  private AccountType accountType;
 
-    public Long getAccountNumber() {
-        return accountNumber;
-    }
+  private Double balance;
 
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+  private int creditScore;
 
-    public AccountType getAccountType() {
-        return accountType;
-    }
+  private Instant accountCreatedAt;
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
+  private Instant lastActivityAt;
 
-    public Double getBalance() {
-        return balance;
-    }
+  private UserMetaResponse userMetaResponse;
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
+  public AccountDetailResponse() {
+  }
 
-    public int getCreditScore() {
-        return creditScore;
-    }
+  public AccountDetailResponse(Long accountNumber, AccountType accountType, Double balance, int creditScore, Instant accountCreatedAt, Instant lastActivityAt, UserMetaResponse userMetaResponse) {
+    this.accountNumber = accountNumber;
+    this.accountType = accountType;
+    this.balance = balance;
+    this.creditScore = creditScore;
+    this.accountCreatedAt = accountCreatedAt;
+    this.lastActivityAt = lastActivityAt;
+    this.userMetaResponse = userMetaResponse;
+  }
 
-    public void setCreditScore(int creditScore) {
-        this.creditScore = creditScore;
-    }
+  public Long getAccountNumber() {
+    return accountNumber;
+  }
 
-    public Instant getAccountCreatedAt() {
-        return accountCreatedAt;
-    }
+  public void setAccountNumber(Long accountNumber) {
+    this.accountNumber = accountNumber;
+  }
 
-    public void setAccountCreatedAt(Instant accountCreatedAt) {
-        this.accountCreatedAt = accountCreatedAt;
-    }
+  public AccountType getAccountType() {
+    return accountType;
+  }
 
-    public Instant getLastActivityAt() {
-        return lastActivityAt;
-    }
+  public void setAccountType(AccountType accountType) {
+    this.accountType = accountType;
+  }
 
-    public void setLastActivityAt(Instant lastActivityAt) {
-        this.lastActivityAt = lastActivityAt;
-    }
+  public Double getBalance() {
+    return balance;
+  }
 
-    public UserMetaResponse getUserMetaResponse() {
-        return userMetaResponse;
-    }
+  public void setBalance(Double balance) {
+    this.balance = balance;
+  }
 
-    public void setUserMetaResponse(UserMetaResponse userMetaResponse) {
-        this.userMetaResponse = userMetaResponse;
-    }
+  public int getCreditScore() {
+    return creditScore;
+  }
+
+  public void setCreditScore(int creditScore) {
+    this.creditScore = creditScore;
+  }
+
+  public Instant getAccountCreatedAt() {
+    return accountCreatedAt;
+  }
+
+  public void setAccountCreatedAt(Instant accountCreatedAt) {
+    this.accountCreatedAt = accountCreatedAt;
+  }
+
+  public Instant getLastActivityAt() {
+    return lastActivityAt;
+  }
+
+  public void setLastActivityAt(Instant lastActivityAt) {
+    this.lastActivityAt = lastActivityAt;
+  }
+
+  public UserMetaResponse getUserMetaResponse() {
+    return userMetaResponse;
+  }
+
+  public void setUserMetaResponse(UserMetaResponse userMetaResponse) {
+    this.userMetaResponse = userMetaResponse;
+  }
+
 }

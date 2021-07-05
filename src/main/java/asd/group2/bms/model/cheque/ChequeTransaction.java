@@ -15,91 +15,93 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "cheque_transactions")
 public class ChequeTransaction extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chequeTransactionId;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cheque_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Cheque cheque;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long chequeTransactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sender_account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Account senderAccount;
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "cheque_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Cheque cheque;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "receiver_account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Account receiverAccount;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "sender_account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Account senderAccount;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ChequeStatus chequeStatus;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "receiver_account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Account receiverAccount;
 
-    @NotNull
-    private Double amount;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private ChequeStatus chequeStatus;
 
-    public ChequeTransaction() {
-    }
+  @NotNull
+  private Double amount;
 
-    public ChequeTransaction(Cheque cheque, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
-        this.cheque = cheque;
-        this.senderAccount = senderAccount;
-        this.receiverAccount = receiverAccount;
-        this.chequeStatus = chequeStatus;
-        this.amount = amount;
-    }
+  public ChequeTransaction() {
+  }
 
-    public Long getChequeTransactionId() {
-        return chequeTransactionId;
-    }
+  public ChequeTransaction(Cheque cheque, Account senderAccount, Account receiverAccount, ChequeStatus chequeStatus, Double amount) {
+    this.cheque = cheque;
+    this.senderAccount = senderAccount;
+    this.receiverAccount = receiverAccount;
+    this.chequeStatus = chequeStatus;
+    this.amount = amount;
+  }
 
-    public void setChequeTransactionId(Long chequeTransactionId) {
-        this.chequeTransactionId = chequeTransactionId;
-    }
+  public Long getChequeTransactionId() {
+    return chequeTransactionId;
+  }
 
-    public Cheque getCheque() {
-        return cheque;
-    }
+  public void setChequeTransactionId(Long chequeTransactionId) {
+    this.chequeTransactionId = chequeTransactionId;
+  }
 
-    public void setCheque(Cheque cheque) {
-        this.cheque = cheque;
-    }
+  public Cheque getCheque() {
+    return cheque;
+  }
 
-    public Account getSenderAccount() {
-        return senderAccount;
-    }
+  public void setCheque(Cheque cheque) {
+    this.cheque = cheque;
+  }
 
-    public void setSenderAccount(Account senderAccount) {
-        this.senderAccount = senderAccount;
-    }
+  public Account getSenderAccount() {
+    return senderAccount;
+  }
 
-    public Account getReceiverAccount() {
-        return receiverAccount;
-    }
+  public void setSenderAccount(Account senderAccount) {
+    this.senderAccount = senderAccount;
+  }
 
-    public void setReceiverAccount(Account receiverAccount) {
-        this.receiverAccount = receiverAccount;
-    }
+  public Account getReceiverAccount() {
+    return receiverAccount;
+  }
 
-    public ChequeStatus getChequeStatus() {
-        return chequeStatus;
-    }
+  public void setReceiverAccount(Account receiverAccount) {
+    this.receiverAccount = receiverAccount;
+  }
 
-    public void setChequeStatus(ChequeStatus chequeStatus) {
-        this.chequeStatus = chequeStatus;
-    }
+  public ChequeStatus getChequeStatus() {
+    return chequeStatus;
+  }
 
-    public Double getAmount() {
-        return amount;
-    }
+  public void setChequeStatus(ChequeStatus chequeStatus) {
+    this.chequeStatus = chequeStatus;
+  }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+  public Double getAmount() {
+    return amount;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
 }

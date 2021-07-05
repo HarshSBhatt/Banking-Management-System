@@ -24,95 +24,119 @@ import java.util.*;
 
 @Service
 public class LeaveService {
-    @Autowired
-    LeaveRepository leaveRepository;
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  LeaveRepository leaveRepository;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserService userService;
 
-    /**
-     * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
-     * @param page:          Page Number
-     * @param size:          Size of the response data
-     * @description: This will return all the leave request having status requestStatus
-     */
+  @Autowired
+  UserRepository userRepository;
 
-    public PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size) {
-        /** Making list in ascending order to get early applied application first */
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
-        Page<LeaveRequest> leaves = leaveRepository.findByRequestStatusEquals(requestStatus, pageable);
+  /**
+   * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
+   * @param page:          Page Number
+   * @param size:          Size of the response data
+   * @return This will return all the leave request having status requestStatus
+   */
+  public PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size) {
+    // Making list in ascending order to get early applied application first
+    Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+    Page<LeaveRequest> leaves = leaveRepository.findByRequestStatusEquals(requestStatus, pageable);
 
-        if (leaves.getNumberOfElements() == 0) {
-            return new PagedResponse<>(Collections.emptyList(), leaves.getNumber(),
-                    leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
-        }
-
-        List<LeaveListResponse> leaveListResponses = leaves.map(ModelMapper::mapLeavesToLeaveListResponse).getContent();
-
-        return new PagedResponse<>(leaveListResponses, leaves.getNumber(),
-                leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
+    if (leaves.getNumberOfElements() == 0) {
+      return new PagedResponse<>(Collections.emptyList(), leaves.getNumber(),
+          leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
     }
 
-    /**
-     * @param userId: id of the user
-     * @description: This will return all the leaves having user id userId
-     */
-    public List<LeaveListResponse> getLeaveListByUserId(Long userId) {
-        List<LeaveRequest> leaves = leaveRepository.findByUser_Id(userId);
-        List<LeaveListResponse> leaveRequests = new ArrayList<>();
-        leaves.forEach(leave -> {
-            leaveRequests.add(ModelMapper.mapLeavesToLeaveListResponse(leave));
-        });
-        return leaveRequests;
-    }
+    List<LeaveListResponse> leaveListResponses = leaves.map(ModelMapper::mapLeavesToLeaveListResponse).getContent();
 
-    public LeaveRequest getLeaveById(Long leaveId) {
-        return leaveRepository.findById(leaveId).orElseThrow(() -> new ResourceNotFoundException("Leave ID", "leaveId", leaveId));
-    }
+    return new PagedResponse<>(leaveListResponses, leaves.getNumber(),
+        leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
+  }
 
-    public LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
-        LeaveRequest leaveRequest = getLeaveById(leaveId);
-        leaveRequest.setRequestStatus(requestStatus);
-        return leaveRepository.save(leaveRequest);
-    }
+  /**
+   * @param userId: id of the user
+   * @return This will return all the leaves having user id userId
+   */
+  public List<LeaveListResponse> getLeaveListByUserId(Long userId) {
+    List<LeaveRequest> leaves = leaveRepository.findByUser_Id(userId);
+    List<LeaveListResponse> leaveRequests = new ArrayList<>();
+    leaves.forEach(leave -> leaveRequests.add(ModelMapper.mapLeavesToLeaveListResponse(leave)));
+    return leaveRequests;
+  }
 
-    public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
-        try {
-            LeaveRequest leaveRequest = getLeaveById(leaveId);
-            if (leaveRequest.getUser().getId() != currentUser.getId()) {
-                return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
-                        HttpStatus.FORBIDDEN);
+  /**
+   * Get the leave by leave id
+   *
+   * @param leaveId: id of the leave
+   * @return a leave based on id
+   */
+  public LeaveRequest getLeaveById(Long leaveId) {
+    return leaveRepository.findById(leaveId).orElseThrow(() -> new ResourceNotFoundException("Leave ID", "leaveId", leaveId));
+  }
+
+  /**
+   * @param leaveId:       id of the leave
+   * @param requestStatus: Status of the leave (APPROVED, REJECTED, PENDING)
+   * @return the updated status of the leave having id - leaveId
+   */
+  public LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
+    LeaveRequest leaveRequest = getLeaveById(leaveId);
+    leaveRequest.setRequestStatus(requestStatus);
+    return leaveRepository.save(leaveRequest);
+  }
+
+  /**
+   * @param currentUser: current logged in user
+   * @param leaveId:     id of the leave
+   * @return success or failure response with appropriate message
+   */
+  public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
+    try {
+      LeaveRequest leaveRequest = getLeaveById(leaveId);
+      if (leaveRequest.getUser().getId() != currentUser.getId()) {
+        return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+            HttpStatus.FORBIDDEN);
+      }
+      leaveRepository.delete(leaveRequest);
+      return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
+    } catch (Exception e) {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
+          HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * This will create a leave request based on the field received from the frontend
+   *
+   * @param user:     User model object
+   * @param fromDate: from date
+   * @param toDate:   to date
+   * @param reason:   reason of the leave
+   * @return success or failure response with appropriate message
+   */
+  public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
+    try {
+      LeaveRequest resignRequest = new LeaveRequest(user, fromDate, toDate, reason, RequestStatus.PENDING);
+      List<LeaveRequest> leavesList = leaveRepository.findByUser(user);
+      if (leavesList.size() > 0) {
+        for (LeaveRequest leaveRequest : leavesList) {
+          if (leaveRequest.getRequestStatus() == RequestStatus.PENDING || leaveRequest.getRequestStatus() == RequestStatus.APPROVED) {
+            if ((!fromDate.before(leaveRequest.getFromDate()) && !fromDate.after(leaveRequest.getToDate())) || (!toDate.before(leaveRequest.getFromDate()) && !toDate.after(leaveRequest.getToDate()))) {
+              return new ResponseEntity<>(new ApiResponse(false, "Dates overlapping with existing requests."),
+                  HttpStatus.NOT_ACCEPTABLE);
             }
-            leaveRepository.delete(leaveRequest);
-            return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
-                    HttpStatus.BAD_REQUEST);
+          }
         }
+      }
+      leaveRepository.save(resignRequest);
+      return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
+    } catch (Exception e) {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
+          HttpStatus.BAD_REQUEST);
     }
+  }
 
-    public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
-        try {
-            LeaveRequest resignRequest = new LeaveRequest(user, fromDate, toDate, reason, RequestStatus.PENDING);
-            List<LeaveRequest> leavesList = leaveRepository.findByUser(user);
-            if (leavesList.size() > 0) {
-                for (int i = 0; i < leavesList.size(); i++) {
-                    if (leavesList.get(i).getRequestStatus() == RequestStatus.PENDING || leavesList.get(i).getRequestStatus() == RequestStatus.APPROVED) {
-                        if ((!fromDate.before(leavesList.get(i).getFromDate()) && !fromDate.after(leavesList.get(i).getToDate())) || (!toDate.before(leavesList.get(i).getFromDate()) && !toDate.after(leavesList.get(i).getToDate()))) {
-                            return new ResponseEntity<>(new ApiResponse(false, "Dates overlapping with existing requests."),
-                                    HttpStatus.NOT_ACCEPTABLE);
-                        }
-                    }
-                }
-            }
-            leaveRepository.save(resignRequest);
-            return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
 }

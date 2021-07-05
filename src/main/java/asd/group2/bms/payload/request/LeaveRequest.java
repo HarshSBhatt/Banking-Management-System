@@ -5,36 +5,38 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class LeaveRequest {
-    @NotNull(message = "From date cant be empty!")
-    private Date fromDate;
 
-    @NotNull(message = "To date cant be empty!")
-    private Date toDate;
+  @NotNull(message = "From date cant be empty!")
+  private Date fromDate;
 
-    @NotBlank(message = "Reason cant be empty!")
-    private String reason;
+  @NotNull(message = "To date cant be empty!")
+  private Date toDate;
 
-    public Date getFromDate() {
-        return fromDate;
-    }
+  @NotBlank(message = "Reason cant be empty!")
+  private String reason;
 
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
+  public Date getFromDate() {
+    return fromDate;
+  }
 
-    public Date getToDate() {
-        return toDate;
-    }
+  public void setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+  }
 
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
+  public Date getToDate() {
+    return toDate;
+  }
 
-    public String getReason() {
-        return reason;
-    }
+  public void setToDate(Date toDate) {
+    this.toDate = toDate;
+  }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
+
 }

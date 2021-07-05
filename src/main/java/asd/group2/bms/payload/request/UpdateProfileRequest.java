@@ -11,99 +11,101 @@ import java.util.Date;
  * @description: Structure of update profile request
  */
 public class UpdateProfileRequest {
-    @NotBlank(message = "First Name is required")
-    @Size(min = 3, max = 40)
-    private String firstName;
 
-    @NotBlank(message = "Last Name is required")
-    @Size(min = 3, max = 40)
-    private String lastName;
+  @NotBlank(message = "First Name is required")
+  @Size(min = 3, max = 40)
+  private String firstName;
 
-    @NotNull(message = "Birthdate is required")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthday;
+  @NotBlank(message = "Last Name is required")
+  @Size(min = 3, max = 40)
+  private String lastName;
 
-    @NotBlank(message = "Phone number is required")
-    @Size(max = 15)
-    private String phone;
+  @NotNull(message = "Birthdate is required")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date birthday;
 
-    @NotBlank(message = "Address is required")
-    @Size(max = 200)
-    private String address;
+  @NotBlank(message = "Phone number is required")
+  @Size(max = 15)
+  private String phone;
 
-    @NotBlank(message = "City is required")
-    @Size(max = 50)
-    private String city;
+  @NotBlank(message = "Address is required")
+  @Size(max = 200)
+  private String address;
 
-    @NotBlank(message = "State is required")
-    @Size(max = 50)
-    private String state;
+  @NotBlank(message = "City is required")
+  @Size(max = 50)
+  private String city;
 
-    @NotBlank(message = "Zip Code is required")
-    @Size(min = 6, max = 6)
-    private String zipCode;
+  @NotBlank(message = "State is required")
+  @Size(max = 50)
+  private String state;
 
-    public String getFirstName() {
-        return firstName;
-    }
+  @NotBlank(message = "Zip Code is required")
+  @Size(min = 6, max = 6)
+  private String zipCode;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public Date getBirthday() {
-        return birthday;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+  public Date getBirthday() {
+    return birthday;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setBirthday(Date birthday) {
+    this.birthday = birthday;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public void setState(String state) {
-        this.state = state;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public void setState(String state) {
+    this.state = state;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
+
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
+
 }
