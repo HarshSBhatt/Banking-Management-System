@@ -17,86 +17,88 @@ import java.util.Date;
 @Entity
 @Table(name = "leaves")
 public class LeaveRequest extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long leaveId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long leaveId;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date fromDate;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private User user;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date toDate;
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date fromDate;
 
-    @NotBlank
-    private String reason;
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date toDate;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private RequestStatus requestStatus;
+  @NotBlank
+  private String reason;
 
-    public LeaveRequest() {
-    }
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private RequestStatus requestStatus;
 
-    public LeaveRequest(User user, Date fromDate, Date toDate, String reason, RequestStatus requestStatus) {
-        this.user = user;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.reason = reason;
-        this.requestStatus = requestStatus;
-    }
+  public LeaveRequest() {
+  }
 
-    public Long getLeaveId() {
-        return leaveId;
-    }
+  public LeaveRequest(User user, Date fromDate, Date toDate, String reason, RequestStatus requestStatus) {
+    this.user = user;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
+    this.reason = reason;
+    this.requestStatus = requestStatus;
+  }
 
-    public void setLeaveId(Long leaveId) {
-        this.leaveId = leaveId;
-    }
+  public Long getLeaveId() {
+    return leaveId;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setLeaveId(Long leaveId) {
+    this.leaveId = leaveId;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public Date getFromDate() {
-        return fromDate;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
+  public Date getFromDate() {
+    return fromDate;
+  }
 
-    public Date getToDate() {
-        return toDate;
-    }
+  public void setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+  }
 
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
+  public Date getToDate() {
+    return toDate;
+  }
 
-    public String getReason() {
-        return reason;
-    }
+  public void setToDate(Date toDate) {
+    this.toDate = toDate;
+  }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+  public String getReason() {
+    return reason;
+  }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+  public RequestStatus getRequestStatus() {
+    return requestStatus;
+  }
+
+  public void setRequestStatus(RequestStatus requestStatus) {
+    this.requestStatus = requestStatus;
+  }
+
 }

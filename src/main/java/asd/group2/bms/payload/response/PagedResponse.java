@@ -6,71 +6,78 @@ import java.util.List;
  * @description: This class will handle pagination related information.
  */
 public class PagedResponse<T> {
-    private List<T> content;
-    private int page;
-    private int size;
-    private long totalElements;
-    private int totalPages;
-    private boolean last;
 
-    public PagedResponse() {
+  private List<T> content;
 
-    }
+  private int page;
 
-    public PagedResponse(List<T> content, int page, int size, long totalElements, int totalPages, boolean last) {
-        this.content = content;
-        this.page = page;
-        this.size = size;
-        this.totalElements = totalElements;
-        this.totalPages = totalPages;
-        this.last = last;
-    }
+  private int size;
 
-    public List<T> getContent() {
-        return content;
-    }
+  private long totalElements;
 
-    public void setContent(List<T> content) {
-        this.content = content;
-    }
+  private int totalPages;
 
-    public int getPage() {
-        return page;
-    }
+  private boolean last;
 
-    public void setPage(int page) {
-        this.page = page;
-    }
+  public PagedResponse() {
 
-    public int getSize() {
-        return size;
-    }
+  }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
+  public PagedResponse(List<T> content, int page, int size, long totalElements, int totalPages, boolean last) {
+    this.content = content;
+    this.page = page;
+    this.size = size;
+    this.totalElements = totalElements;
+    this.totalPages = totalPages;
+    this.last = last;
+  }
 
-    public long getTotalElements() {
-        return totalElements;
-    }
+  public List<T> getContent() {
+    return content;
+  }
 
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
-    }
+  public void setContent(List<T> content) {
+    this.content = content;
+  }
 
-    public int getTotalPages() {
-        return totalPages;
-    }
+  public int getPage() {
+    return page;
+  }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
+  public void setPage(int page) {
+    this.page = page;
+  }
 
-    public boolean isLast() {
-        return last;
-    }
+  public int getSize() {
+    return size;
+  }
 
-    public void setLast(boolean last) {
-        this.last = last;
-    }
+  public void setSize(int size) {
+    this.size = size;
+  }
+
+  public long getTotalElements() {
+    return totalElements;
+  }
+
+  public void setTotalElements(long totalElements) {
+    this.totalElements = totalElements;
+  }
+
+  public int getTotalPages() {
+    return totalPages;
+  }
+
+  public void setTotalPages(int totalPages) {
+    this.totalPages = totalPages;
+  }
+
+  public boolean isLast() {
+    return last;
+  }
+
+  public void setLast(boolean last) {
+    this.last = last;
+  }
+
 }

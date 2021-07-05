@@ -28,162 +28,217 @@ import java.util.Collections;
 
 @Service
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+  @Autowired
+  UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+  @Autowired
+  RoleRepository roleRepository;
 
-    @Autowired
-    CustomEmail customEmail;
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
-    public Boolean isEmailAvailable(String email) {
-        return !userRepository.existsByEmail(email);
+  @Autowired
+  CustomEmail customEmail;
+
+  /**
+   * @param email: email
+   * @return true or false based on email availability
+   */
+  public Boolean isEmailAvailable(String email) {
+    return !userRepository.existsByEmail(email);
+  }
+
+  /**
+   * @param username: username
+   * @return true or false based on username availability
+   */
+  public Boolean isUsernameAvailable(String username) {
+    return !userRepository.existsByUsername(username);
+  }
+
+  /**
+   * @param signUpRequest: Signup related data (username, email, name, phone etc.)
+   * @return success or failure response with appropriate message
+   */
+  public ResponseEntity<?> createUser(SignUpRequest signUpRequest) {
+    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+      return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
+          HttpStatus.BAD_REQUEST);
     }
 
-    public Boolean isUsernameAvailable(String username) {
-        return !userRepository.existsByUsername(username);
+    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+      return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
+          HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<?> createUser(SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+    // Creating user's account
+    User user = new User(
+        signUpRequest.getFirstName(),
+        signUpRequest.getLastName(),
+        signUpRequest.getUsername(),
+        signUpRequest.getEmail(),
+        signUpRequest.getBirthday(),
+        signUpRequest.getPhone(),
+        signUpRequest.getPassword(),
+        signUpRequest.getAddress(),
+        signUpRequest.getCity(),
+        signUpRequest.getState(),
+        signUpRequest.getZipCode(),
+        AccountStatus.PENDING,
+        signUpRequest.getRequestedAccountType()
+    );
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Creating user's account
-        User user = new User(
-                signUpRequest.getFirstName(),
-                signUpRequest.getLastName(),
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                signUpRequest.getBirthday(),
-                signUpRequest.getPhone(),
-                signUpRequest.getPassword(),
-                signUpRequest.getAddress(),
-                signUpRequest.getCity(),
-                signUpRequest.getState(),
-                signUpRequest.getZipCode(),
-                AccountStatus.PENDING,
-                signUpRequest.getRequestedAccountType()
-        );
+    Role userRole;
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    RoleType role = signUpRequest.getRole();
 
-        Role userRole;
-
-        RoleType role = signUpRequest.getRole();
-
-        if (role == null) {
-            userRole = roleRepository.findByName(RoleType.ROLE_USER)
-                    .orElseThrow(() -> new BMSException("User Role not set."));
-        } else {
-            if (role.equals(RoleType.ROLE_USER)) {
-                user.setAccountStatus(AccountStatus.PENDING);
-            } else {
-                user.setAccountStatus(AccountStatus.ACTIVE);
-            }
-            userRole = roleRepository.findByName(role)
-                    .orElseThrow(() -> new BMSException("User Role not set."));
-        }
-
-        user.setRoles(Collections.singleton(userRole));
-
-        User result = userRepository.save(user);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    if (role == null) {
+      userRole = roleRepository.findByName(RoleType.ROLE_USER)
+          .orElseThrow(() -> new BMSException("User Role not set."));
+    } else {
+      if (role.equals(RoleType.ROLE_USER)) {
+        user.setAccountStatus(AccountStatus.PENDING);
+      } else {
+        user.setAccountStatus(AccountStatus.ACTIVE);
+      }
+      userRole = roleRepository.findByName(role)
+          .orElseThrow(() -> new BMSException("User Role not set."));
     }
 
-    public User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
-        User user = getUserByEmail(email);
-        user.setAccountStatus(accountStatus);
-        customEmail.sendUserAccountStatusChangeMail(email, user.getFirstName(), accountStatus.toString());
-        return userRepository.save(user);
+    user.setRoles(Collections.singleton(userRole));
+
+    User result = userRepository.save(user);
+
+    URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{username}")
+        .buildAndExpand(result.getUsername()).toUri();
+
+    return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+  }
+
+  /**
+   * @param email:         email id of the user
+   * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
+   * @return the updated status of the user having email - email
+   */
+  public User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
+    User user = getUserByEmail(email);
+    user.setAccountStatus(accountStatus);
+    customEmail.sendUserAccountStatusChangeMail(email, user.getFirstName(), accountStatus.toString());
+    return userRepository.save(user);
+  }
+
+  /**
+   * @param oldPassword: old password of the user account
+   * @param newPassword: new password of the user account
+   * @param currentUser: current logged in user
+   * @return success or failure response with appropriate message
+   */
+  public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
+    if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
+      User user = getUserByEmail(currentUser.getEmail());
+      user.setPassword(passwordEncoder.encode(newPassword));
+      userRepository.save(user);
+      return new ApiResponse(true, "Password changed successfully!");
+    } else {
+      return new ApiResponse(false, "Current password is wrong!");
     }
+  }
 
-    public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
-        if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
-            User user = getUserByEmail(currentUser.getEmail());
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return new ApiResponse(true, "Password changed successfully!");
-        } else {
-            return new ApiResponse(false, "Current password is wrong!");
-        }
+  /**
+   * @param newPassword:        new password to be replaced
+   * @param confirmNewPassword: new password to be replaced
+   * @param user:               User model object
+   * @return success or failure response with appropriate message
+   */
+  public ResponseEntity<?> resetPassword(String newPassword, String confirmNewPassword, User user) {
+    if (newPassword.equals(confirmNewPassword)) {
+      user.setPassword(passwordEncoder.encode(newPassword));
+      user.setForgotPasswordToken(null);
+      userRepository.save(user);
+      return ResponseEntity.ok(new ApiResponse(true, "Password reset successfully"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "New passwords are not same"), HttpStatus.BAD_REQUEST);
     }
+  }
 
-    public ResponseEntity<?> resetPassword(String newPassword, String confirmNewPassword, User user) {
-        if (newPassword.equals(confirmNewPassword)) {
-            user.setPassword(passwordEncoder.encode(newPassword));
-            user.setForgotPasswordToken(null);
-            userRepository.save(user);
-            return ResponseEntity.ok(new ApiResponse(true, "Password reset successfully"));
-        } else {
-            return new ResponseEntity<>(new ApiResponse(false, "New passwords are not same"), HttpStatus.BAD_REQUEST);
-        }
-    }
+  /**
+   * @param token: Reset token received via email
+   * @param email: email of the user
+   */
+  public void updateResetForgotPasswordToken(String token, String email) {
+    User user = getUserByEmail(email);
+    user.setForgotPasswordToken(token);
+    userRepository.save(user);
+  }
 
-    public void updateResetForgotPasswordToken(String token, String email) {
-        User user = getUserByEmail(email);
-        user.setForgotPasswordToken(token);
-        userRepository.save(user);
-    }
+  /**
+   * Get the user by user email
+   *
+   * @param email: email of the user
+   * @return a user based on email
+   */
+  public User getUserByEmail(String email) {
+    return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Email", "email", email));
+  }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Email", "email", email));
-    }
+  /**
+   * Get the user by user token
+   *
+   * @param token: token of the user
+   * @return a user based on token
+   */
+  public User getUserByToken(String token) {
+    return userRepository.findByForgotPasswordToken(token).orElseThrow(() -> new ResourceNotFoundException("Reset Password Token", "token", token));
+  }
 
-    public User getUserByToken(String token) {
-        return userRepository.findByForgotPasswordToken(token).orElseThrow(() -> new ResourceNotFoundException("Reset Password Token", "token", token));
-    }
+  /**
+   * Get the user profile by username
+   *
+   * @param username: username of the user
+   * @return a user profile based on username
+   */
+  public UserProfile getUserProfileByUsername(String username) {
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-    public UserProfile getUserProfileByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+    return new UserProfile(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getBirthday(),
+        user.getEmail(),
+        user.getPhone(),
+        user.getAddress(),
+        user.getCity(),
+        user.getState(),
+        user.getZipCode(),
+        user.getCreatedAt()
+    );
+  }
 
-        return new UserProfile(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getBirthday(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getAddress(),
-                user.getCity(),
-                user.getState(),
-                user.getZipCode(),
-                user.getCreatedAt()
-        );
-    }
+  /**
+   * @param currentUser:          current logged in user
+   * @param updateProfileRequest: required foields to update the data of the user
+   * @return true or false based on update status
+   */
+  public Boolean updateUserProfileByUsername(UserPrincipal currentUser, UpdateProfileRequest updateProfileRequest) {
+    User user = userRepository.findById(currentUser.getId())
+        .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));
 
-    public Boolean updateUserProfileByUsername(UserPrincipal currentUser, UpdateProfileRequest updateProfileRequest) {
-        User user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));
+    user.setFirstName(updateProfileRequest.getFirstName());
+    user.setLastName(updateProfileRequest.getLastName());
+    user.setBirthday(updateProfileRequest.getBirthday());
+    user.setPhone(updateProfileRequest.getPhone());
+    user.setAddress(updateProfileRequest.getAddress());
+    user.setCity(updateProfileRequest.getCity());
+    user.setState(updateProfileRequest.getState());
+    user.setZipCode(updateProfileRequest.getZipCode());
 
-        user.setFirstName(updateProfileRequest.getFirstName());
-        user.setLastName(updateProfileRequest.getLastName());
-        user.setBirthday(updateProfileRequest.getBirthday());
-        user.setPhone(updateProfileRequest.getPhone());
-        user.setAddress(updateProfileRequest.getAddress());
-        user.setCity(updateProfileRequest.getCity());
-        user.setState(updateProfileRequest.getState());
-        user.setZipCode(updateProfileRequest.getZipCode());
+    return userRepository.save(user).getId().equals(currentUser.getId());
+  }
 
-        if (userRepository.save(user).getId().equals(currentUser.getId())) {
-            return true;
-        }
-        return false;
-    }
 }

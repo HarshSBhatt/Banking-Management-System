@@ -15,72 +15,74 @@ import java.io.Serializable;
 @Entity
 @Table(name = "accounts")
 public class Account extends DateAudit implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long accountNumber;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long accountNumber;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private AccountType accountType;
+  @OneToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private User user;
 
-    @NotNull
-    private Double balance;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private AccountType accountType;
 
-    @NotNull
-    private int creditScore;
+  @NotNull
+  private Double balance;
 
-    public Account() {
-    }
+  @NotNull
+  private int creditScore;
 
-    public Account(AccountType accountType, Double balance, int creditScore) {
-        this.accountType = accountType;
-        this.balance = balance;
-        this.creditScore = creditScore;
-    }
+  public Account() {
+  }
 
-    public Long getAccountNumber() {
-        return accountNumber;
-    }
+  public Account(AccountType accountType, Double balance, int creditScore) {
+    this.accountType = accountType;
+    this.balance = balance;
+    this.creditScore = creditScore;
+  }
 
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+  public Long getAccountNumber() {
+    return accountNumber;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setAccountNumber(Long accountNumber) {
+    this.accountNumber = accountNumber;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public AccountType getAccountType() {
-        return accountType;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
+  public AccountType getAccountType() {
+    return accountType;
+  }
 
-    public Double getBalance() {
-        return balance;
-    }
+  public void setAccountType(AccountType accountType) {
+    this.accountType = accountType;
+  }
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
+  public Double getBalance() {
+    return balance;
+  }
 
-    public int getCreditScore() {
-        return creditScore;
-    }
+  public void setBalance(Double balance) {
+    this.balance = balance;
+  }
 
-    public void setCreditScore(int creditScore) {
-        this.creditScore = creditScore;
-    }
+  public int getCreditScore() {
+    return creditScore;
+  }
+
+  public void setCreditScore(int creditScore) {
+    this.creditScore = creditScore;
+  }
+
 }
 

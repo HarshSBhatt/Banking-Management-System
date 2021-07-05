@@ -1,13 +1,14 @@
 package asd.group2.bms.util;
 
+import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.payload.response.LeaveListResponse;
-import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.payload.response.UserMetaResponse;
+import asd.group2.bms.payload.response.*;
 
 public class ModelMapper {
+
     public static LeaveListResponse mapLeavesToLeaveListResponse(LeaveRequest leaveRequest) {
         LeaveListResponse leaveListResponse = new LeaveListResponse();
         leaveListResponse.setLeaveId(leaveRequest.getLeaveId());
@@ -47,5 +48,41 @@ public class ModelMapper {
         );
         resignListResponse.setUserMetaResponse(userMetaResponse);
         return resignListResponse;
+    }
+
+
+    public static CreditCardListResponse mapCreditCardToCreditCardListResponse(CreditCard creditCard) {
+        CreditCardListResponse creditCardListResponse = new CreditCardListResponse();
+        creditCardListResponse.setCreditCardNumber(creditCard.getCreditCardNumber());
+        creditCardListResponse.setPin(creditCard.getPin());
+        creditCardListResponse.setTransactionLimit(creditCard.getTransactionLimit());
+        creditCardListResponse.setCreditCardStatus(creditCard.getCreditCardStatus());
+        creditCardListResponse.setExpiryYear(creditCard.getExpiryYear());
+        creditCardListResponse.setExpiryMonth(creditCard.getExpiryMonth());
+        creditCardListResponse.setCvv(creditCard.getCvv());
+        creditCardListResponse.setActive(creditCard.getActive());
+
+        Account account = creditCard.getAccount();
+        User user = creditCard.getAccount().getUser();
+        UserMetaResponse userMetaResponse = new UserMetaResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone()
+        );
+        AccountDetailResponse accountDetailResponse = new AccountDetailResponse(
+                account.getAccountNumber(),
+                account.getAccountType(),
+                account.getBalance(),
+                account.getCreditScore(),
+                account.getCreatedAt(),
+                account.getUpdatedAt(),
+                userMetaResponse
+        );
+        creditCardListResponse.setAccountDetailResponse(accountDetailResponse);
+
+        return creditCardListResponse;
     }
 }

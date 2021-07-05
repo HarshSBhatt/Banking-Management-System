@@ -19,221 +19,223 @@ import java.util.stream.Collectors;
  * from loadUserByUsername() method.
  */
 public class UserPrincipal implements UserDetails {
-    private Long id;
 
-    private String firstName;
+  private Long id;
 
-    private String lastName;
+  private String firstName;
 
-    private String username;
+  private String lastName;
 
-    private Date birthday;
+  private String username;
 
-    @JsonIgnore
-    private String email;
+  private Date birthday;
 
-    private String phone;
+  @JsonIgnore
+  private String email;
 
-    private String address;
+  private String phone;
 
-    private String city;
+  private String address;
 
-    private String state;
+  private String city;
 
-    private String zipCode;
+  private String state;
 
-    private AccountStatus accountStatus;
+  private String zipCode;
 
-    @JsonIgnore
-    private String password;
+  private AccountStatus accountStatus;
 
-    private Collection<? extends GrantedAuthority> authorities;
+  @JsonIgnore
+  private String password;
 
-    public UserPrincipal(Long id, String firstName, String lastName, String username, Date birthday, String email, String phone, String address, String city, String state, String zipCode, AccountStatus accountStatus, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.birthday = birthday;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.accountStatus = accountStatus;
-        this.password = password;
-        this.authorities = authorities;
-    }
+  private Collection<? extends GrantedAuthority> authorities;
 
-    public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
+  public UserPrincipal(Long id, String firstName, String lastName, String username, Date birthday, String email, String phone, String address, String city, String state, String zipCode, AccountStatus accountStatus, String password, Collection<? extends GrantedAuthority> authorities) {
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.birthday = birthday;
+    this.email = email;
+    this.phone = phone;
+    this.address = address;
+    this.city = city;
+    this.state = state;
+    this.zipCode = zipCode;
+    this.accountStatus = accountStatus;
+    this.password = password;
+    this.authorities = authorities;
+  }
 
-        return new UserPrincipal(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getBirthday(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getAddress(),
-                user.getCity(),
-                user.getState(),
-                user.getZipCode(),
-                user.getAccountStatus(),
-                user.getPassword(),
-                authorities
-        );
-    }
+  public static UserPrincipal create(User user) {
+    List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
+        new SimpleGrantedAuthority(role.getName().name())
+    ).collect(Collectors.toList());
 
-    public Long getId() {
-        return id;
-    }
+    return new UserPrincipal(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getBirthday(),
+        user.getEmail(),
+        user.getPhone(),
+        user.getAddress(),
+        user.getCity(),
+        user.getState(),
+        user.getZipCode(),
+        user.getAccountStatus(),
+        user.getPassword(),
+        authorities
+    );
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  @Override
+  public String getUsername() {
+    return username;
+  }
 
-    public Date getBirthday() {
-        return birthday;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+  public Date getBirthday() {
+    return birthday;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setBirthday(Date birthday) {
+    this.birthday = birthday;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public void setState(String state) {
-        this.state = state;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public void setState(String state) {
+    this.state = state;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
 
-    public AccountStatus getAccountStatus() {
-        return accountStatus;
-    }
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
-        this.accountStatus = accountStatus;
-    }
+  public AccountStatus getAccountStatus() {
+    return accountStatus;
+  }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+  public void setAccountStatus(AccountStatus accountStatus) {
+    this.accountStatus = accountStatus;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+    this.authorities = authorities;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserPrincipal that = (UserPrincipal) o;
-        return Objects.equals(id, that.id);
-    }
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    UserPrincipal that = (UserPrincipal) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
 }

@@ -18,27 +18,29 @@ import java.time.Instant;
  * @description: We will extend this table such that it will inject created_at and updated_at in tables we want to keep record
  */
 public class DateAudit {
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private Instant updatedAt;
+  @CreatedDate
+  @Column(nullable = false, updatable = false)
+  private Instant createdAt;
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
+  @LastModifiedDate
+  @Column(nullable = false)
+  private Instant updatedAt;
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+  public void setCreatedAt(Instant createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Instant updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
 }

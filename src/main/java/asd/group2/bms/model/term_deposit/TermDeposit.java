@@ -11,35 +11,37 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "term_deposits")
 public class TermDeposit {
-    @Id
-    @NotBlank
-    @Size(max = 100)
-    private String duration;
 
-    @NotNull
-    private float rateOfInterest;
+  @Id
+  @NotBlank
+  @Size(max = 100)
+  private String duration;
 
-    public TermDeposit() {
-    }
+  @NotNull
+  private float rateOfInterest;
 
-    public TermDeposit(String duration, float rateOfInterest) {
-        this.duration = duration;
-        this.rateOfInterest = rateOfInterest;
-    }
+  public TermDeposit() {
+  }
 
-    public String getDuration() {
-        return duration;
-    }
+  public TermDeposit(String duration, float rateOfInterest) {
+    this.duration = duration;
+    this.rateOfInterest = rateOfInterest;
+  }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
+  public String getDuration() {
+    return duration;
+  }
 
-    public float getRateOfInterest() {
-        return rateOfInterest;
-    }
+  public void setDuration(String duration) {
+    this.duration = duration;
+  }
 
-    public void setRateOfInterest(float rateOfInterest) {
-        this.rateOfInterest = rateOfInterest;
-    }
+  public float getRateOfInterest() {
+    return rateOfInterest;
+  }
+
+  public void setRateOfInterest(float rateOfInterest) {
+    this.rateOfInterest = rateOfInterest;
+  }
+
 }

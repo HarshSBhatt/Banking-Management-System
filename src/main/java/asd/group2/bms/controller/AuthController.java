@@ -30,80 +30,94 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+  @Autowired
+  UserService userService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+  @Autowired
+  RoleRepository roleRepository;
 
-    @Autowired
-    JwtTokenProvider tokenProvider;
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
-    @Autowired
-    CustomEmail customEmail;
+  @Autowired
+  JwtTokenProvider tokenProvider;
 
-    /**
-     * @param loginRequest: username and password
-     * @description: Authenticate the user's login request.
-     */
-    @PostMapping("/auth/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  @Autowired
+  CustomEmail customEmail;
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()));
+  /**
+   * Authenticate the user's login request.
+   *
+   * @param loginRequest: username and password
+   * @return success or failure response with appropriate message
+   */
+  @PostMapping("/auth/signin")
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    Authentication authentication = authenticationManager
+        .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(),
+            loginRequest.getPassword()));
 
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    String jwt = tokenProvider.generateToken(authentication);
+    return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+  }
+
+  /**
+   * Register the user into the system.
+   *
+   * @param signUpRequest: username, email, password and related information
+   * @return success or failure response with appropriate message
+   */
+  @PostMapping("/auth/signup")
+  public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    return userService.createUser(signUpRequest);
+  }
+
+  /**
+   * Send email link to change password.
+   *
+   * @param forgotPasswordRequest: email of the user
+   * @return success or failure response with appropriate message
+   */
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    String email = forgotPasswordRequest.getEmail();
+    String token = RandomString.make(45);
+
+    userService.updateResetForgotPasswordToken(token, email);
+    String forgotPasswordLink = "http://localhost:3000/reset-password?token=" + token;
+    try {
+      customEmail.sendResetPasswordEmail(email, forgotPasswordLink);
+      return ResponseEntity.ok(new ApiResponse(true, "Email sent successfully"));
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(new ApiResponse(false, "Error while sending email"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
 
-    /**
-     * @param signUpRequest: username, email, password and related information
-     * @description: Register the user into the system.
-     */
-    @PostMapping("/auth/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        return userService.createUser(signUpRequest);
-    }
+  /**
+   * Reset the user password based on reset token received via mail
+   *
+   * @param resetPasswordRequest: email of the user
+   * @return success or failure response with appropriate message
+   */
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    String token = resetPasswordRequest.getToken();
+    String newPassword = resetPasswordRequest.getNewPassword();
+    String confirmNewPassword = resetPasswordRequest.getConfirmNewPassword();
 
-    /**
-     * @param forgotPasswordRequest: email of the user
-     * @description: Send email link to change password.
-     */
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        String email = forgotPasswordRequest.getEmail();
-        String token = RandomString.make(45);
+    User user = userService.getUserByToken(token);
+    return userService.resetPassword(newPassword, confirmNewPassword, user);
+  }
 
-        userService.updateResetForgotPasswordToken(token, email);
-        String forgotPasswordLink = "http://localhost:3000/reset-password?token=" + token;
-        try {
-            customEmail.sendResetPasswordEmail(email, forgotPasswordLink);
-            return ResponseEntity.ok(new ApiResponse(true, "Email sent successfully"));
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(new ApiResponse(false, "Error while sending email"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        String token = resetPasswordRequest.getToken();
-        String newPassword = resetPasswordRequest.getNewPassword();
-        String confirmNewPassword = resetPasswordRequest.getConfirmNewPassword();
-
-        User user = userService.getUserByToken(token);
-        return userService.resetPassword(newPassword, confirmNewPassword, user);
-    }
 }

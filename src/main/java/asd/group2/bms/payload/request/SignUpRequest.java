@@ -13,158 +13,160 @@ import java.util.Date;
  * @description: Structure of signup request
  */
 public class SignUpRequest {
-    @NotBlank(message = "First Name is required")
-    @Size(min = 3, max = 40)
-    private String firstName;
 
-    @NotBlank(message = "Last Name is required")
-    @Size(min = 3, max = 40)
-    private String lastName;
+  @NotBlank(message = "First Name is required")
+  @Size(min = 3, max = 40)
+  private String firstName;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 15)
-    private String username;
+  @NotBlank(message = "Last Name is required")
+  @Size(min = 3, max = 40)
+  private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Size(max = 40)
-    @Email(message = "Please enter a valid email")
-    private String email;
+  @NotBlank(message = "Username is required")
+  @Size(min = 3, max = 15)
+  private String username;
 
-    @NotNull(message = "Birthdate is required")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthday;
+  @NotBlank(message = "Email is required")
+  @Size(max = 40)
+  @Email(message = "Please enter a valid email")
+  private String email;
 
-    @NotBlank(message = "Phone number is required")
-    @Size(max = 15)
-    private String phone;
+  @NotNull(message = "Birthdate is required")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date birthday;
 
-    @NotBlank(message = "Address is required")
-    @Size(max = 200)
-    private String address;
+  @NotBlank(message = "Phone number is required")
+  @Size(max = 15)
+  private String phone;
 
-    @NotBlank(message = "City is required")
-    @Size(max = 50)
-    private String city;
+  @NotBlank(message = "Address is required")
+  @Size(max = 200)
+  private String address;
 
-    @NotBlank(message = "State is required")
-    @Size(max = 50)
-    private String state;
+  @NotBlank(message = "City is required")
+  @Size(max = 50)
+  private String city;
 
-    @NotBlank(message = "Zip Code is required")
-    @Size(min = 6, max = 6)
-    private String zipCode;
+  @NotBlank(message = "State is required")
+  @Size(max = 50)
+  private String state;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 20)
-    private String password;
+  @NotBlank(message = "Zip Code is required")
+  @Size(min = 6, max = 6)
+  private String zipCode;
 
-    @Enumerated(EnumType.STRING)
-    private AccountType requestedAccountType;
+  @NotBlank(message = "Password is required")
+  @Size(min = 6, max = 20)
+  private String password;
 
-    @Enumerated(EnumType.STRING)
-    private RoleType role;
+  @Enumerated(EnumType.STRING)
+  private AccountType requestedAccountType;
 
-    public String getFirstName() {
-        return firstName;
-    }
+  @Enumerated(EnumType.STRING)
+  private RoleType role;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public Date getBirthday() {
-        return birthday;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+  public Date getBirthday() {
+    return birthday;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setBirthday(Date birthday) {
+    this.birthday = birthday;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public void setState(String state) {
-        this.state = state;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public void setState(String state) {
+    this.state = state;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public AccountType getRequestedAccountType() {
-        return requestedAccountType;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setRequestedAccountType(AccountType requestedAccountType) {
-        this.requestedAccountType = requestedAccountType;
-    }
+  public AccountType getRequestedAccountType() {
+    return requestedAccountType;
+  }
 
-    public RoleType getRole() {
-        return role;
-    }
+  public void setRequestedAccountType(AccountType requestedAccountType) {
+    this.requestedAccountType = requestedAccountType;
+  }
 
-    public void setRole(RoleType role) {
-        this.role = role;
-    }
+  public RoleType getRole() {
+    return role;
+  }
+
+  public void setRole(RoleType role) {
+    this.role = role;
+  }
+
 }
