@@ -6,6 +6,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+/**
+ *@description: Structure of credit card body request
+ */
 public class UpdateCreditCardStatusRequest {
     @NotNull(message = "Credit Card Number is required")
     private Long creditCardNumber;

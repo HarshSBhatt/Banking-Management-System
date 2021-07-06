@@ -46,10 +46,20 @@ public class CreditCardService {
                 cards.getSize(), cards.getTotalElements(), cards.getTotalPages(), cards.isLast());
     }
 
+
+    /**
+     * @param creditCardNumber: credit card number
+     * @return credit card based on credit card number
+     */
     public CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber) {
         return creditCardRepository.findById(creditCardNumber).orElseThrow(() -> new ResourceNotFoundException("Credit Card Number", "creditCardNumber", creditCardNumber));
     }
 
+    /**
+     * @param creditCardNumber: credit card number
+     * @param creditCardStatus: Status of the credit card (APPROVED, REJECTED, PENDING)
+     * @return the updated status of the credit card having credit card number - creditCardNumber
+     */
     public CreditCard setCreditCardRequestStatus(Long creditCardNumber, CreditCardStatus creditCardStatus) {
         CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
         creditCard.setCreditCardStatus(creditCardStatus);

@@ -36,6 +36,10 @@ public class CreditCardController {
         return creditCardService.getCreditCardListByStatus(creditCardStatus, page, size);
     }
 
+    /**
+     * @param updateCreditCardStatusRequest: credit card number and credit card status
+     * @return success or failure response with appropriate message
+     */
     @PutMapping("/services/creditcards")
     @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
     public ResponseEntity<?> updateCreditCardRequestStatus(
