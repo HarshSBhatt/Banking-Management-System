@@ -1,7 +1,10 @@
 package asd.group2.bms.service;
 
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
+import asd.group2.bms.model.resign.RequestStatus;
+import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.CreditCardRepository;
@@ -41,5 +44,15 @@ public class CreditCardService {
 
         return new PagedResponse<>(creditCardListResponses, cards.getNumber(),
                 cards.getSize(), cards.getTotalElements(), cards.getTotalPages(), cards.isLast());
+    }
+
+    public CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber) {
+        return creditCardRepository.findById(creditCardNumber).orElseThrow(() -> new ResourceNotFoundException("Credit Card Number", "creditCardNumber", creditCardNumber));
+    }
+
+    public CreditCard setCreditCardRequestStatus(Long creditCardNumber, CreditCardStatus creditCardStatus) {
+        CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
+        creditCard.setCreditCardStatus(creditCardStatus);
+        return creditCardRepository.save(creditCard);
     }
 }
