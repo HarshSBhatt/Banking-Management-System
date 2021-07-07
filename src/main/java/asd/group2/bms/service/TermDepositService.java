@@ -1,14 +1,14 @@
 package asd.group2.bms.service;
 
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.model.term_deposit.TermDeposit;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.TermDepositDetailRepository;
-import asd.group2.bms.repository.TermDepositRepository;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.util.AppConstants;
+import asd.group2.bms.util.CustomEmail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TermDepositService {
@@ -30,54 +28,50 @@ public class TermDepositService {
   TermDepositDetailRepository termDepositDetailRepository;
 
   @Autowired
-  UserRepository userRepository;
+  AccountService accountService;
 
   @Autowired
-  TermDepositRepository termDepositRepository;
+  CustomEmail customEmail;
 
 
-  public List<TermDeposit> getTermDeposit() {
-    return termDepositRepository.findAll();
-  }
-
-  public ResponseEntity<?> makeTermDepositRequest(Long userId, Double amount, Date currentDate, int years) {
+  public ResponseEntity<?> makeTermDepositRequest(Long userId,String email,String firstName, Double fdAmount, Date currentDate, int duration) {
     try {
-      Optional<Account> account = accountRepository.findAccountByUser_Id(userId);
-      if (account.isPresent() && account.get().getBalance() < amount) {
+      Account account = accountService.getAccountByUserId(userId);
+      if (fdAmount  < 1000) {
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to create Fixed Deposit is $1000!"),
+            HttpStatus.BAD_REQUEST);
+      }
+      if (account.getBalance() < fdAmount) {
         return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
             HttpStatus.BAD_REQUEST);
       }
-      if (!account.isPresent()) {
-        return new ResponseEntity<>(new ApiResponse(false, "No account is there!"), HttpStatus.BAD_REQUEST);
+      if (account.getBalance() - 1000 < fdAmount) {
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum $1000 is required after creating Fixed Deposit in your account!"),
+            HttpStatus.BAD_REQUEST);
       }
 
       // Balance Updated
-      account.get().setBalance(account.get().getBalance() - amount);
-      accountRepository.save(account.get());
+      Double newBalance= account.getBalance() - fdAmount;
+      account.setBalance(newBalance);
+      accountRepository.save(account);
+
+      //Sending email
+      customEmail.sendBalanceDeductionMail(email, firstName, fdAmount, newBalance);
 
       // Maturity Date calculation
       Calendar c = Calendar.getInstance();
-      float interestRate = (float) 0.06;
+      float interestRate = AppConstants.DEFAULT_INTEREST_VALUE;
       c.setTime(currentDate);
-      c.add(Calendar.YEAR, years);
+      c.add(Calendar.YEAR, duration);
       Date maturityDate = c.getTime();
 
-      // New TermDeposit
-      TermDeposit termDeposit = new TermDeposit(String.valueOf(years), interestRate);
-      Double maturityAmount = amount * Math.pow((1 + (interestRate / 12)), 12 * years);
+      // Calculating maturityAmount
+      Double maturityAmount = fdAmount * Math.pow((1 + (interestRate / 12)), 12 * duration);
 
       // New TermDepositDetail
-      TermDepositDetail termDepositDetail = new TermDepositDetail();
-      termDepositDetail.setAccount(account.get());
-      termDepositDetail.setTermDeposit(termDeposit);
-      termDepositDetail.setStartDate(currentDate);
-      termDepositDetail.setInitialAmount(amount);
-      termDepositDetail.setMaturityDate(maturityDate);
-      termDepositDetail.setMaturityAmount(maturityAmount);
-      termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+      TermDepositDetail termDepositDetail = new TermDepositDetail(account, currentDate, fdAmount, duration, interestRate, maturityDate, maturityAmount, TermDepositStatus.ACTIVE);
 
       // Saving TermDepositDetail & TermDeposit
-      termDepositRepository.save(termDeposit);
       termDepositDetailRepository.save(termDepositDetail);
 
       return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
@@ -87,5 +81,9 @@ public class TermDepositService {
     }
 
   }
+  public TermDepositDetail getTermDepositDetailById(Long id){
+    return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
+  }
+
 
 }

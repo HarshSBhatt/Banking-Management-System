@@ -92,4 +92,22 @@ public class CustomEmail {
     javaMailSender.send(message);
   }
 
+  public void sendBalanceDeductionMail(String email, String firstName,Double debitedAmount, Double newBalance) throws MessagingException, UnsupportedEncodingException {
+    MimeMessage message = javaMailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+
+    helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+    helper.setTo(email);
+
+    String subject = "Activity in your account: Amount debited!";
+    String content = "<p>Dear " + firstName + ",</p>" +
+        "<p>Your balance has been deducted</p>" +
+        "<p>Amount debited: "+debitedAmount+"</p>" +
+        "<p>Your available balance: "+newBalance+"</p>" +
+        "<p>Happy Banking!</p>";
+    helper.setSubject(subject);
+    helper.setText(content, true);
+    javaMailSender.send(message);
+  }
+
 }
