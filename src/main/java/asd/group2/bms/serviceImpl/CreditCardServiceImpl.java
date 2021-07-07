@@ -89,8 +89,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     String expiryMonth = String.valueOf(month);
     String expiryYear = String.valueOf(currentYear + 4);
 
-    String pin = String.format("%04d", (Math.random()*9000+1000));
-    String cvv = String.format("%06d", (Math.random()*900000+100000));
+    String pin = String.format("%04d", (int)(Math.random()*9000+1000));
+    String cvv = String.format("%06d", (int)(Math.random()*900000+100000));
 
     String creditCardNumber = new Helper().generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
