@@ -79,7 +79,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @return This will return the debit card details
    */
   public CreditCard createCreditCard(Account account) {
-    Random random = new Random();
+//    Random random = new Random();
     Date date = new Date();
     LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
