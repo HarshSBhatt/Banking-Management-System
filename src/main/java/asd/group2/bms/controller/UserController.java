@@ -12,9 +12,7 @@ import asd.group2.bms.payload.response.UserSummary;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import asd.group2.bms.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +31,10 @@ import java.io.UnsupportedEncodingException;
 public class UserController {
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userService;
 
   @Autowired
   UserRepository userRepository;
-
-  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   /**
    * @param currentUser: logged in user

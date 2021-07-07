@@ -4,8 +4,12 @@ public interface AppConstants {
 
   String DEFAULT_PAGE_NUMBER = "0";
   String DEFAULT_PAGE_SIZE = "30";
+
   float DEFAULT_INTEREST_VALUE = 0.06f;
 
+  int FOUR_DIGIT = 10000;
+  int SIX_DIGIT = 1000000;
+  int DEFAULT_TRANSACTION_LIMIT = 50000;
   int MAX_PAGE_SIZE = 50;
 
 }

@@ -28,7 +28,6 @@ public class TermDepositDetail extends DateAudit {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Account account;
 
-
   @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date startDate;
@@ -57,16 +56,16 @@ public class TermDepositDetail extends DateAudit {
   }
 
   public TermDepositDetail(Account account, Date startDate,
-      Double initialAmount, int duration, float rateOfInterest,
-      Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
-      this.account = account;
-      this.startDate = startDate;
-      this.initialAmount = initialAmount;
-      this.duration = duration;
-      this.rateOfInterest = rateOfInterest;
-      this.maturityDate = maturityDate;
-      this.maturityAmount = maturityAmount;
-      this.termDepositStatus = termDepositStatus;
+                           Double initialAmount, int duration, float rateOfInterest,
+                           Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
+    this.account = account;
+    this.startDate = startDate;
+    this.initialAmount = initialAmount;
+    this.duration = duration;
+    this.rateOfInterest = rateOfInterest;
+    this.maturityDate = maturityDate;
+    this.maturityAmount = maturityAmount;
+    this.termDepositStatus = termDepositStatus;
   }
 
   public Long getTermDepositId() {
@@ -140,7 +139,5 @@ public class TermDepositDetail extends DateAudit {
   public void setTermDepositStatus(TermDepositStatus termDepositStatus) {
     this.termDepositStatus = termDepositStatus;
   }
-
-  
 
 }
