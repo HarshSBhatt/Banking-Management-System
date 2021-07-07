@@ -1,7 +1,6 @@
 package asd.group2.bms.model.account;
 
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,73 +14,75 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "account_activities")
 public class AccountActivity extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long activityId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Account account;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long activityId;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ActivityType activityType;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Account account;
 
-    @NotNull
-    private Double transactionAmount;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private ActivityType activityType;
 
-    @NotNull
-    private String comment;
+  @NotNull
+  private Double transactionAmount;
 
-    public AccountActivity() {
-    }
+  @NotNull
+  private String comment;
 
-    public AccountActivity(Account account, ActivityType activityType, Double transactionAmount, String comment) {
-        this.account = account;
-        this.activityType = activityType;
-        this.transactionAmount = transactionAmount;
-        this.comment = comment;
-    }
+  public AccountActivity() {
+  }
 
-    public Long getActivityId() {
-        return activityId;
-    }
+  public AccountActivity(Account account, ActivityType activityType, Double transactionAmount, String comment) {
+    this.account = account;
+    this.activityType = activityType;
+    this.transactionAmount = transactionAmount;
+    this.comment = comment;
+  }
 
-    public void setActivityId(Long activityId) {
-        this.activityId = activityId;
-    }
+  public Long getActivityId() {
+    return activityId;
+  }
 
-    public Account getAccount() {
-        return account;
-    }
+  public void setActivityId(Long activityId) {
+    this.activityId = activityId;
+  }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+  public Account getAccount() {
+    return account;
+  }
 
-    public ActivityType getActivityType() {
-        return activityType;
-    }
+  public void setAccount(Account account) {
+    this.account = account;
+  }
 
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
-    }
+  public ActivityType getActivityType() {
+    return activityType;
+  }
 
-    public Double getTransactionAmount() {
-        return transactionAmount;
-    }
+  public void setActivityType(ActivityType activityType) {
+    this.activityType = activityType;
+  }
 
-    public void setTransactionAmount(Double transactionAmount) {
-        this.transactionAmount = transactionAmount;
-    }
+  public Double getTransactionAmount() {
+    return transactionAmount;
+  }
 
-    public String getComment() {
-        return comment;
-    }
+  public void setTransactionAmount(Double transactionAmount) {
+    this.transactionAmount = transactionAmount;
+  }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+  public String getComment() {
+    return comment;
+  }
+
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
 }

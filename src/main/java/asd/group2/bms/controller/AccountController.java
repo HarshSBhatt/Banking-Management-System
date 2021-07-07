@@ -29,72 +29,96 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-    @Autowired
-    AccountService accountService;
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  AccountService accountService;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserService userService;
 
-    @Autowired
-    CustomEmail customEmail;
+  @Autowired
+  UserRepository userRepository;
 
-    @GetMapping("/account/user")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public PagedResponse<User> getUserAccountListByStatus(
-            @RequestParam(value = "accountStatus") AccountStatus accountStatus,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return accountService.getUserAccountListByStatus(accountStatus, page, size);
+  @Autowired
+  CustomEmail customEmail;
+
+  /**
+   * Users list based on the account status of the users
+   *
+   * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
+   * @param page:          number of the page
+   * @param size:          page size
+   * @return User data of size N having page number "page"
+   */
+  @GetMapping("/account/user")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public PagedResponse<User> getUserAccountListByStatus(
+      @RequestParam(value = "accountStatus") AccountStatus accountStatus,
+      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+    return accountService.getUserAccountListByStatus(accountStatus, page, size);
+  }
+
+  /**
+   * This will fetch user account based on login detail (jwt)
+   *
+   * @param currentUser: current logged in user
+   * @return account detail of logged in user
+   */
+  @GetMapping("/account/me")
+  @RolesAllowed({"ROLE_USER"})
+  public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
+    Account account = accountService.getAccountByUserId(currentUser.getId());
+    AccountDetailResponse accountDetailResponse = new AccountDetailResponse();
+    accountDetailResponse.setAccountNumber(account.getAccountNumber());
+    accountDetailResponse.setAccountType(account.getAccountType());
+    accountDetailResponse.setBalance(account.getBalance());
+    accountDetailResponse.setCreditScore(account.getCreditScore());
+    accountDetailResponse.setAccountCreatedAt(account.getCreatedAt());
+    accountDetailResponse.setLastActivityAt(account.getUpdatedAt());
+    User user = account.getUser();
+    UserMetaResponse userMetaResponse = new UserMetaResponse(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getPhone()
+    );
+    accountDetailResponse.setUserMetaResponse(userMetaResponse);
+    return accountDetailResponse;
+  }
+
+  /**
+   * This will create user account based on the payload received (balance, credit score)
+   *
+   * @param accountRequest: Request body containing all necessary data
+   * @return success or failure response with appropriate message
+   * @throws MessagingException:           This will throw MessagingException
+   * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
+   */
+  @PostMapping("/account/user")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) throws MessagingException, UnsupportedEncodingException {
+    String email = accountRequest.getEmail();
+    Double balance = accountRequest.getBalance();
+    int creditScore = accountRequest.getCreditScore();
+    if (!userRepository.existsByEmail(email)) {
+      return new ResponseEntity<>(new ApiResponse(false, "User does not exist!"), HttpStatus.BAD_REQUEST);
     }
-
-    @GetMapping("/account/me")
-    @RolesAllowed({"ROLE_USER"})
-    public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
-        Account account = accountService.getAccountByUserId(currentUser.getId());
-        AccountDetailResponse accountDetailResponse = new AccountDetailResponse();
-        accountDetailResponse.setAccountNumber(account.getAccountNumber());
-        accountDetailResponse.setAccountType(account.getAccountType());
-        accountDetailResponse.setBalance(account.getBalance());
-        accountDetailResponse.setCreditScore(account.getCreditScore());
-        accountDetailResponse.setAccountCreatedAt(account.getCreatedAt());
-        accountDetailResponse.setLastActivityAt(account.getUpdatedAt());
-        User user = account.getUser();
-        UserMetaResponse userMetaResponse = new UserMetaResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhone()
-        );
-        accountDetailResponse.setUserMetaResponse(userMetaResponse);
-        return accountDetailResponse;
+    User user = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
+    if (user == null) {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
+          HttpStatus.BAD_REQUEST);
     }
-
-    @PostMapping("/account/user")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) throws MessagingException, UnsupportedEncodingException {
-        String email = accountRequest.getEmail();
-        Double balance = accountRequest.getBalance();
-        int creditScore = accountRequest.getCreditScore();
-        if (!userRepository.existsByEmail(email)) {
-            return new ResponseEntity<>(new ApiResponse(false, "User does not exist!"), HttpStatus.BAD_REQUEST);
-        }
-        User user = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
-        if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-        AccountType accountType = user.getRequestedAccountType();
-        accountService.createAccount(user, accountType, balance, creditScore);
-        try {
-            customEmail.sendAccountCreationMail(email, user.getFirstName());
-            return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
-        }
+    AccountType accountType = user.getRequestedAccountType();
+    accountService.createAccount(user, accountType, balance, creditScore);
+    try {
+      customEmail.sendAccountCreationMail(email, user.getFirstName());
+      return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
     }
+  }
+
 }

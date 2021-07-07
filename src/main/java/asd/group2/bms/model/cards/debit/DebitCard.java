@@ -16,113 +16,117 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "debit_cards")
 public class DebitCard extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long debitCardNumber;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Account account;
+  @Id
+  private Long debitCardNumber;
 
-    @NotBlank
-    @Size(max = 6)
-    private String pin;
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private Account account;
 
-    @NotNull
-    @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
-    private Integer transactionLimit;
+  @NotBlank
+  @Size(max = 6)
+  private String pin;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private DebitCardStatus debitCardStatus;
+  @NotNull
+  @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
+  private Integer transactionLimit;
 
-    @NotBlank
-    @Size(max = 4)
-    private String expiryYear;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private DebitCardStatus debitCardStatus;
 
-    @NotBlank
-    @Size(max = 2)
-    private String expiryMonth;
+  @NotBlank
+  @Size(max = 4)
+  private String expiryYear;
 
-    @NotBlank
-    @Size(max = 6)
-    private String cvv;
+  @NotBlank
+  @Size(max = 2)
+  private String expiryMonth;
 
-    public DebitCard() {
-    }
+  @NotBlank
+  @Size(max = 6)
+  private String cvv;
 
-    public DebitCard(Account account, String pin, Integer transactionLimit, DebitCardStatus debitCardStatus, String expiryYear, String expiryMonth, String cvv) {
-        this.account = account;
-        this.pin = pin;
-        this.transactionLimit = transactionLimit;
-        this.debitCardStatus = debitCardStatus;
-        this.expiryYear = expiryYear;
-        this.expiryMonth = expiryMonth;
-        this.cvv = cvv;
-    }
+  public DebitCard() {
+  }
 
-    public Long getDebitCardNumber() {
-        return debitCardNumber;
-    }
+  public DebitCard(Long debitCardNumber, Account account, String pin,
+                   Integer transactionLimit,
+                   DebitCardStatus debitCardStatus, String expiryYear, String expiryMonth, String cvv) {
+    this.debitCardNumber = debitCardNumber;
+    this.account = account;
+    this.pin = pin;
+    this.transactionLimit = transactionLimit;
+    this.debitCardStatus = debitCardStatus;
+    this.expiryYear = expiryYear;
+    this.expiryMonth = expiryMonth;
+    this.cvv = cvv;
+  }
 
-    public void setDebitCardNumber(Long debitCardNumber) {
-        this.debitCardNumber = debitCardNumber;
-    }
+  public Long getDebitCardNumber() {
+    return debitCardNumber;
+  }
 
-    public Account getAccount() {
-        return account;
-    }
+  public void setDebitCardNumber(Long debitCardNumber) {
+    this.debitCardNumber = debitCardNumber;
+  }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+  public Account getAccount() {
+    return account;
+  }
 
-    public String getPin() {
-        return pin;
-    }
+  public void setAccount(Account account) {
+    this.account = account;
+  }
 
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+  public String getPin() {
+    return pin;
+  }
 
-    public Integer getTransactionLimit() {
-        return transactionLimit;
-    }
+  public void setPin(String pin) {
+    this.pin = pin;
+  }
 
-    public void setTransactionLimit(Integer transactionLimit) {
-        this.transactionLimit = transactionLimit;
-    }
+  public Integer getTransactionLimit() {
+    return transactionLimit;
+  }
 
-    public DebitCardStatus getDebitCardStatus() {
-        return debitCardStatus;
-    }
+  public void setTransactionLimit(Integer transactionLimit) {
+    this.transactionLimit = transactionLimit;
+  }
 
-    public void setDebitCardStatus(DebitCardStatus debitCardStatus) {
-        this.debitCardStatus = debitCardStatus;
-    }
+  public DebitCardStatus getDebitCardStatus() {
+    return debitCardStatus;
+  }
 
-    public String getExpiryYear() {
-        return expiryYear;
-    }
+  public void setDebitCardStatus(DebitCardStatus debitCardStatus) {
+    this.debitCardStatus = debitCardStatus;
+  }
 
-    public void setExpiryYear(String expiryYear) {
-        this.expiryYear = expiryYear;
-    }
+  public String getExpiryYear() {
+    return expiryYear;
+  }
 
-    public String getExpiryMonth() {
-        return expiryMonth;
-    }
+  public void setExpiryYear(String expiryYear) {
+    this.expiryYear = expiryYear;
+  }
 
-    public void setExpiryMonth(String expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
+  public String getExpiryMonth() {
+    return expiryMonth;
+  }
 
-    public String getCvv() {
-        return cvv;
-    }
+  public void setExpiryMonth(String expiryMonth) {
+    this.expiryMonth = expiryMonth;
+  }
 
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
+  public String getCvv() {
+    return cvv;
+  }
+
+  public void setCvv(String cvv) {
+    this.cvv = cvv;
+  }
+
 }

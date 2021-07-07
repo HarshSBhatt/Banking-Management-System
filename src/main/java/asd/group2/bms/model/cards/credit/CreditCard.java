@@ -16,125 +16,129 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "credit_cards")
 public class CreditCard extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long creditCardNumber;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Account account;
+  @Id
+  private Long creditCardNumber;
 
-    @NotBlank
-    @Size(max = 6)
-    private String pin;
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private Account account;
 
-    @NotNull
-    @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
-    private Integer transactionLimit;
+  @NotBlank
+  @Size(max = 6)
+  private String pin;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private CreditCardStatus creditCardStatus;
+  @NotNull
+  @Column(name = "transaction_limit", columnDefinition = "integer default 5000")
+  private Integer transactionLimit;
 
-    @NotBlank
-    @Size(max = 4)
-    private String expiryYear;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private CreditCardStatus creditCardStatus;
 
-    @NotBlank
-    @Size(max = 2)
-    private String expiryMonth;
+  @NotBlank
+  @Size(max = 4)
+  private String expiryYear;
 
-    @NotBlank
-    @Size(max = 6)
-    private String cvv;
+  @NotBlank
+  @Size(max = 2)
+  private String expiryMonth;
 
-    @Column(name = "is_active", columnDefinition = "boolean default false")
-    private Boolean isActive;
+  @NotBlank
+  @Size(max = 6)
+  private String cvv;
 
-    public CreditCard() {
-    }
+  @Column(name = "is_active", columnDefinition = "boolean default false")
+  private Boolean isActive;
 
-    public CreditCard(Account account, String pin, Integer transactionLimit, CreditCardStatus creditCardStatus, String expiryYear, String expiryMonth, String cvv, Boolean isActive) {
-        this.account = account;
-        this.pin = pin;
-        this.transactionLimit = transactionLimit;
-        this.creditCardStatus = creditCardStatus;
-        this.expiryYear = expiryYear;
-        this.expiryMonth = expiryMonth;
-        this.cvv = cvv;
-        this.isActive = isActive;
-    }
+  public CreditCard() {
+  }
 
-    public Long getCreditCardNumber() {
-        return creditCardNumber;
-    }
+  public CreditCard(Long creditCardNumber, Account account, String pin,
+                    Integer transactionLimit,
+                    CreditCardStatus creditCardStatus, String expiryYear, String expiryMonth, String cvv, Boolean isActive) {
+    this.creditCardNumber = creditCardNumber;
+    this.account = account;
+    this.pin = pin;
+    this.transactionLimit = transactionLimit;
+    this.creditCardStatus = creditCardStatus;
+    this.expiryYear = expiryYear;
+    this.expiryMonth = expiryMonth;
+    this.cvv = cvv;
+    this.isActive = isActive;
+  }
 
-    public void setCreditCardNumber(Long creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
-    }
+  public Long getCreditCardNumber() {
+    return creditCardNumber;
+  }
 
-    public Account getAccount() {
-        return account;
-    }
+  public void setCreditCardNumber(Long creditCardNumber) {
+    this.creditCardNumber = creditCardNumber;
+  }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+  public Account getAccount() {
+    return account;
+  }
 
-    public String getPin() {
-        return pin;
-    }
+  public void setAccount(Account account) {
+    this.account = account;
+  }
 
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+  public String getPin() {
+    return pin;
+  }
 
-    public Integer getTransactionLimit() {
-        return transactionLimit;
-    }
+  public void setPin(String pin) {
+    this.pin = pin;
+  }
 
-    public void setTransactionLimit(Integer transactionLimit) {
-        this.transactionLimit = transactionLimit;
-    }
+  public Integer getTransactionLimit() {
+    return transactionLimit;
+  }
 
-    public CreditCardStatus getCreditCardStatus() {
-        return creditCardStatus;
-    }
+  public void setTransactionLimit(Integer transactionLimit) {
+    this.transactionLimit = transactionLimit;
+  }
 
-    public void setCreditCardStatus(CreditCardStatus creditCardStatus) {
-        this.creditCardStatus = creditCardStatus;
-    }
+  public CreditCardStatus getCreditCardStatus() {
+    return creditCardStatus;
+  }
 
-    public String getExpiryYear() {
-        return expiryYear;
-    }
+  public void setCreditCardStatus(CreditCardStatus creditCardStatus) {
+    this.creditCardStatus = creditCardStatus;
+  }
 
-    public void setExpiryYear(String expiryYear) {
-        this.expiryYear = expiryYear;
-    }
+  public String getExpiryYear() {
+    return expiryYear;
+  }
 
-    public String getExpiryMonth() {
-        return expiryMonth;
-    }
+  public void setExpiryYear(String expiryYear) {
+    this.expiryYear = expiryYear;
+  }
 
-    public void setExpiryMonth(String expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
+  public String getExpiryMonth() {
+    return expiryMonth;
+  }
 
-    public String getCvv() {
-        return cvv;
-    }
+  public void setExpiryMonth(String expiryMonth) {
+    this.expiryMonth = expiryMonth;
+  }
 
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
+  public String getCvv() {
+    return cvv;
+  }
 
-    public Boolean getActive() {
-        return isActive;
-    }
+  public void setCvv(String cvv) {
+    this.cvv = cvv;
+  }
 
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
+  public Boolean getActive() {
+    return isActive;
+  }
+
+  public void setActive(Boolean active) {
+    isActive = active;
+  }
+
 }

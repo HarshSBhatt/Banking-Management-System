@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 public
 class BmsApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+  @Test
+  void contextLoads() {
+  }
 
 }

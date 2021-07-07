@@ -9,15 +9,16 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@EntityScan(basePackageClasses = { BmsApplication.class, Jsr310JpaConverters.class })
+@EntityScan(basePackageClasses = {BmsApplication.class, Jsr310JpaConverters.class})
 public class BmsApplication {
-    @PostConstruct
-    void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
 
-    public static void main(String[] args) {
-        SpringApplication.run(BmsApplication.class, args);
-    }
+  @PostConstruct
+  void init() {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+  }
+
+  public static void main(String[] args) {
+    SpringApplication.run(BmsApplication.class, args);
+  }
 
 }

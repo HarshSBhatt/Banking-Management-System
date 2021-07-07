@@ -15,73 +15,75 @@ import java.util.Date;
 @Entity
 @Table(name = "credit_card_bills")
 public class CreditCardBill extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long billId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "credit_card_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private CreditCard creditCard;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long billId;
 
-    @NotNull
-    private Double amount;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "credit_card_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private CreditCard creditCard;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dueDate;
+  @NotNull
+  private Double amount;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private BillStatus billStatus;
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date dueDate;
 
-    public CreditCardBill() {
-    }
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private BillStatus billStatus;
 
-    public CreditCardBill(CreditCard creditCard, Double amount, Date dueDate, BillStatus billStatus) {
-        this.creditCard = creditCard;
-        this.amount = amount;
-        this.dueDate = dueDate;
-        this.billStatus = billStatus;
-    }
+  public CreditCardBill() {
+  }
 
-    public Long getBillId() {
-        return billId;
-    }
+  public CreditCardBill(CreditCard creditCard, Double amount, Date dueDate, BillStatus billStatus) {
+    this.creditCard = creditCard;
+    this.amount = amount;
+    this.dueDate = dueDate;
+    this.billStatus = billStatus;
+  }
 
-    public void setBillId(Long billId) {
-        this.billId = billId;
-    }
+  public Long getBillId() {
+    return billId;
+  }
 
-    public CreditCard getCreditCard() {
-        return creditCard;
-    }
+  public void setBillId(Long billId) {
+    this.billId = billId;
+  }
 
-    public void setCreditCard(CreditCard creditCard) {
-        this.creditCard = creditCard;
-    }
+  public CreditCard getCreditCard() {
+    return creditCard;
+  }
 
-    public Double getAmount() {
-        return amount;
-    }
+  public void setCreditCard(CreditCard creditCard) {
+    this.creditCard = creditCard;
+  }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+  public Double getAmount() {
+    return amount;
+  }
 
-    public Date getDueDate() {
-        return dueDate;
-    }
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
+  public Date getDueDate() {
+    return dueDate;
+  }
 
-    public BillStatus getBillStatus() {
-        return billStatus;
-    }
+  public void setDueDate(Date dueDate) {
+    this.dueDate = dueDate;
+  }
 
-    public void setBillStatus(BillStatus billStatus) {
-        this.billStatus = billStatus;
-    }
+  public BillStatus getBillStatus() {
+    return billStatus;
+  }
+
+  public void setBillStatus(BillStatus billStatus) {
+    this.billStatus = billStatus;
+  }
+
 }

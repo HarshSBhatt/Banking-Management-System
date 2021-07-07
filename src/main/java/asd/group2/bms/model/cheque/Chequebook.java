@@ -14,48 +14,50 @@ import javax.persistence.*;
 @Entity
 @Table(name = "chequebooks")
 public class Chequebook extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chequebookNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_number", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Account account;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long chequebookNumber;
 
-    @Column(name = "is_issued", columnDefinition = "boolean default false")
-    private Boolean isIssued;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "account_number", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JsonIgnore
+  private Account account;
 
-    public Chequebook() {
-    }
+  @Column(name = "is_issued", columnDefinition = "boolean default false")
+  private Boolean isIssued;
 
-    public Chequebook(Account account, Boolean isIssued) {
-        this.account = account;
-        this.isIssued = isIssued;
-    }
+  public Chequebook() {
+  }
 
-    public Long getChequebookNumber() {
-        return chequebookNumber;
-    }
+  public Chequebook(Account account, Boolean isIssued) {
+    this.account = account;
+    this.isIssued = isIssued;
+  }
 
-    public void setChequebookNumber(Long chequebookNumber) {
-        this.chequebookNumber = chequebookNumber;
-    }
+  public Long getChequebookNumber() {
+    return chequebookNumber;
+  }
 
-    public Account getAccount() {
-        return account;
-    }
+  public void setChequebookNumber(Long chequebookNumber) {
+    this.chequebookNumber = chequebookNumber;
+  }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+  public Account getAccount() {
+    return account;
+  }
 
-    public Boolean getIssued() {
-        return isIssued;
-    }
+  public void setAccount(Account account) {
+    this.account = account;
+  }
 
-    public void setIssued(Boolean issued) {
-        isIssued = issued;
-    }
+  public Boolean getIssued() {
+    return isIssued;
+  }
+
+  public void setIssued(Boolean issued) {
+    isIssued = issued;
+  }
+
 }

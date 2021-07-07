@@ -17,74 +17,76 @@ import java.util.Date;
 @Entity
 @Table(name = "resigns")
 public class ResignRequest extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long resignId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long resignId;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private User user;
 
-    @NotBlank
-    private String reason;
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date date;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private RequestStatus requestStatus;
+  @NotBlank
+  private String reason;
 
-    public ResignRequest() {
-    }
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private RequestStatus requestStatus;
 
-    public ResignRequest(User user, Date date, String reason, RequestStatus requestStatus) {
-        this.user = user;
-        this.date = date;
-        this.reason = reason;
-        this.requestStatus = requestStatus;
-    }
+  public ResignRequest() {
+  }
 
-    public Long getResignId() {
-        return resignId;
-    }
+  public ResignRequest(User user, Date date, String reason, RequestStatus requestStatus) {
+    this.user = user;
+    this.date = date;
+    this.reason = reason;
+    this.requestStatus = requestStatus;
+  }
 
-    public void setResignId(Long resignId) {
-        this.resignId = resignId;
-    }
+  public Long getResignId() {
+    return resignId;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setResignId(Long resignId) {
+    this.resignId = resignId;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public Date getDate() {
-        return date;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+  public Date getDate() {
+    return date;
+  }
 
-    public String getReason() {
-        return reason;
-    }
+  public void setDate(Date date) {
+    this.date = date;
+  }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+  public String getReason() {
+    return reason;
+  }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+  public RequestStatus getRequestStatus() {
+    return requestStatus;
+  }
+
+  public void setRequestStatus(RequestStatus requestStatus) {
+    this.requestStatus = requestStatus;
+  }
+
 }
 
