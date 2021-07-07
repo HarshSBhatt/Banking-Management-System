@@ -77,7 +77,7 @@ public class ResignService {
   /**
    * @param resignId:      id of the resign
    * @param requestStatus: Status of the resign (APPROVED, REJECTED, PENDING)
-   * @return the updated status of the resign having id - leaveId
+   * @return the updated status of the resign having id - resignId
    */
   public ResignRequest setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
     ResignRequest resignRequest = getResignById(resignId);
