@@ -12,10 +12,10 @@ import asd.group2.bms.payload.response.UserMetaResponse;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.AccountService;
-import asd.group2.bms.service.UserService;
+import asd.group2.bms.serviceImpl.AccountServiceImpl;
+import asd.group2.bms.serviceImpl.UserServiceImpl;
 import asd.group2.bms.util.AppConstants;
-import asd.group2.bms.util.CustomEmail;
+import asd.group2.bms.util.CustomEmailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +31,16 @@ import java.io.UnsupportedEncodingException;
 public class AccountController {
 
   @Autowired
-  AccountService accountService;
+  AccountServiceImpl accountService;
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userService;
 
   @Autowired
   UserRepository userRepository;
 
   @Autowired
-  CustomEmail customEmail;
+  CustomEmailImpl customEmail;
 
   /**
    * Users list based on the account status of the users
