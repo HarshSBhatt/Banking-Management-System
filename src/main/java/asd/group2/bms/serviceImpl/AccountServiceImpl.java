@@ -10,7 +10,6 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.service.AccountService;
-import asd.group2.bms.util.CustomEmailImpl;
 import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

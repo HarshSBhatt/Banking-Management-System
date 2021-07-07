@@ -11,7 +11,7 @@ import asd.group2.bms.repository.RoleRepository;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.JwtTokenProvider;
 import asd.group2.bms.serviceImpl.UserServiceImpl;
-import asd.group2.bms.util.CustomEmailImpl;
+import asd.group2.bms.serviceImpl.CustomEmailImpl;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

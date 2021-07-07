@@ -1,4 +1,4 @@
-package asd.group2.bms.util;
+package asd.group2.bms.service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;

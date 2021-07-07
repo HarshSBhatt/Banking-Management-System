@@ -15,7 +15,7 @@ import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.serviceImpl.AccountServiceImpl;
 import asd.group2.bms.serviceImpl.UserServiceImpl;
 import asd.group2.bms.util.AppConstants;
-import asd.group2.bms.util.CustomEmailImpl;
+import asd.group2.bms.serviceImpl.CustomEmailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -9,7 +9,6 @@ import asd.group2.bms.repository.AccountRepository;
 import asd.group2.bms.repository.TermDepositDetailRepository;
 import asd.group2.bms.service.TermDepositDetailService;
 import asd.group2.bms.util.AppConstants;
-import asd.group2.bms.util.CustomEmailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
