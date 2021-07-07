@@ -1,5 +1,6 @@
 package asd.group2.bms.service;
 
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
@@ -79,6 +80,9 @@ public class TermDepositService {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
     }
 
+  }
+  public TermDepositDetail getTermDepositDetailById(Long id){
+    return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
   }
 
 
