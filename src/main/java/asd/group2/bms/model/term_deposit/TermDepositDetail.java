@@ -2,7 +2,6 @@ package asd.group2.bms.model.term_deposit;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.audit.DateAudit;
-import asd.group2.bms.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -29,18 +28,18 @@ public class TermDepositDetail extends DateAudit {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Account account;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "term_duration", nullable = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-  private TermDeposit termDeposit;
-
   @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date startDate;
 
   @NotNull
   private Double initialAmount;
+
+  @NotNull
+  private int duration;
+
+  @NotNull
+  private float rateOfInterest;
 
   @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -56,11 +55,14 @@ public class TermDepositDetail extends DateAudit {
   public TermDepositDetail() {
   }
 
-  public TermDepositDetail(User user, Account account, TermDeposit termDeposit, Date startDate, Double initialAmount, Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
+  public TermDepositDetail(Account account, Date startDate,
+                           Double initialAmount, int duration, float rateOfInterest,
+                           Date maturityDate, Double maturityAmount, TermDepositStatus termDepositStatus) {
     this.account = account;
-    this.termDeposit = termDeposit;
     this.startDate = startDate;
     this.initialAmount = initialAmount;
+    this.duration = duration;
+    this.rateOfInterest = rateOfInterest;
     this.maturityDate = maturityDate;
     this.maturityAmount = maturityAmount;
     this.termDepositStatus = termDepositStatus;
@@ -82,14 +84,6 @@ public class TermDepositDetail extends DateAudit {
     this.account = account;
   }
 
-  public TermDeposit getTermDeposit() {
-    return termDeposit;
-  }
-
-  public void setTermDeposit(TermDeposit termDeposit) {
-    this.termDeposit = termDeposit;
-  }
-
   public Date getStartDate() {
     return startDate;
   }
@@ -104,6 +98,22 @@ public class TermDepositDetail extends DateAudit {
 
   public void setInitialAmount(Double initialAmount) {
     this.initialAmount = initialAmount;
+  }
+
+  public int getDuration() {
+    return duration;
+  }
+
+  public void setDuration(int duration) {
+    this.duration = duration;
+  }
+
+  public float getRateOfInterest() {
+    return rateOfInterest;
+  }
+
+  public void setRateOfInterest(float rateOfInterest) {
+    this.rateOfInterest = rateOfInterest;
   }
 
   public Date getMaturityDate() {

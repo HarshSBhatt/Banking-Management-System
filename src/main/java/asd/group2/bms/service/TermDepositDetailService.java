@@ -1,31 +1,18 @@
 package asd.group2.bms.service;
 
-import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
-import asd.group2.bms.repository.TermDepositDetailRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@Service
-public class TermDepositDetailService {
+public interface TermDepositDetailService {
 
-  @Autowired
-  TermDepositDetailRepository termDepositDetailRepository;
+  ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
+                                           String firstName, Double fdAmount, Date currentDate, int duration);
 
-  @Autowired
-  AccountService accountService;
+  TermDepositDetail getTermDepositDetailById(Long id);
 
-  public List<TermDepositDetail> getTermDepositDetail(Long userId) {
-
-    Account account = accountService.getAccountByUserId(userId);
-    List<TermDepositDetail> termDepositDetailList = termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(account.getAccountNumber());
-    if (termDepositDetailList.size() > 0) {
-      return termDepositDetailList;
-    }
-    return new ArrayList<>();
-  }
+  List<TermDepositDetail> getTermDepositDetail(Long userId);
 
 }

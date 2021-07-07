@@ -1,5 +1,6 @@
-package asd.group2.bms.util;
+package asd.group2.bms.serviceImpl;
 
+import asd.group2.bms.service.CustomEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 
 @Component
-public class CustomEmail {
+public class CustomEmailImpl implements CustomEmail {
 
   @Autowired
   JavaMailSender javaMailSender;
@@ -86,6 +87,24 @@ public class CustomEmail {
         "<p>Debit Card Year: " + expiryYear + ".</p>" +
         "<p>Debit Card CVV: " + cvv + ".</p>" +
         "<p>Thank you.</p>" +
+        "<p>Happy Banking!</p>";
+    helper.setSubject(subject);
+    helper.setText(content, true);
+    javaMailSender.send(message);
+  }
+
+  public void sendBalanceDeductionMail(String email, String firstName, Double debitedAmount, Double newBalance) throws MessagingException, UnsupportedEncodingException {
+    MimeMessage message = javaMailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+
+    helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+    helper.setTo(email);
+
+    String subject = "Activity in your account: Amount debited!";
+    String content = "<p>Dear " + firstName + ",</p>" +
+        "<p>Your balance has been deducted</p>" +
+        "<p>Amount debited: " + debitedAmount + "</p>" +
+        "<p>Your available balance: " + newBalance + "</p>" +
         "<p>Happy Banking!</p>";
     helper.setSubject(subject);
     helper.setText(content, true);
