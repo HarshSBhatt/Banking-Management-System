@@ -9,8 +9,8 @@ import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.AccountService;
-import asd.group2.bms.service.CreditCardService;
+import asd.group2.bms.serviceImpl.AccountServiceImpl;
+import asd.group2.bms.serviceImpl.CreditCardServiceImpl;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +23,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class CreditCardController {
-    @Autowired
-    CreditCardService creditCardService;
 
     @Autowired
-    AccountService accountService;
+    CreditCardServiceImpl creditCardService;
+
+    @Autowired
+    AccountServiceImpl accountService;
 
     /**
      * @param creditCardStatus: Credit card status
@@ -41,7 +42,6 @@ public class CreditCardController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return creditCardService.getCreditCardListByStatus(creditCardStatus, page, size);
     }
-
 
     /**
      * @param updateCreditCardStatusRequest: credit card number and credit card status
@@ -73,4 +73,5 @@ public class CreditCardController {
         Account account = accountService.getAccountByUserId(userid);
         return creditCardService.createCreditCard(account);
     }
+
 }
