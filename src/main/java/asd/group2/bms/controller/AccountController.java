@@ -9,7 +9,7 @@ import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.UserMetaResponse;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.serviceImpl.AccountServiceImpl;
@@ -37,7 +37,7 @@ public class AccountController {
   UserServiceImpl userService;
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   @Autowired
   CustomEmailImpl customEmail;
@@ -106,8 +106,9 @@ public class AccountController {
     if (!userRepository.existsByEmail(email)) {
       return new ResponseEntity<>(new ApiResponse(false, "User does not exist!"), HttpStatus.BAD_REQUEST);
     }
-    User user = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
-    if (user == null) {
+    Boolean isUpdated = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
+    User user = userService.getUserByEmail(email);
+    if (isUpdated) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
           HttpStatus.BAD_REQUEST);
     }

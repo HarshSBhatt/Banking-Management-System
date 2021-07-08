@@ -24,54 +24,53 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class CreditCardController {
 
-    @Autowired
-    CreditCardServiceImpl creditCardService;
+  @Autowired
+  CreditCardServiceImpl creditCardService;
 
-    @Autowired
-    AccountServiceImpl accountService;
+  @Autowired
+  AccountServiceImpl accountService;
 
-    /**
-     * @param creditCardStatus: Credit card status
-     * @description: Return all the credit cards having status creditCardStatus
-     */
-    @GetMapping("/services/creditcards")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public PagedResponse<CreditCardListResponse> getCreditCardByStatus(
-            @RequestParam(value = "creditCardStatus") CreditCardStatus creditCardStatus,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return creditCardService.getCreditCardListByStatus(creditCardStatus, page, size);
+  /**
+   * @param creditCardStatus: Credit card status
+   * @description: Return all the credit cards having status creditCardStatus
+   */
+  @GetMapping("/services/creditcards")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public PagedResponse<CreditCardListResponse> getCreditCardByStatus(
+      @RequestParam(value = "creditCardStatus") CreditCardStatus creditCardStatus,
+      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+    return creditCardService.getCreditCardListByStatus(creditCardStatus, page, size);
+  }
+
+  /**
+   * @param updateCreditCardStatusRequest: credit card number and credit card status
+   * @return success or failure response with appropriate message
+   */
+  @PutMapping("/services/creditcards")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> updateCreditCardRequestStatus(
+      @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) {
+    CreditCard creditCard = creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
+    if (creditCard != null) {
+      return ResponseEntity.ok(new ApiResponse(true, "Credit Card request status changed successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Credit Card request status!"),
+          HttpStatus.BAD_REQUEST);
     }
+  }
 
-    /**
-     * @param updateCreditCardStatusRequest: credit card number and credit card status
-     * @return success or failure response with appropriate message
-     */
-    @PutMapping("/services/creditcards")
-    @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<?> updateCreditCardRequestStatus(
-            @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) {
-        CreditCard creditCard = creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
-        if (creditCard != null) {
-            return ResponseEntity.ok(new ApiResponse(true, "Credit Card request status changed successfully!"));
-        } else {
-            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Credit Card request status!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    /**
-     * @param currentUser: current logged in user
-     * @return
-     */
-    @PostMapping("/services/creditcards")
-    @RolesAllowed({"ROLE_USER"})
-    public CreditCard createCreditCard(
-            @CurrentLoggedInUser UserPrincipal currentUser) {
-        Long userid = currentUser.getId();
-        Account account = accountService.getAccountByUserId(userid);
-        return creditCardService.createCreditCard(account);
-    }
+  /**
+   * @param currentUser: current logged in user
+   * @return it will create and return credit card information
+   */
+  @PostMapping("/services/creditcards")
+  @RolesAllowed({"ROLE_USER"})
+  public CreditCard createCreditCard(
+      @CurrentLoggedInUser UserPrincipal currentUser) {
+    Long userid = currentUser.getId();
+    Account account = accountService.getAccountByUserId(userid);
+    return creditCardService.createCreditCard(account);
+  }
 
 }
