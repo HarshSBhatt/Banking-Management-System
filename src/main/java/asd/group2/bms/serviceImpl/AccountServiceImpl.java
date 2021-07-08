@@ -7,8 +7,8 @@ import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repository.AccountRepository;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.AccountRepositoryImpl;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.service.AccountService;
 import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   @Autowired
-  AccountRepository accountRepository;
+  AccountRepositoryImpl accountRepository;
 
   @Autowired
   DebitCardServiceImpl debitCardService;
