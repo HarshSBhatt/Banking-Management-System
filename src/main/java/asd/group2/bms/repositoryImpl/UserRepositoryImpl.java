@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.Date;
@@ -202,17 +199,16 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
   public Boolean update(User user) {
     String sql = "UPDATE users SET " +
         "updated_at = ?, account_status = ?, address = ?, " +
-        "birthday = ?, email = ?, first_name = ?, last_name = ?, " +
-        "password = ?, phone = ?, username = ?, forgot_password_token = ?, " +
+        "birthday = ?, first_name = ?, last_name = ?, " +
+        "password = ?, phone = ?, forgot_password_token = ?, " +
         "requested_account_type = ?, city = ?, state = ?, zip_code = ?" +
         " WHERE id = ?";
     int status = jdbcTemplate.update(sql,
         new Date(),
         AccountStatus.valueOf(user.getAccountStatus().toString()).ordinal(),
         user.getAddress(),
-        user.getBirthday(),
-        user.getEmail(), user.getFirstName(), user.getLastName(),
-        user.getPassword(), user.getPhone(), user.getUsername(),
+        user.getBirthday(), user.getFirstName(), user.getLastName(),
+        user.getPassword(), user.getPhone(),
         user.getForgotPasswordToken(),
         user.getRequestedAccountType().name(),
         user.getCity(), user.getState(), user.getZipCode(), user.getId());
