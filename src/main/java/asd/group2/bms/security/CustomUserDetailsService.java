@@ -1,7 +1,7 @@
 package asd.group2.bms.security;
 
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   /**
    * @param usernameOrEmail: username or email of the user

@@ -3,7 +3,7 @@ package asd.group2.bms.serviceImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
-import asd.group2.bms.repository.DebitCardRepository;
+import asd.group2.bms.repositoryImpl.DebitCardRepositoryImpl;
 import asd.group2.bms.service.DebitCardService;
 import asd.group2.bms.util.AppConstants;
 import asd.group2.bms.util.Helper;
@@ -19,7 +19,7 @@ import java.util.Random;
 public class DebitCardServiceImpl implements DebitCardService {
 
   @Autowired
-  DebitCardRepository debitCardRepository;
+  DebitCardRepositoryImpl debitCardRepository;
 
   /**
    * @param account: Account of user whose debit card is being created

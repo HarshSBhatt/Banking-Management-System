@@ -20,7 +20,7 @@ public interface UserService {
 
   ResponseEntity<?> createUser(SignUpRequest signUpRequest);
 
-  User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException;
+  Boolean setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException;
 
   ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser);
 
