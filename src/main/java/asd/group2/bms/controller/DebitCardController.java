@@ -2,6 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
+import asd.group2.bms.payload.request.DebitCardSetPinRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.service.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,24 @@ public class DebitCardController {
         }
     }
 
-}
+    /**
+     *
+     * @param debitCardSetPinRequest: Request to set pin for the given debit card
+     * @return Returns whether pin is updated
+     */
+    @PutMapping("/services/debitcard")
+    @RolesAllowed({"ROLE_USER"})
+    public ResponseEntity<?> debitCardSetPin(
+            @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
+        DebitCard debitCard = debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin());
+        if (debitCard.getPin() == debitCardSetPinRequest.getPin()) {
+            return ResponseEntity.ok(new ApiResponse(true, "Pin is updated successfully!"));
+        } else {
+            return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing pin"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    }
