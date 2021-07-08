@@ -62,8 +62,19 @@ public class DebitCardService {
    */
   public DebitCard setDebitCardLimit(Long debitCardNumber, Integer transactionLimit) {
     DebitCard debitCard = getDebitCardByNumber(debitCardNumber);
-
     debitCard.setTransactionLimit(transactionLimit);
+    return debitCardRepository.save(debitCard);
+  }
+
+  /**
+   *
+   * @param debitCardNumber: Debit card number
+   * @param pin: Pin to set for the given debit card
+   * @return Returns debit card of the changed pin
+   */
+  public DebitCard setDebitCardPin(Long debitCardNumber, String pin) {
+    DebitCard debitCard = getDebitCardByNumber(debitCardNumber);
+    debitCard.setPin(pin);
     return debitCardRepository.save(debitCard);
   }
 
