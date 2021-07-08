@@ -1,4 +1,4 @@
-package asd.group2.bms.repository;
+package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepositoryImpl extends JpaRepository<Account, Long> {
 
   /**
    * @param accountNumber: account number of the user

@@ -1,4 +1,4 @@
-package asd.group2.bms.repository;
+package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ResignRepository extends JpaRepository<ResignRequest, Long> {
+public interface ResignRepositoryImpl extends JpaRepository<ResignRequest, Long> {
 
   /**
    * @param requestStatus: request status

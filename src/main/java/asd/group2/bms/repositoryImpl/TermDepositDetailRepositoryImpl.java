@@ -1,4 +1,4 @@
-package asd.group2.bms.repository;
+package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 @Repository
-public interface TermDepositDetailRepository extends JpaRepository<TermDepositDetail, Long> {
+public interface TermDepositDetailRepositoryImpl extends JpaRepository<TermDepositDetail, Long> {
 
   /**
    * @param accountNumber: bank account number of the user

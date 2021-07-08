@@ -1,4 +1,4 @@
-package asd.group2.bms.repository;
+package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
+public interface LeaveRepositoryImpl extends JpaRepository<LeaveRequest, Long> {
 
   /**
    * @param requestStatus: request status

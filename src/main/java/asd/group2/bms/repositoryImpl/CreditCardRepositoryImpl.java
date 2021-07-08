@@ -1,4 +1,4 @@
-package asd.group2.bms.repository;
+package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
+public interface CreditCardRepositoryImpl extends JpaRepository<CreditCard, Long> {
     /**
      * @param creditCardStatus: request status
      * @descriptions: This will return the Credit Card records by status.
