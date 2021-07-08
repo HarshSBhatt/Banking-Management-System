@@ -7,7 +7,7 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.repository.ResignRepository;
+import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ResignService;
 import asd.group2.bms.util.ModelMapper;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ResignServiceImpl implements ResignService {
 
   @Autowired
-  ResignRepository resignRepository;
+  ResignRepositoryImpl resignRepository;
 
   /**
    * @param requestStatus: Resign Status (PENDING, APPROVED, REJECTED)

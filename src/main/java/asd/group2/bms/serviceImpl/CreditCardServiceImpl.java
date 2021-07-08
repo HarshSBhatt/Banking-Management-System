@@ -1,12 +1,15 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.exception.ResourceNotFoundException;
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repository.CreditCardRepository;
+import asd.group2.bms.repositoryImpl.CreditCardRepositoryImpl;
 import asd.group2.bms.service.CreditCardService;
+import asd.group2.bms.util.AppConstants;
+import asd.group2.bms.util.Helper;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,14 +18,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
-public class CreditCardServiceServiceImpl implements CreditCardService {
+public class CreditCardServiceImpl implements CreditCardService {
 
   @Autowired
-  CreditCardRepository creditCardRepository;
+  CreditCardRepositoryImpl creditCardRepository;
+
+  Random random;
+
+  Date date;
 
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
@@ -62,6 +73,30 @@ public class CreditCardServiceServiceImpl implements CreditCardService {
   public CreditCard setCreditCardRequestStatus(Long creditCardNumber, CreditCardStatus creditCardStatus) {
     CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
     creditCard.setCreditCardStatus(creditCardStatus);
+    return creditCardRepository.save(creditCard);
+  }
+
+
+  /**
+   * @param account: account for which credit card would be created
+   * @return This will return the debit card details
+   */
+  public CreditCard createCreditCard(Account account) {
+    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+    int month = localDate.getMonthValue();
+    int currentYear = localDate.getYear();
+
+    String expiryMonth = String.valueOf(month);
+    String expiryYear = String.valueOf(currentYear + 4);
+
+    String pin = String.format("%04d", random.nextInt(AppConstants.FOUR_DIGIT));
+    String cvv = String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
+
+    String creditCardNumber = new Helper().generateRandomDigits(16);
+    CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
+        account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, CreditCardStatus.PENDING, expiryYear, expiryMonth, cvv, false);
+
     return creditCardRepository.save(creditCard);
   }
 

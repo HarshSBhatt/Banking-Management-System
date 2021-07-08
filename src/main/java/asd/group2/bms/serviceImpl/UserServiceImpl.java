@@ -10,8 +10,8 @@ import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserProfile;
-import asd.group2.bms.repository.RoleRepository;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.RoleRepositoryImpl;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,10 @@ import java.util.Collections;
 public class UserServiceImpl implements UserService {
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   @Autowired
-  RoleRepository roleRepository;
+  RoleRepositoryImpl roleRepository;
 
   @Autowired
   PasswordEncoder passwordEncoder;
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
    * @param signUpRequest: Signup related data (username, email, name, phone etc.)
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> createUser(SignUpRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
@@ -123,11 +124,11 @@ public class UserServiceImpl implements UserService {
    * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
    * @return the updated status of the user having email - email
    */
-  public User setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
+  public Boolean setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
     User user = getUserByEmail(email);
     user.setAccountStatus(accountStatus);
     customEmail.sendUserAccountStatusChangeMail(email, user.getFirstName(), accountStatus.toString());
-    return userRepository.save(user);
+    return userRepository.update(user);
   }
 
   /**
@@ -140,7 +141,7 @@ public class UserServiceImpl implements UserService {
     if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
       User user = getUserByEmail(currentUser.getEmail());
       user.setPassword(passwordEncoder.encode(newPassword));
-      userRepository.save(user);
+      userRepository.update(user);
       return new ApiResponse(true, "Password changed successfully!");
     } else {
       return new ApiResponse(false, "Current password is wrong!");
@@ -157,7 +158,7 @@ public class UserServiceImpl implements UserService {
     if (newPassword.equals(confirmNewPassword)) {
       user.setPassword(passwordEncoder.encode(newPassword));
       user.setForgotPasswordToken(null);
-      userRepository.save(user);
+      userRepository.update(user);
       return ResponseEntity.ok(new ApiResponse(true, "Password reset successfully"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "New passwords are not same"), HttpStatus.BAD_REQUEST);
@@ -171,7 +172,7 @@ public class UserServiceImpl implements UserService {
   public void updateResetForgotPasswordToken(String token, String email) {
     User user = getUserByEmail(email);
     user.setForgotPasswordToken(token);
-    userRepository.save(user);
+    userRepository.update(user);
   }
 
   /**
@@ -238,7 +239,7 @@ public class UserServiceImpl implements UserService {
     user.setState(updateProfileRequest.getState());
     user.setZipCode(updateProfileRequest.getZipCode());
 
-    return userRepository.save(user).getId().equals(currentUser.getId());
+    return userRepository.update(user);
   }
 
 }

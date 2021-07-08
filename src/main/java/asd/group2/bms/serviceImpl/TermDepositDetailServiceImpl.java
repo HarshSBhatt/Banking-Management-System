@@ -5,8 +5,8 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.repository.AccountRepository;
-import asd.group2.bms.repository.TermDepositDetailRepository;
+import asd.group2.bms.repositoryImpl.AccountRepositoryImpl;
+import asd.group2.bms.repositoryImpl.TermDepositDetailRepositoryImpl;
 import asd.group2.bms.service.TermDepositDetailService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ import java.util.List;
 public class TermDepositDetailServiceImpl implements TermDepositDetailService {
 
   @Autowired
-  TermDepositDetailRepository termDepositDetailRepository;
+  TermDepositDetailRepositoryImpl termDepositDetailRepository;
 
   @Autowired
   AccountServiceImpl accountService;
 
   @Autowired
-  AccountRepository accountRepository;
+  AccountRepositoryImpl accountRepository;
 
   @Autowired
   CustomEmailImpl customEmail;

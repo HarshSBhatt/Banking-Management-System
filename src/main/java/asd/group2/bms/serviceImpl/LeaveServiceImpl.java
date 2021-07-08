@@ -7,8 +7,8 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repository.LeaveRepository;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.LeaveRepositoryImpl;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.LeaveService;
 import asd.group2.bms.util.ModelMapper;
@@ -27,13 +27,13 @@ import java.util.*;
 public class LeaveServiceImpl implements LeaveService {
 
   @Autowired
-  LeaveRepository leaveRepository;
+  LeaveRepositoryImpl leaveRepository;
 
   @Autowired
   UserServiceImpl userService;
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   /**
    * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
