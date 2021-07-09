@@ -16,10 +16,7 @@ public class ResignRowMapper implements RowMapper<ResignRequest> {
   @Override
   public ResignRequest mapRow(ResultSet resultSet, int i) throws SQLException {
     ResignRequest resignRequest = new ResignRequest();
-    User user = new User();
-    Role role = new Role();
-
-    User mappedUser = new UserRowMapper().mapRow(resultSet, i);
+    UserRowMapper userRowMapper = new UserRowMapper();
 
     LocalDate createdAt = resultSet.getDate("created_at").toLocalDate();
     LocalDate updatedAt = resultSet.getDate("updated_at").toLocalDate();
@@ -30,7 +27,9 @@ public class ResignRowMapper implements RowMapper<ResignRequest> {
     resignRequest.setDate(resultSet.getDate("date"));
     resignRequest.setReason(resultSet.getString("reason"));
     resignRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString("request_status")));
-    resignRequest.setUser(mappedUser);
+
+    User user = userRowMapper.mapRow(resultSet, i);
+    resignRequest.setUser(user);
 
     return resignRequest;
   }
