@@ -85,7 +85,12 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public List<ResignRequest> findByUserOrderByCreatedAtDesc(User user) {
-    return null;
+    String sql = "SELECT * FROM resigns r INNER JOIN users u ON r.user_id = u.id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles ro ON ro.id = ur.role_id WHERE r.user_id = ? ORDER BY r.created_at DESC";
+    try {
+      return jdbcTemplate.query(sql, new Object[]{user.getId()}, new ResignRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
@@ -104,7 +109,8 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-          ps.setDate(3, (java.sql.Date) resignRequest.getDate());
+//          ps.setDate(3, (java.sql.Date) resignRequest.getDate());
+          ps.setDate(3, new java.sql.Date(resignRequest.getDate().getTime()));
           ps.setString(4, resignRequest.getReason());
           ps.setString(5, resignRequest.getRequestStatus().name());
           ps.setLong(6, resignRequest.getUser().getId());

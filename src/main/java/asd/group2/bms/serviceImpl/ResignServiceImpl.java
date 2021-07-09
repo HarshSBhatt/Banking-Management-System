@@ -98,7 +98,7 @@ public class ResignServiceImpl implements ResignService {
         return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
             HttpStatus.FORBIDDEN);
       }
-      resignRepository.delete(resignRequest);
+      resignRepository.delete(resignId);
       return ResponseEntity.ok(new ApiResponse(true, "Resignation request deleted successfully"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
