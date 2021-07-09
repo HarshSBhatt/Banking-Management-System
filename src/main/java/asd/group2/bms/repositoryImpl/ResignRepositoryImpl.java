@@ -116,7 +116,14 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public Boolean update(ResignRequest resignRequest) {
-    return null;
+    String sql = "UPDATE resigns SET " +
+        "updated_at = ?, date = ?, reason = ?, " +
+        "request_status = ? WHERE resign_id = ?";
+    int status = jdbcTemplate.update(sql,
+        new Date(),
+        resignRequest.getDate(), resignRequest.getReason(),
+        resignRequest.getRequestStatus());
+    return status != 0;
   }
 
   @Override
