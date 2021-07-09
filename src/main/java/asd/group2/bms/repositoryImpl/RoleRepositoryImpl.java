@@ -4,7 +4,6 @@ import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.repository.RoleRepository;
 import asd.group2.bms.repositoryMapper.RoleRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -18,11 +17,15 @@ import java.util.Optional;
 @Repository
 public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
+  final
   DataSource dataSource;
+
+  public RoleRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+  }
 
   @PostConstruct
   private void initialize() {

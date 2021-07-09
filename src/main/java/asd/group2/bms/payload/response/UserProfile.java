@@ -47,6 +47,10 @@ public class UserProfile {
     this.joinedAt = joinedAt;
   }
 
+  public UserProfile() {
+
+  }
+
   public Long getId() {
     return id;
   }

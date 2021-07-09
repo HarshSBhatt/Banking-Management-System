@@ -6,12 +6,14 @@ import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
+@Component
 public class UserRowMapper implements RowMapper<User> {
 
   @Override

@@ -108,7 +108,7 @@ public class AccountController {
     }
     Boolean isUpdated = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
     User user = userService.getUserByEmail(email);
-    if (isUpdated) {
+    if (!isUpdated) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
           HttpStatus.BAD_REQUEST);
     }

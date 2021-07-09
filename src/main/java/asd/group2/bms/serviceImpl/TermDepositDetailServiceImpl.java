@@ -54,7 +54,13 @@ public class TermDepositDetailServiceImpl implements TermDepositDetailService {
       // Balance Updated
       Double newBalance = account.getBalance() - fdAmount;
       account.setBalance(newBalance);
-      accountRepository.save(account);
+      Boolean isUpdated = accountRepository.update(account);
+
+      if (!isUpdated) {
+        return new ResponseEntity<>(new ApiResponse(false, "Something went " +
+            "wrong while updating balance!"),
+            HttpStatus.BAD_REQUEST);
+      }
 
       //Sending email
       customEmail.sendBalanceDeductionMail(email, firstName, fdAmount, newBalance);
