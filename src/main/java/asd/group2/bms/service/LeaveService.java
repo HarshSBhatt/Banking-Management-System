@@ -13,18 +13,18 @@ import java.util.List;
 
 public interface LeaveService {
 
-  PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size);
+    PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size);
 
-  List<LeaveListResponse> getLeaveListByUserId(Long userId);
+    List<LeaveListResponse> getLeaveListByUserId(Long userId);
 
-  LeaveRequest getLeaveById(Long leaveId);
+    LeaveRequest getLeaveById(Long leaveId);
 
-  LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus);
+    LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus);
 
-  ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser,
-                                           Long leaveId);
+    ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser,
+                                             Long leaveId);
 
-  ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate,
-                                     String reason);
+    ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate,
+                                       String reason);
 
 }
