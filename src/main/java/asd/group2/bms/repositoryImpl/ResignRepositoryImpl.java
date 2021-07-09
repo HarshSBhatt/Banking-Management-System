@@ -2,6 +2,7 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
+import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ResignRepository;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
@@ -12,12 +13,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +90,28 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public ResignRequest save(ResignRequest resignRequest) {
-    return null;
+    Date now = new Date();
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    String resignSql = "INSERT INTO resigns (" +
+        "created_at, updated_at, date, reason, request_status, user_id)" +
+        "VALUES (?, ?, ?, ?, ?, ?)";
+
+    jdbcTemplate.update(
+        connection -> {
+          PreparedStatement ps =
+              connection.prepareStatement(resignSql,
+                  Statement.RETURN_GENERATED_KEYS);
+          ps.setDate(1, new java.sql.Date(now.getTime()));
+          ps.setDate(2, new java.sql.Date(now.getTime()));
+          ps.setDate(3, (java.sql.Date) resignRequest.getDate());
+          ps.setString(4, resignRequest.getReason());
+          ps.setString(5, resignRequest.getRequestStatus().name());
+          ps.setLong(6, resignRequest.getUser().getId());
+          return ps;
+        }, keyHolder);
+
+    return resignRequest;
   }
 
   @Override
