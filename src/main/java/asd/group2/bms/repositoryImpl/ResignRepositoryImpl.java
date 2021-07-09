@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +29,6 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Autowired
   DataSource dataSource;
-
-  @Autowired
-  ResignRepositoryImpl resignRepository;
 
   @PostConstruct
   private void initialize() {
@@ -44,12 +42,17 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public List<ResignRequest> findByUser_Id(Long userId) {
-    return null;
+    String sql = "SELECT * FROM resigns r INNER JOIN users u ON r.user_id = u.id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles ro ON ro.id = ur.role_id WHERE r.user_id = ?";
+    try {
+      return jdbcTemplate.query(sql, new Object[]{userId}, new ResignRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
   public Optional<ResignRequest> findById(Long resignId) {
-    String sql = "SELECT * FROM resigns r INNER JOIN users u ON r.user_id = u.id INNER JOIN roles r ON r.id = ur.role_id WHERE r.id = ?";
+    String sql = "SELECT * FROM resigns r INNER JOIN users u ON r.user_id = u.id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles ro ON ro.id = ur.role_id WHERE r.resign_id = ?";
     try {
       return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new Object[]{resignId},
           new ResignRowMapper()));
