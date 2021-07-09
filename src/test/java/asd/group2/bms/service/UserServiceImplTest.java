@@ -1,10 +1,13 @@
 package asd.group2.bms.service;
 
 import asd.group2.bms.BmsApplicationTests;
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.SignUpRequest;
+import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.UserPrincipal;
@@ -27,17 +30,22 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class UserServiceImplTest extends BmsApplicationTests {
-    @Mock
+    @Autowired
     AuthenticationManager authenticationManager;
     @Mock
     UserServiceImpl currentservice;
     @Mock
     UserRepositoryImpl CurrentRepository;
+    @Mock
+    UserPrincipal userPrincipal;
+    @Mock
+    UpdateProfileRequest updateProfileRequest;
 
 
     //Email available
@@ -148,8 +156,20 @@ class UserServiceImplTest extends BmsApplicationTests {
     }
 
     @Test
-    void getUserByEmail() {
-
+    void getUserByEmailSuccess() {
+        User test  = currentservice.getUserByEmail("harsh.bhatt@dal.ca");
+        assertTrue( test.getEmail() == "harsh.bhatt@dal.ca","Expected true got false");
+    }
+    @Test
+    void getUserByEmailWrongUserFail() {
+        try {
+            User test = currentservice.getUserByEmail("har2sh.bhatt@dal.ca");
+            System.out.println("Error exception expected");
+        }
+        catch(ResourceNotFoundException r)
+        {
+            assertTrue(1 == 1 ,"Expected error but got no exception");
+        }
     }
 
     @Test
@@ -158,12 +178,20 @@ class UserServiceImplTest extends BmsApplicationTests {
     }
 
     @Test
-    void getUserProfileByUsername() {
+    void getUserProfileByUsernameValidUsername() {
+        UserProfile test = currentservice.getUserProfileByUsername("harsh");
+        assertTrue(test.getUsername() == "harsh","Expected true as username exist but found false");
+
+    }
+    @Test
+    void getUserProfileByUsernameInValidUsername() {
+        UserProfile test = currentservice.getUserProfileByUsername("harsh23");
+        assertTrue(test == null,"Expected false as username does not exist but found true");
 
     }
 
     @Test
-    void updateUserProfileByUsername() {
-
+    void updateUserProfileByUsernameValidUsername() {
+        assertTrue(currentservice.updateUserProfileByUsername(userPrincipal,updateProfileRequest),"Expected true but got false");
     }
 }
