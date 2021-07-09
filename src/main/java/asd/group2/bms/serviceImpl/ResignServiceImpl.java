@@ -76,14 +76,14 @@ public class ResignServiceImpl implements ResignService {
   }
 
   /**
-   * @param resignId:      id of the resign
-   * @param requestStatus: Status of the resign (APPROVED, REJECTED, PENDING)
+   * @param resignId :      id of the resign
+   * @param requestStatus : Status of the resign (APPROVED, REJECTED, PENDING)
    * @return the updated status of the resign having id - resignId
    */
-  public ResignRequest setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
+  public boolean setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
     ResignRequest resignRequest = getResignById(resignId);
     resignRequest.setRequestStatus(requestStatus);
-    return resignRepository.save(resignRequest);
+    return resignRepository.update(resignRequest);
   }
 
   /**
@@ -98,7 +98,7 @@ public class ResignServiceImpl implements ResignService {
         return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
             HttpStatus.FORBIDDEN);
       }
-      resignRepository.delete(resignRequest);
+      resignRepository.delete(resignId);
       return ResponseEntity.ok(new ApiResponse(true, "Resignation request deleted successfully"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
