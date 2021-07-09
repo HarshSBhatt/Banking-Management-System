@@ -96,8 +96,8 @@ public class ResignController {
   @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
   public ResponseEntity<?> updateResignRequestStatus(
       @Valid @RequestBody UpdateResignStatusRequest updateResignStatusRequest) {
-    asd.group2.bms.model.resign.ResignRequest resignRequest = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
-    if (resignRequest != null) {
+    boolean isUpdated = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
+    if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Resign request status changed successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing resign request status!"),

@@ -128,7 +128,7 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
     int status = jdbcTemplate.update(sql,
         new Date(),
         resignRequest.getDate(), resignRequest.getReason(),
-        resignRequest.getRequestStatus());
+        resignRequest.getRequestStatus().name(), resignRequest.getResignId());
     return status != 0;
   }
 
