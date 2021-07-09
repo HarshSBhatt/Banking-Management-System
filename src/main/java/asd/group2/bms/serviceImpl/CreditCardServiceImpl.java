@@ -6,7 +6,7 @@ import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repository.CreditCardRepository;
+import asd.group2.bms.repositoryImpl.CreditCardRepositoryImpl;
 import asd.group2.bms.service.CreditCardService;
 import asd.group2.bms.util.AppConstants;
 import asd.group2.bms.util.Helper;
@@ -29,8 +29,11 @@ import java.util.Random;
 public class CreditCardServiceImpl implements CreditCardService {
 
   @Autowired
-  CreditCardRepository creditCardRepository;
+  CreditCardRepositoryImpl creditCardRepository;
 
+  Random random;
+
+  Date date;
 
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
@@ -79,8 +82,6 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @return This will return the debit card details
    */
   public CreditCard createCreditCard(Account account) {
-//    Random random = new Random();
-    Date date = new Date();
     LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
     int month = localDate.getMonthValue();
@@ -89,12 +90,12 @@ public class CreditCardServiceImpl implements CreditCardService {
     String expiryMonth = String.valueOf(month);
     String expiryYear = String.valueOf(currentYear + 4);
 
-    String pin = String.format("%04d", (int)(Math.random()*9000+1000));
-    String cvv = String.format("%06d", (int)(Math.random()*900000+100000));
+    String pin = String.format("%04d", random.nextInt(AppConstants.FOUR_DIGIT));
+    String cvv = String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
 
     String creditCardNumber = new Helper().generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
-            account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, CreditCardStatus.PENDING, expiryYear, expiryMonth, cvv, false);
+        account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, CreditCardStatus.PENDING, expiryYear, expiryMonth, cvv, false);
 
     return creditCardRepository.save(creditCard);
   }

@@ -1,20 +1,35 @@
 package asd.group2.bms.repository;
 
+import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-
-@Repository
-public interface TermDepositDetailRepository extends JpaRepository<TermDepositDetail, Long> {
+public interface TermDepositDetailRepository {
 
   /**
    * @param accountNumber: bank account number of the user
    * @return This will return the user's bank account number.
    */
   List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber);
+
+  /**
+   * @param termDepositId: term deposit id
+   * @return This will return termDeposit request based on termDeposit id.
+   */
+  Optional<ResignRequest> findById(Long termDepositId);
+
+  /**
+   * @param termDepositDetail: TermDepositDetail details
+   * @return This will return termDepositDetail if inserted in the database.
+   */
+  TermDepositDetail save(TermDepositDetail termDepositDetail);
+
+  /**
+   * @param termDepositDetail: TermDepositDetail details
+   * @return true if termDepositDetail updated else false
+   */
+  Boolean update(TermDepositDetail termDepositDetail);
 
 }

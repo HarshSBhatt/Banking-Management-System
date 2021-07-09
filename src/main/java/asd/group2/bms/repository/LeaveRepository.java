@@ -5,14 +5,11 @@ import asd.group2.bms.model.leaves.RequestStatus;
 import asd.group2.bms.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
+public interface LeaveRepository {
 
   /**
    * @param requestStatus: request status
@@ -21,21 +18,16 @@ public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
   Page<LeaveRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable);
 
   /**
-   * @param leaveIds: Leave Ids
-   * @return This will return the leaves records by leave ids.
+   * @param userId: Id of user
+   * @return This will return the leave records by user id.
    */
-  List<LeaveRequest> findByLeaveIdIn(List<Long> leaveIds);
+  List<LeaveRequest> findByUser_Id(Long userId);
 
   /**
-   * @return This will return the leaves records
+   * @param leaveId: leave id
+   * @return This will return leave request based on leave id.
    */
-  List<LeaveRequest> findAll();
-
-  /**
-   * @param leaveId: Leave Id
-   * @return This will return the leave request by leave id.
-   */
-  Optional<LeaveRequest> findByLeaveId(Long leaveId);
+  Optional<LeaveRequest> findById(Long leaveId);
 
   /**
    * @param user: User model object
@@ -43,10 +35,32 @@ public interface LeaveRepository extends JpaRepository<LeaveRequest, Long> {
    */
   List<LeaveRequest> findByUser(User user);
 
-  /**
-   * @param userId: Id of user
-   * @return This will return the leave records by user id.
+  /*
+    @param leaveIds: Leave Ids
+   * @return This will return the leaves records by leave ids.
    */
-  List<LeaveRequest> findByUser_Id(Long userId);
+  // List<LeaveRequest> findByLeaveIdIn(List<Long> leaveIds);
+
+  /*
+    @return This will return the leaves records
+   */
+  // List<LeaveRequest> findAll();
+
+  /**
+   * @param leaveRequest: LeaveRequest details
+   * @return This will return leaveRequest if inserted in the database.
+   */
+  LeaveRequest save(LeaveRequest leaveRequest);
+
+  /**
+   * @param leaveRequest: LeaveRequest details
+   * @return true if leaveRequest updated else false
+   */
+  Boolean update(LeaveRequest leaveRequest);
+
+  /**
+   * @param leaveId: Leave Id to be deleted
+   */
+  void delete(Long leaveId);
 
 }
