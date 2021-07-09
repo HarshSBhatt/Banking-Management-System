@@ -1,11 +1,8 @@
 package asd.group2.bms.repositoryMapper;
 
-import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
-import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.Role;
-import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,45 +19,19 @@ public class ResignRowMapper implements RowMapper<ResignRequest> {
     User user = new User();
     Role role = new Role();
 
+    User mappedUser = new UserRowMapper().mapRow(resultSet, i);
+
     LocalDate createdAt = resultSet.getDate("created_at").toLocalDate();
     LocalDate updatedAt = resultSet.getDate("updated_at").toLocalDate();
 
     resignRequest.setCreatedAt(createdAt.atStartOfDay(ZoneOffset.UTC).toInstant());
     resignRequest.setUpdatedAt(updatedAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    resignRequest.setResignId(resultSet.getLong("resignId"));
+    resignRequest.setResignId(resultSet.getLong("resign_id"));
     resignRequest.setDate(resultSet.getDate("date"));
     resignRequest.setReason(resultSet.getString("reason"));
-    resignRequest.setRequestStatus(RequestStatus.values()[resultSet.getInt("requestStatus")]);
-    setUser(resultSet, user, role, createdAt, updatedAt);
-    resignRequest.getUser();
-    resignRequest.setUser(resignRequest.getUser());
+    resignRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString("request_status")));
+    resignRequest.setUser(mappedUser);
 
     return resignRequest;
   }
-
-  private void setUser(ResultSet resultSet, User user, Role role, LocalDate createdAt, LocalDate updatedAt) throws SQLException {
-    user.setCreatedAt(createdAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    user.setUpdatedAt(updatedAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    user.setId(resultSet.getLong("id"));
-    user.setFirstName(resultSet.getString("first_name"));
-    user.setLastName(resultSet.getString("last_name"));
-    user.setAccountStatus(AccountStatus.values()[resultSet.getInt("account_status")]);
-    user.setAddress(resultSet.getString("address"));
-    user.setBirthday(resultSet.getDate("birthday"));
-    user.setEmail(resultSet.getString("email"));
-    user.setPassword(resultSet.getString("password"));
-    user.setPhone(resultSet.getString("phone"));
-    user.setUsername(resultSet.getString("username"));
-    user.setForgotPasswordToken(resultSet.getString("forgot_password_token"));
-    user.setRequestedAccountType(AccountType.valueOf(resultSet.getString(
-        "requested_account_type")));
-    user.setCity(resultSet.getString("city"));
-    user.setState(resultSet.getString("state"));
-    user.setZipCode(resultSet.getString("zip_code"));
-    role.setName(RoleType.valueOf(resultSet.getString("name")));
-    role.setId(resultSet.getLong("role_id"));
-    user.getRoles().add(role);
-    user.setRoles(user.getRoles());
-  }
-
 }
