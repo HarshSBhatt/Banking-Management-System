@@ -128,7 +128,8 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public void delete(Long resignId) {
-
+    String sql = "DELETE from resigns WHERE resign_id = ?";
+    Object[] args = new Object[]{resignId};
+    jdbcTemplate.update(sql, args);
   }
-
 }
