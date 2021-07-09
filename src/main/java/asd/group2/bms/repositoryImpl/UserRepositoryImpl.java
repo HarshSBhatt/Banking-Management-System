@@ -52,9 +52,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
 
   public Boolean existsByEmail(String email) {
     String sql = "SELECT count(*) FROM users WHERE email = ?";
-
     int count = jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
-
     return count > 0;
   }
 
