@@ -5,14 +5,14 @@ import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ResignRepository;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
-import asd.group2.bms.repositoryMapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +37,23 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
 
   @Override
   public Page<ResignRequest> findByRequestStatusEquals(RequestStatus requestStatus, Pageable pageable) {
-    return null;
+    String rowCountSql = "SELECT count(1) AS row_count " +
+        "FROM resigns " +
+        "WHERE request_status = " + "\"" + requestStatus + "\"";
+
+    int total =
+        jdbcTemplate.queryForObject(rowCountSql, Integer.class);
+
+    String querySql = "SELECT * FROM resigns r INNER JOIN users u ON r.user_id = u.id INNER JOIN user_roles ur ON u.id = " +
+        "ur.user_id INNER JOIN roles ro ON ro.id = ur.role_id WHERE request_status = " + "\"" + requestStatus + "\"" +
+        "LIMIT " + pageable.getPageSize() +
+        " OFFSET " + pageable.getOffset();
+
+    List<ResignRequest> resignRequests = jdbcTemplate.query(
+        querySql, new ResignRowMapper()
+    );
+
+    return new PageImpl<>(resignRequests, pageable, total);
   }
 
   @Override
