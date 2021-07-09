@@ -54,7 +54,7 @@ public class DebitCardController {
      * @param debitCardSetPinRequest: Request to set pin for the given debit card
      * @return Returns whether pin is updated
      */
-    @PutMapping("/services/debitcard")
+    @PutMapping("/services/debitcard/pin")
     @RolesAllowed({"ROLE_USER"})
     public ResponseEntity<?> debitCardSetPin(
             @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
