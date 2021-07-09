@@ -1,33 +1,24 @@
 package asd.group2.bms.service;
 
-import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repository.LeaveRepository;
-import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.util.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collections;
+=======
+>>>>>>> 8b6d5742dc16cc5c728ceb0dc63884b6be1e54b0
 import java.util.Date;
 import java.util.List;
 
-@Service
-public class LeaveService {
+public interface LeaveService {
 
+<<<<<<< HEAD
     @Autowired
     LeaveRepository leaveRepository;
 
@@ -141,5 +132,20 @@ public class LeaveService {
                     HttpStatus.BAD_REQUEST);
         }
     }
+=======
+  PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size);
+
+  List<LeaveListResponse> getLeaveListByUserId(Long userId);
+
+  LeaveRequest getLeaveById(Long leaveId);
+
+  LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus);
+
+  ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser,
+                                           Long leaveId);
+
+  ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate,
+                                     String reason);
+>>>>>>> 8b6d5742dc16cc5c728ceb0dc63884b6be1e54b0
 
 }

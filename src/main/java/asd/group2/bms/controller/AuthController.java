@@ -7,11 +7,11 @@ import asd.group2.bms.payload.request.ResetPasswordRequest;
 import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.JwtAuthenticationResponse;
-import asd.group2.bms.repository.RoleRepository;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.RoleRepositoryImpl;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.JwtTokenProvider;
-import asd.group2.bms.service.UserService;
-import asd.group2.bms.util.CustomEmail;
+import asd.group2.bms.serviceImpl.UserServiceImpl;
+import asd.group2.bms.serviceImpl.CustomEmailImpl;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,13 +35,13 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  UserRepository userRepository;
+  UserRepositoryImpl userRepository;
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userService;
 
   @Autowired
-  RoleRepository roleRepository;
+  RoleRepositoryImpl roleRepository;
 
   @Autowired
   PasswordEncoder passwordEncoder;
@@ -50,7 +50,7 @@ public class AuthController {
   JwtTokenProvider tokenProvider;
 
   @Autowired
-  CustomEmail customEmail;
+  CustomEmailImpl customEmail;
 
   /**
    * Authenticate the user's login request.
