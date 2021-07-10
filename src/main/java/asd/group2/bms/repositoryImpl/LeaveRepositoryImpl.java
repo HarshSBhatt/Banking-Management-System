@@ -87,18 +87,18 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
     }
   }
 
-  @Override
-  public List<LeaveRequest> findByUser(User user) {
-    String sql = "SELECT * FROM leaves l INNER JOIN users u ON l.user_id = u" +
-        ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
-        "ro ON ro.id = ur.role_id WHERE l.user_id = " + "\"" + user.getId() + "\"";
-    try {
-      return jdbcTemplate.query(sql,
-          new LeaveRowMapper());
-    } catch (EmptyResultDataAccessException e) {
-      return Collections.emptyList();
-    }
-  }
+//  @Override
+//  public List<LeaveRequest> findByUser(User user) {
+//    String sql = "SELECT * FROM leaves l INNER JOIN users u ON l.user_id = u" +
+//        ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
+//        "ro ON ro.id = ur.role_id WHERE l.user_id = " + "\"" + user.getId() + "\"";
+//    try {
+//      return jdbcTemplate.query(sql,
+//          new LeaveRowMapper());
+//    } catch (EmptyResultDataAccessException e) {
+//      return Collections.emptyList();
+//    }
+//  }
 
   @Override
   public LeaveRequest save(LeaveRequest leaveRequest) {
