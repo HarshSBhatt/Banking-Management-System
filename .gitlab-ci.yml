@@ -46,7 +46,7 @@ staging:
   only:
     - test
   tags:
-    - dalfcs_gitlab_docker_ci
+    - dalfcs_docker_kvm
 
 production:
   type: deploy
@@ -60,4 +60,4 @@ production:
   only:
     - master
   tags:
-    - dalfcs_gitlab_docker_ci
+    - dalfcs_docker_kvm
