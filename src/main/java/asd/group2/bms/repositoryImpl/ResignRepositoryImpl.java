@@ -5,7 +5,6 @@ import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ResignRepository;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,11 +27,15 @@ import java.util.Optional;
 @Repository
 public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignRepository {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
+  final
   DataSource dataSource;
+
+  public ResignRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+  }
 
   @PostConstruct
   private void initialize() {

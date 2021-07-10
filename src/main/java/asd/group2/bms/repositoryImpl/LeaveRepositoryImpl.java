@@ -2,10 +2,8 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.LeaveRepository;
 import asd.group2.bms.repositoryMapper.LeaveRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,11 +26,15 @@ import java.util.Optional;
 @Repository
 public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveRepository {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
+  final
   DataSource dataSource;
+
+  public LeaveRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+  }
 
   @PostConstruct
   private void initialize() {
@@ -147,4 +149,5 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
     Object[] args = new Object[]{leaveId};
     jdbcTemplate.update(sql, args);
   }
+
 }

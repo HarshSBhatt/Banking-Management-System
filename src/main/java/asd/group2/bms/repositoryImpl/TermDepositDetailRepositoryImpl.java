@@ -7,10 +7,7 @@ import java.sql.Statement;
 import java.util.*;
 
 import asd.group2.bms.repository.TermDepositDetailRepository;
-import asd.group2.bms.repositoryMapper.ResignRowMapper;
-import asd.group2.bms.repositoryMapper.RoleRowMapper;
 import asd.group2.bms.repositoryMapper.TermDepositDetailRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -25,11 +22,15 @@ import javax.sql.DataSource;
 @Repository
 public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements TermDepositDetailRepository {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
+  final
   DataSource dataSource;
+
+  public TermDepositDetailRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+  }
 
   @PostConstruct
   private void initialize() {
@@ -42,14 +43,9 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
    */
   public List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber) {
     String sql = "SELECT * FROM term_deposit_details td INNER JOIN accounts a" +
-        " " +
-        "on" +
-        " a" +
-        ".account_number = td.account_number INNER JOIN users u on u.id = a" +
-        ".user_id INNER JOIN user_roles ur on u.id = ur.user_id INNER JOIN " +
-        "roles r ON r.id = ur.role_id" +
-        " WHERE a" +
-        ".account_number= ?";
+        " ON a.account_number = td.account_number INNER JOIN users u ON u.id " +
+        "= a.user_id INNER JOIN user_roles ur on u.id = ur.user_id INNER JOIN " +
+        "roles r ON r.id = ur.role_id WHERE a.account_number= ?";
     try {
       return jdbcTemplate.query(sql, new Object[]{accountNumber}, new TermDepositDetailRowMapper());
     } catch (EmptyResultDataAccessException e) {
@@ -60,12 +56,11 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
   @Override
   public Optional<TermDepositDetail> findById(Long termDepositId) {
     String sql = "SELECT * FROM term_deposit_details td INNER JOIN accounts a" +
-        " on a" +
-        ".account_number = td.account_number INNER JOIN users u on u.id = a" +
-        ".user_id INNER JOIN user_roles ur on u.id = ur.user_id INNER JOIN " +
-        "roles r ON r.id = ur.role_id" +
-        " WHERE td" +
-        ".term_deposit_id= ?";;
+        " ON a.account_number = td.account_number " +
+        "INNER JOIN users u on u.id = a.user_id " +
+        "INNER JOIN user_roles ur on u.id = ur.user_id " +
+        "INNER JOIN roles r ON r.id = ur.role_id " +
+        "WHERE td.term_deposit_id = ?";
 
     try {
       return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
@@ -84,8 +79,9 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
     String termDepositSql = "INSERT INTO term_deposit_details " +
         "(created_at, updated_at, duration, initial_amount, " +
         "maturity_amount, maturity_date, rate_of_interest, " +
-        "start_date, term_deposit_status, account_number) VALUES (?, ?, ?," +
-        " ?, ?, ?, ?, ?, ?, ?)";
+        "start_date, term_deposit_status, account_number) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     jdbcTemplate.update(
         connection -> {
           PreparedStatement ps =
@@ -93,15 +89,15 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-          ps.setInt(3,termDepositDetail.getDuration());
-          ps.setDouble(4,termDepositDetail.getInitialAmount());
-          ps.setDouble(5,termDepositDetail.getMaturityAmount());
+          ps.setInt(3, termDepositDetail.getDuration());
+          ps.setDouble(4, termDepositDetail.getInitialAmount());
+          ps.setDouble(5, termDepositDetail.getMaturityAmount());
           ps.setDate(6,
               new java.sql.Date(termDepositDetail.getMaturityDate().getTime()));
-          ps.setFloat(7,termDepositDetail.getRateOfInterest());
+          ps.setFloat(7, termDepositDetail.getRateOfInterest());
           ps.setDate(8, new java.sql.Date(termDepositDetail.getStartDate().getTime()));
-          ps.setString(9,termDepositDetail.getTermDepositStatus().name());
-          ps.setLong(10,termDepositDetail.getAccount().getAccountNumber());
+          ps.setString(9, termDepositDetail.getTermDepositStatus().name());
+          ps.setLong(10, termDepositDetail.getAccount().getAccountNumber());
           return ps;
         }, keyHolder);
 
@@ -110,12 +106,12 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
 
   @Override
   public Boolean update(TermDepositDetail termDepositDetail) {
-    String sql="UPDATE term_deposit_details SET duration = ?, " +
+    String sql = "UPDATE term_deposit_details SET duration = ?, " +
         "initial_amount = ?, maturity_amount = ?, maturity_date = ?, " +
         "rate_of_interest = ?, term_deposit_status = ? WHERE term_deposit_id = ?";
     int status = jdbcTemplate.update(sql,
         new Date(),
-        termDepositDetail.getDuration(),termDepositDetail.getInitialAmount(),
+        termDepositDetail.getDuration(), termDepositDetail.getInitialAmount(),
         termDepositDetail.getMaturityAmount(),
         termDepositDetail.getMaturityDate(),
         termDepositDetail.getRateOfInterest(),
