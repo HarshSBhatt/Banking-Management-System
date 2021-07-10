@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +97,15 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public Boolean update(LeaveRequest leaveRequest) {
-    return null;
+    String sql = "UPDATE leaves SET " +
+        "updated_at = ?, from_date = ?, reason = ?, " +
+        "request_status = ?, to_date = ? WHERE leave_id = ?";
+    int status = jdbcTemplate.update(sql,
+        new Date(),
+        leaveRequest.getFromDate(), leaveRequest.getReason(),
+        leaveRequest.getRequestStatus().name(),
+        leaveRequest.getToDate(), leaveRequest.getLeaveId());
+    return status != 0;
   }
 
   @Override
