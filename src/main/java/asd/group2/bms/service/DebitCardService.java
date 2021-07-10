@@ -2,46 +2,16 @@ package asd.group2.bms.service;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.debit.DebitCard;
-import asd.group2.bms.model.cards.debit.DebitCardStatus;
-import asd.group2.bms.repository.DebitCardRepository;
-import asd.group2.bms.util.Helper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Random;
+public interface DebitCardService {
 
-@Service
-public class DebitCardService {
+    DebitCard createDebitCard(Account account);
 
-  @Autowired
-  DebitCardRepository debitCardRepository;
+    DebitCard getDebitCardByNumber(Long debitCardNumber);
 
-  /**
-   * @param account: Account of user whose debit card is being created
-   * @return This will return the debit card details
-   */
-  public DebitCard createDebitCard(Account account) {
-    Random random = new Random();
-    Date date = new Date();
-    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    DebitCard setDebitCardLimit(Long debitCardNumber, Integer transactionLimit);
 
-    int month = localDate.getMonthValue();
-    int currentYear = localDate.getYear();
+    DebitCard setDebitCardPin(Long debitCardNumber, String pin);
 
-    String expiryMonth = String.valueOf(month);
-    String expiryYear = String.valueOf(currentYear + 4);
-
-    String pin = String.format("%04d", random.nextInt(10000));
-    String cvv = String.format("%06d", random.nextInt(1000000));
-
-    String debitCardNumber = new Helper().generateRandomDigits(16);
-    DebitCard debitCard = new DebitCard(Long.parseLong(debitCardNumber),
-        account, pin, 50000, DebitCardStatus.ACTIVE, expiryYear, expiryMonth, cvv);
-
-    return debitCardRepository.save(debitCard);
-  }
 
 }

@@ -1,6 +1,5 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.ChangePasswordRequest;
 import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.request.UpdateAccountStatusRequest;
@@ -9,12 +8,10 @@ import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserIdentityAvailability;
 import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.payload.response.UserSummary;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import asd.group2.bms.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +30,10 @@ import java.io.UnsupportedEncodingException;
 public class UserController {
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userService;
 
   @Autowired
-  UserRepository userRepository;
-
-  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+  UserRepositoryImpl userRepository;
 
   /**
    * @param currentUser: logged in user
@@ -147,9 +142,10 @@ public class UserController {
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> updateUserAccountStatus(
       @Valid @RequestBody UpdateAccountStatusRequest updateAccountStatus) throws MessagingException, UnsupportedEncodingException {
-    User user = userService.setUserAccountStatus(updateAccountStatus.getEmail(),
-        updateAccountStatus.getAccountStatus());
-    if (user != null) {
+    Boolean isUpdated =
+        userService.setUserAccountStatus(updateAccountStatus.getEmail(),
+            updateAccountStatus.getAccountStatus());
+    if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Account status changed successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
