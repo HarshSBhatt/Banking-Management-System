@@ -9,8 +9,8 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.ResignService;
-import asd.group2.bms.service.UserService;
+import asd.group2.bms.serviceImpl.ResignServiceImpl;
+import asd.group2.bms.serviceImpl.UserServiceImpl;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +27,10 @@ import java.util.List;
 public class ResignController {
 
   @Autowired
-  ResignService resignService;
+  ResignServiceImpl resignService;
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userService;
 
   /**
    * @param requestStatus: resign request status
@@ -96,8 +96,8 @@ public class ResignController {
   @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
   public ResponseEntity<?> updateResignRequestStatus(
       @Valid @RequestBody UpdateResignStatusRequest updateResignStatusRequest) {
-    asd.group2.bms.model.resign.ResignRequest resignRequest = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
-    if (resignRequest != null) {
+    boolean isUpdated = resignService.setResignRequestStatus(updateResignStatusRequest.getResignId(), updateResignStatusRequest.getRequestStatus());
+    if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Resign request status changed successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing resign request status!"),
