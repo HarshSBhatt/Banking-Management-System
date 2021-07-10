@@ -12,7 +12,8 @@ public interface CreditCardService {
 
     CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber);
 
-    CreditCard setCreditCardRequestStatus(Long creditCardNumber, CreditCardStatus creditCardStatus);
+    Boolean setCreditCardRequestStatus(Long creditCardNumber,
+                                 CreditCardStatus creditCardStatus);
 
     CreditCard createCreditCard(Account account);
 

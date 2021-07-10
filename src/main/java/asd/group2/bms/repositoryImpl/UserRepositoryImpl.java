@@ -172,8 +172,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-          ps.setInt(3,
-              AccountStatus.valueOf(user.getAccountStatus().toString()).ordinal());
+          ps.setInt(3, AccountStatus.valueOf(user.getAccountStatus().toString()).ordinal());
           ps.setString(4, user.getAddress());
           ps.setDate(5, new java.sql.Date(user.getBirthday().getTime()));
           ps.setString(6, user.getEmail());
