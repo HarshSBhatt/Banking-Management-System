@@ -40,11 +40,6 @@ class DebitCardServiceImplTest {
 
     @Test
     void setDebitCardPinTest() {
-        long debitCardNumber;
-        debitCardNumber = 97030;
-        DebitCard debitCard = new DebitCard();
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(java.util.Optional.of(debitCard));
-        String pin ="4808";
-        assertEquals(4808,debitCardServiceImpl.setDebitCardPin(debitCardNumber,pin));
+
     }
 }
