@@ -8,6 +8,7 @@ import asd.group2.bms.repository.LeaveRepository;
 import asd.group2.bms.repositoryMapper.LeaveRowMapper;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +60,15 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public List<LeaveRequest> findByUser_Id(Long userId) {
-    return null;
+    String sql = "SELECT * FROM leaves l INNER JOIN users u ON l.user_id = u" +
+        ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
+        "ro ON ro.id = ur.role_id WHERE l.user_id = ?";
+    try {
+      return jdbcTemplate.query(sql, new Object[]{userId},
+          new LeaveRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
