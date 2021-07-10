@@ -98,8 +98,8 @@ public class LeaveController {
   @RolesAllowed({"ROLE_HR", "ROLE_MANAGER"})
   public ResponseEntity<?> updateLeaveRequestStatus(
       @Valid @RequestBody UpdateLeaveStatusRequest updateLeaveStatusRequest) {
-    LeaveRequest leaveRequest = leaveService.setLeaveRequestStatus(updateLeaveStatusRequest.getLeaveId(), updateLeaveStatusRequest.getRequestStatus());
-    if (leaveRequest != null) {
+    boolean isUpdated = leaveService.setLeaveRequestStatus(updateLeaveStatusRequest.getLeaveId(), updateLeaveStatusRequest.getRequestStatus());
+    if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Leave request status changed successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing leave request status!"),
