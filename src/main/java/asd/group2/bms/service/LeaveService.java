@@ -19,7 +19,7 @@ public interface LeaveService {
 
     LeaveRequest getLeaveById(Long leaveId);
 
-    LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus);
+    boolean setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus);
 
     ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser,
                                              Long leaveId);
