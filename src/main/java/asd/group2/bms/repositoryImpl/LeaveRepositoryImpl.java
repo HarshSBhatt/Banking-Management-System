@@ -101,7 +101,8 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public void delete(Long leaveId) {
-
+    String sql = "DELETE from leaves WHERE leave_id = ?";
+    Object[] args = new Object[]{leaveId};
+    jdbcTemplate.update(sql, args);
   }
-
 }
