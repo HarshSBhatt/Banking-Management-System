@@ -77,7 +77,9 @@ public class AccountServiceImpl implements AccountService {
         creditScore);
     account.setUser(user);
 
-    DebitCard debitCard = debitCardService.createDebitCard(account);
+    Account createdAccount = accountRepository.save(account);
+
+    DebitCard debitCard = debitCardService.createDebitCard(createdAccount);
     String email = user.getEmail();
     String firstName = user.getFirstName();
     Long debitCardNumber = debitCard.getDebitCardNumber();
@@ -87,7 +89,8 @@ public class AccountServiceImpl implements AccountService {
     String cvv = debitCard.getCvv();
 
     customEmail.sendDebitCardGenerationMail(email, firstName, debitCardNumber, pin, expiryMonth, expiryYear, cvv);
-    return accountRepository.save(account);
+
+    return createdAccount;
   }
 
   /**

@@ -19,8 +19,8 @@ public interface ResignService {
 
   ResignRequest getResignById(Long resignId);
 
-  ResignRequest setResignRequestStatus(Long resignId,
-                                       RequestStatus requestStatus);
+  boolean setResignRequestStatus(Long resignId,
+                                 RequestStatus requestStatus);
 
   ResponseEntity<?> deleteResignationRequestById(UserPrincipal currentUser,
                                                  Long resignId);
