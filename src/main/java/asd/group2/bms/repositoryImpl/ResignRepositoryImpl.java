@@ -107,7 +107,6 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-//          ps.setDate(3, (java.sql.Date) resignRequest.getDate());
           ps.setDate(3, new java.sql.Date(resignRequest.getDate().getTime()));
           ps.setString(4, resignRequest.getReason());
           ps.setString(5, resignRequest.getRequestStatus().name());

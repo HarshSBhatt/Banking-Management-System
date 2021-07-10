@@ -83,10 +83,10 @@ public class LeaveServiceImpl implements LeaveService {
    * @param requestStatus: Status of the leave (APPROVED, REJECTED, PENDING)
    * @return the updated status of the leave having id - leaveId
    */
-  public LeaveRequest setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
+  public boolean setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
     LeaveRequest leaveRequest = getLeaveById(leaveId);
     leaveRequest.setRequestStatus(requestStatus);
-    return leaveRepository.save(leaveRequest);
+    return leaveRepository.update(leaveRequest);
   }
 
   /**
@@ -101,7 +101,7 @@ public class LeaveServiceImpl implements LeaveService {
         return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
             HttpStatus.FORBIDDEN);
       }
-      leaveRepository.delete(leaveRequest);
+      leaveRepository.delete(leaveId);
       return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
@@ -120,24 +120,24 @@ public class LeaveServiceImpl implements LeaveService {
    */
   public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
     try {
-      LeaveRequest resignRequest = new LeaveRequest(user, fromDate, toDate, reason, RequestStatus.PENDING);
-      List<LeaveRequest> leavesList = leaveRepository.findByUser(user);
+      LeaveRequest leaveRequest = new LeaveRequest(user, fromDate, toDate, reason,
+          RequestStatus.PENDING);
+      List<LeaveRequest> leavesList = leaveRepository.findByUser_Id(user.getId());
       if (leavesList.size() > 0) {
-        for (LeaveRequest leaveRequest : leavesList) {
-          if (leaveRequest.getRequestStatus() == RequestStatus.PENDING || leaveRequest.getRequestStatus() == RequestStatus.APPROVED) {
-            if ((!fromDate.before(leaveRequest.getFromDate()) && !fromDate.after(leaveRequest.getToDate())) || (!toDate.before(leaveRequest.getFromDate()) && !toDate.after(leaveRequest.getToDate()))) {
+        for (LeaveRequest leaves : leavesList) {
+          if (leaves.getRequestStatus() == RequestStatus.PENDING || leaves.getRequestStatus() == RequestStatus.APPROVED) {
+            if ((!fromDate.before(leaves.getFromDate()) && !fromDate.after(leaves.getToDate())) || (!toDate.before(leaves.getFromDate()) && !toDate.after(leaves.getToDate()))) {
               return new ResponseEntity<>(new ApiResponse(false, "Dates overlapping with existing requests."),
                   HttpStatus.NOT_ACCEPTABLE);
             }
           }
         }
       }
-      leaveRepository.save(resignRequest);
+      leaveRepository.save(leaveRequest);
       return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
           HttpStatus.BAD_REQUEST);
     }
   }
-
 }

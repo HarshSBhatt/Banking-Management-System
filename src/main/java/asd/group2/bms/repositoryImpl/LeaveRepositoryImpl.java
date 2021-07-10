@@ -76,7 +76,7 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public Optional<LeaveRequest> findById(Long leaveId) {
-    String sql = "SELECT * FROM leaves l INNER JOIN users u ON r.user_id = u" +
+    String sql = "SELECT * FROM leaves l INNER JOIN users u ON l.user_id = u" +
         ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
         "ro ON ro.id = ur.role_id WHERE l.leave_id = ?";
     try {
@@ -91,9 +91,9 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
   public List<LeaveRequest> findByUser(User user) {
     String sql = "SELECT * FROM leaves l INNER JOIN users u ON l.user_id = u" +
         ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
-        "ro ON ro.id = ur.role_id WHERE l.user_id = ?";
+        "ro ON ro.id = ur.role_id WHERE l.user_id = " + "\"" + user.getId() + "\"";
     try {
-      return jdbcTemplate.query(sql, new Object[]{user.getId()},
+      return jdbcTemplate.query(sql,
           new LeaveRowMapper());
     } catch (EmptyResultDataAccessException e) {
       return Collections.emptyList();
@@ -106,7 +106,7 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     String leaveSql = "INSERT INTO leaves (" +
-        "created_at, updated_at, from_date, reason, request_status, to_date " +
+        "created_at, updated_at, from_date, reason, request_status, to_date, " +
         "user_id)" +
         "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
