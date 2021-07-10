@@ -3,6 +3,8 @@ image: node:latest
 stages:
   - build
   - test
+  - deploy_stag
+  - deploy_prod
 
 build:
   image: maven:3.8.1-openjdk-16
@@ -25,3 +27,28 @@ test:
       junit:
         - Group2/target/surefire-reports/TEST-*.xml
   script: mvn verify
+
+staging:
+  type: deploy
+  stage: deploy_stag
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY
+
+  only:
+    - test
+
+production:
+  type: deploy
+  stage: deploy_prod
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY
+  only:
+    - master

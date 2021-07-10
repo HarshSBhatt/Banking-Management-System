@@ -29,11 +29,11 @@ public interface LeaveRepository {
    */
   Optional<LeaveRequest> findById(Long leaveId);
 
-  /**
-   * @param user: User model object
-   * @return This will return the leave record by user.
-   */
-  List<LeaveRequest> findByUser(User user);
+//  /**
+//   * @param user: User model object
+//   * @return This will return the leave record by user.
+//   */
+//  List<LeaveRequest> findByUser(User user);
 
   /*
     @param leaveIds: Leave Ids

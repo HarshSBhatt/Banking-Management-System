@@ -51,8 +51,9 @@ public class CreditCardController {
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> updateCreditCardRequestStatus(
       @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) {
-    CreditCard creditCard = creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
-    if (creditCard != null) {
+    Boolean isUpdated =
+        creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
+    if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Credit Card request status changed successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Credit Card request status!"),

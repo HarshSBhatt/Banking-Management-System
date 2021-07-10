@@ -31,10 +31,6 @@ public class CreditCardServiceImpl implements CreditCardService {
   @Autowired
   CreditCardRepositoryImpl creditCardRepository;
 
-  Random random;
-
-  Date date;
-
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
    * @param page:             Page Number
@@ -70,10 +66,11 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param creditCardStatus: Status of the credit card (APPROVED, REJECTED, PENDING)
    * @return the updated status of the credit card having credit card number - creditCardNumber
    */
-  public CreditCard setCreditCardRequestStatus(Long creditCardNumber, CreditCardStatus creditCardStatus) {
+  public Boolean setCreditCardRequestStatus(Long creditCardNumber,
+                                            CreditCardStatus creditCardStatus) {
     CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
     creditCard.setCreditCardStatus(creditCardStatus);
-    return creditCardRepository.save(creditCard);
+    return creditCardRepository.update(creditCard);
   }
 
 
@@ -82,6 +79,9 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @return This will return the debit card details
    */
   public CreditCard createCreditCard(Account account) {
+    Random random = new Random();
+    Date date = new Date();
+
     LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
     int month = localDate.getMonthValue();

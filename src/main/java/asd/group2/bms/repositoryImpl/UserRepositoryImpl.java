@@ -6,7 +6,6 @@ import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.UserRepository;
 import asd.group2.bms.repositoryMapper.UserRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,14 +28,19 @@ import java.util.Optional;
 @Repository
 public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository {
 
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
+  final
   DataSource dataSource;
 
-  @Autowired
+  final
   RoleRepositoryImpl roleRepository;
+
+  public UserRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource, RoleRepositoryImpl roleRepository) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+    this.roleRepository = roleRepository;
+  }
 
   @PostConstruct
   private void initialize() {
@@ -168,8 +172,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-          ps.setInt(3,
-              AccountStatus.valueOf(user.getAccountStatus().toString()).ordinal());
+          ps.setInt(3, AccountStatus.valueOf(user.getAccountStatus().toString()).ordinal());
           ps.setString(4, user.getAddress());
           ps.setDate(5, new java.sql.Date(user.getBirthday().getTime()));
           ps.setString(6, user.getEmail());
