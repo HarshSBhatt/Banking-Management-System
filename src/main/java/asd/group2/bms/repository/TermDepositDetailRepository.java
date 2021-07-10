@@ -1,6 +1,5 @@
 package asd.group2.bms.repository;
 
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public interface TermDepositDetailRepository {
    * @param termDepositId: term deposit id
    * @return This will return termDeposit request based on termDeposit id.
    */
-  Optional<ResignRequest> findById(Long termDepositId);
+  Optional<TermDepositDetail> findById(Long termDepositId);
 
   /**
    * @param termDepositDetail: TermDepositDetail details
