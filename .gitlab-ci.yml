@@ -3,7 +3,8 @@ image: node:latest
 stages:
   - build
   - test
-  - deploy
+  - deploy_stag
+  - deploy_prod
 
 build:
   image: maven:3.8.1-openjdk-16
@@ -29,7 +30,7 @@ test:
 
 staging:
   type: deploy
-  stage: staging
+  stage: deploy_stag
   image: ruby:latest
   script:
     - apt-get update -qy
@@ -42,7 +43,7 @@ staging:
 
 production:
   type: deploy
-  stage: production
+  stage: deploy_prod
   image: ruby:latest
   script:
     - apt-get update -qy
