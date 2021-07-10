@@ -1,10 +1,94 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.cards.debit.DebitCard;
-import org.springframework.data.jpa.repository.JpaRepository;
+import asd.group2.bms.repository.DebitCardRepository;
+import asd.group2.bms.repositoryMapper.DebitCardRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface DebitCardRepositoryImpl extends JpaRepository<DebitCard, Long> {
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.util.Date;
+import java.util.Optional;
 
+@Repository
+public class DebitCardRepositoryImpl extends JdbcDaoSupport implements DebitCardRepository {
+
+  private final JdbcTemplate jdbcTemplate;
+
+  final
+  DataSource dataSource;
+
+  public DebitCardRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.dataSource = dataSource;
+  }
+
+  @PostConstruct
+  private void initialize() {
+    setDataSource(dataSource);
+  }
+
+
+  @Override
+  public Optional<DebitCard> findById(Long debitCardNumber) {
+
+    String sql = "SELECT * FROM debit_cards dc INNER JOIN accounts a ON dc.account_number = a.account_number " +
+            "INNER JOIN users u ON a.user_id = u.id INNER JOIN user_roles ur ON " +
+            "u.id = ur.user_id INNER JOIN roles r ON r.id = ur.role_id WHERE dc.debit_card_number = ?";
+
+    try {
+      return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+              new Object[]{debitCardNumber},
+              new DebitCardRowMapper()));
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+  }
+
+
+  @Override
+  public DebitCard save(DebitCard debitCard) {
+
+    Date now = new Date();
+
+    String debitCardSql = "INSERT INTO debit_cards " +
+            "(debit_card_number, created_at, updated_at," +
+            "cvv, debit_card_status, expiry_month," +
+            "expiry_year, pin, transaction_limit, account_number)" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    jdbcTemplate.update(debitCardSql, new Object[]{
+            debitCard.getDebitCardNumber(),
+            new java.sql.Date(now.getTime()),
+            new java.sql.Date(now.getTime()),
+            debitCard.getCvv(),
+            debitCard.getDebitCardStatus().name(),
+            debitCard.getExpiryMonth(),
+            debitCard.getExpiryYear(),
+            debitCard.getPin(),
+            debitCard.getTransactionLimit(),
+            debitCard.getAccount().getAccountNumber()
+    });
+
+    return debitCard;
+  }
+
+  @Override
+  public Boolean update(DebitCard debitCard) {
+    String sql = "UPDATE debit_cards SET " +
+            "updated_at = ?, debit_card_status = ? , pin = ?, " +
+            "transaction_limit = ? WHERE debit_card_number = ?";
+    int status = jdbcTemplate.update(sql,
+            new Date(),
+            debitCard.getDebitCardStatus().name(),
+            debitCard.getPin(),
+            debitCard.getTransactionLimit(),
+            debitCard.getDebitCardNumber()
+    );
+
+    return status != 0;
+  }
 }
