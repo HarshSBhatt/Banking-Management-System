@@ -2,17 +2,20 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.*;
 
 import asd.group2.bms.repository.TermDepositDetailRepository;
+import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import asd.group2.bms.repositoryMapper.RoleRowMapper;
 import asd.group2.bms.repositoryMapper.TermDepositDetailRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -37,13 +40,33 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
    * @param accountNumber: bank account number of the user
    * @return This will return the user's bank account number.
    */
-  public List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber){
-    return new ArrayList<>();
+  public List<TermDepositDetail> findTermDepositDetailByAccount_AccountNumber(Long accountNumber) {
+    String sql = "SELECT * FROM term_deposit_details td INNER JOIN accounts a" +
+        " " +
+        "on" +
+        " a" +
+        ".account_number = td.account_number INNER JOIN users u on u.id = a" +
+        ".user_id INNER JOIN user_roles ur on u.id = ur.user_id INNER JOIN " +
+        "roles r ON r.id = ur.role_id" +
+        " WHERE a" +
+        ".account_number= ?";
+    try {
+      return jdbcTemplate.query(sql, new Object[]{accountNumber}, new TermDepositDetailRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
   public Optional<TermDepositDetail> findById(Long termDepositId) {
-    String sql = "SELECT * FROM term_deposit_details WHERE id = ?";
+    String sql = "SELECT * FROM term_deposit_details td INNER JOIN accounts a" +
+        " on a" +
+        ".account_number = td.account_number INNER JOIN users u on u.id = a" +
+        ".user_id INNER JOIN user_roles ur on u.id = ur.user_id INNER JOIN " +
+        "roles r ON r.id = ur.role_id" +
+        " WHERE td" +
+        ".term_deposit_id= ?";;
+
     try {
       return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
           new Object[]{termDepositId},
@@ -55,12 +78,51 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements T
 
   @Override
   public TermDepositDetail save(TermDepositDetail termDepositDetail) {
-    return null;
+    Date now = new Date();
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    String termDepositSql = "INSERT INTO term_deposit_details " +
+        "(created_at, updated_at, duration, initial_amount, " +
+        "maturity_amount, maturity_date, rate_of_interest, " +
+        "start_date, term_deposit_status, account_number) VALUES (?, ?, ?," +
+        " ?, ?, ?, ?, ?, ?, ?)";
+    jdbcTemplate.update(
+        connection -> {
+          PreparedStatement ps =
+              connection.prepareStatement(termDepositSql,
+                  Statement.RETURN_GENERATED_KEYS);
+          ps.setDate(1, new java.sql.Date(now.getTime()));
+          ps.setDate(2, new java.sql.Date(now.getTime()));
+          ps.setInt(3,termDepositDetail.getDuration());
+          ps.setDouble(4,termDepositDetail.getInitialAmount());
+          ps.setDouble(5,termDepositDetail.getMaturityAmount());
+          ps.setDate(6,
+              new java.sql.Date(termDepositDetail.getMaturityDate().getTime()));
+          ps.setFloat(7,termDepositDetail.getRateOfInterest());
+          ps.setDate(8, new java.sql.Date(termDepositDetail.getStartDate().getTime()));
+          ps.setString(9,termDepositDetail.getTermDepositStatus().name());
+          ps.setLong(10,termDepositDetail.getAccount().getAccountNumber());
+          return ps;
+        }, keyHolder);
+
+    return termDepositDetail;
   }
 
   @Override
   public Boolean update(TermDepositDetail termDepositDetail) {
-    return null;
+    String sql="UPDATE term_deposit_details SET duration = ?, " +
+        "initial_amount = ?, maturity_amount = ?, maturity_date = ?, " +
+        "rate_of_interest = ?, term_deposit_status = ? WHERE term_deposit_id = ?";
+    int status = jdbcTemplate.update(sql,
+        new Date(),
+        termDepositDetail.getDuration(),termDepositDetail.getInitialAmount(),
+        termDepositDetail.getMaturityAmount(),
+        termDepositDetail.getMaturityDate(),
+        termDepositDetail.getRateOfInterest(),
+        termDepositDetail.getTermDepositStatus().name(),
+        termDepositDetail.getTermDepositId());
+    return status != 0;
+
   }
 
 }
