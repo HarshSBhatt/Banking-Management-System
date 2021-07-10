@@ -2,11 +2,9 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.LeaveRepository;
 import asd.group2.bms.repositoryMapper.LeaveRowMapper;
-import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -14,10 +12,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -100,7 +102,30 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public LeaveRequest save(LeaveRequest leaveRequest) {
-    return null;
+    Date now = new Date();
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    String leaveSql = "INSERT INTO leaves (" +
+        "created_at, updated_at, from_date, reason, request_status, to_date " +
+        "user_id)" +
+        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    jdbcTemplate.update(
+        connection -> {
+          PreparedStatement ps =
+              connection.prepareStatement(leaveSql,
+                  Statement.RETURN_GENERATED_KEYS);
+          ps.setDate(1, new java.sql.Date(now.getTime()));
+          ps.setDate(2, new java.sql.Date(now.getTime()));
+          ps.setDate(3, new java.sql.Date(leaveRequest.getFromDate().getTime()));
+          ps.setString(4, leaveRequest.getReason());
+          ps.setString(5, leaveRequest.getRequestStatus().name());
+          ps.setDate(6, new java.sql.Date(leaveRequest.getToDate().getTime()));
+          ps.setLong(7, leaveRequest.getUser().getId());
+          return ps;
+        }, keyHolder);
+
+    return leaveRequest;
   }
 
   @Override
