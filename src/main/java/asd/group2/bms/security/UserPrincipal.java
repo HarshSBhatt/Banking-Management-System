@@ -50,6 +50,9 @@ public class UserPrincipal implements UserDetails {
 
   private Collection<? extends GrantedAuthority> authorities;
 
+  public UserPrincipal() {
+  }
+
   public UserPrincipal(Long id, String firstName, String lastName, String username, Date birthday, String email, String phone, String address, String city, String state, String zipCode, AccountStatus accountStatus, String password, Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.firstName = firstName;

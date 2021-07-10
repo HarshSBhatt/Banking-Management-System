@@ -141,8 +141,14 @@ public class UserServiceImpl implements UserService {
     if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
       User user = getUserByEmail(currentUser.getEmail());
       user.setPassword(passwordEncoder.encode(newPassword));
-      userRepository.update(user);
-      return new ApiResponse(true, "Password changed successfully!");
+
+      Boolean isUpdated = userRepository.update(user);
+      if (isUpdated) {
+        return new ApiResponse(true, "Password changed successfully!");
+      } else {
+        return new ApiResponse(false, "Something went wrong while changing " +
+            "password");
+      }
     } else {
       return new ApiResponse(false, "Current password is wrong!");
     }
@@ -158,8 +164,13 @@ public class UserServiceImpl implements UserService {
     if (newPassword.equals(confirmNewPassword)) {
       user.setPassword(passwordEncoder.encode(newPassword));
       user.setForgotPasswordToken(null);
-      userRepository.update(user);
-      return ResponseEntity.ok(new ApiResponse(true, "Password reset successfully"));
+      Boolean isUpdated = userRepository.update(user);
+      if (isUpdated) {
+        return ResponseEntity.ok(new ApiResponse(true, "Password reset successfully"));
+      } else {
+        return new ResponseEntity<>(new ApiResponse(false, "Something went " +
+            "wrong while resetting password"), HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "New passwords are not same"), HttpStatus.BAD_REQUEST);
     }
