@@ -73,7 +73,15 @@ public class LeaveRepositoryImpl extends JdbcDaoSupport implements LeaveReposito
 
   @Override
   public Optional<LeaveRequest> findById(Long leaveId) {
-    return Optional.empty();
+    String sql = "SELECT * FROM leaves l INNER JOIN users u ON r.user_id = u" +
+        ".id INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles " +
+        "ro ON ro.id = ur.role_id WHERE l.leave_id = ?";
+    try {
+      return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new Object[]{leaveId},
+          new LeaveRowMapper()));
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override
