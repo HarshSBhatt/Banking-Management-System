@@ -1,23 +1,27 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.SignUpRequest;
+import asd.group2.bms.payload.request.UpdateProfileRequest;
+import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.repositoryImpl.RoleRepositoryImpl;
 import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +30,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -44,6 +51,9 @@ class UserServiceImplTest {
   @Mock
   PasswordEncoder passwordEncoder;
 
+  @Mock
+  CustomEmailImpl customEmail;
+
   @InjectMocks
   UserServiceImpl userService;
 
@@ -52,6 +62,7 @@ class UserServiceImplTest {
     HttpServletRequest mockRequest = new MockHttpServletRequest();
     ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockRequest);
     RequestContextHolder.setRequestAttributes(servletRequestAttributes);
+    MockitoAnnotations.openMocks(this);
   }
 
   @AfterEach
@@ -137,19 +148,155 @@ class UserServiceImplTest {
   }
 
   @Test
-  void setUserAccountStatus() {
+  void setUserAccountStatusSuccess() throws MessagingException,
+      UnsupportedEncodingException {
+    String email = "harsh.bhatt@dal.ca";
+    AccountStatus accountStatus = AccountStatus.PENDING;
+
+    User user = new User();
+    user.setEmail(email);
+    user.setAccountStatus(accountStatus);
+
+    when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
+
+    User fetchedUser = userService.getUserByEmail(email);
+
+    when(userRepository.update(fetchedUser)).thenReturn(true);
+
+    Boolean isUpdated = userService.setUserAccountStatus(email, accountStatus);
+
+    assertTrue(isUpdated, "Account status is not updated");
   }
 
   @Test
-  void changePassword() {
+  void setUserAccountStatusFailure() throws MessagingException,
+      UnsupportedEncodingException {
+    String email = "harsh.bhatt@dal.ca";
+    AccountStatus accountStatus = AccountStatus.PENDING;
+
+    User user = new User();
+    user.setEmail(email);
+    user.setAccountStatus(accountStatus);
+
+    when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
+
+    User fetchedUser = userService.getUserByEmail(email);
+
+    when(userRepository.update(fetchedUser)).thenReturn(false);
+
+    Boolean isUpdated = userService.setUserAccountStatus(email, accountStatus);
+
+    assertFalse(isUpdated, "Account status mistakenly updated");
   }
 
   @Test
-  void resetPassword() {
+  void changePasswordTrue() {
+    String oldPassword = "abc";
+    String newPassword = "def";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    when(passwordEncoder.matches(oldPassword, userPrincipal.getPassword())).thenReturn(true);
+    when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+    User fetchedUser = userService.getUserByEmail(email);
+
+    when(userRepository.update(fetchedUser)).thenReturn(true);
+
+    ApiResponse apiResponse = userService.changePassword(oldPassword,
+        newPassword, userPrincipal);
+
+    assertTrue(apiResponse.getSuccess(), "False was returned");
+  }
+
+  @Test
+  void changePasswordFalse() {
+    String oldPassword = "abc";
+    String newPassword = "abc";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    when(passwordEncoder.matches(oldPassword, userPrincipal.getPassword())).thenReturn(false);
+
+    ApiResponse apiResponse = userService.changePassword(oldPassword,
+        newPassword, userPrincipal);
+
+    assertFalse(apiResponse.getSuccess(), "True was returned");
+  }
+
+  @Test
+  void resetPasswordTrue() {
+    String newPassword = "abc";
+    String confirmNewPassword = "abc";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    when(userRepository.update(user)).thenReturn(true);
+
+    ResponseEntity<?> responseEntity = userService.resetPassword(newPassword,
+        confirmNewPassword, user);
+
+    assertEquals(HttpStatus.OK.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Correct status code not received");
+  }
+
+  @Test
+  void resetPasswordFalse() {
+    String newPassword = "abcd";
+    String confirmNewPassword = "abc";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    ResponseEntity<?> responseEntity = userService.resetPassword(newPassword,
+        confirmNewPassword, user);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Correct status code not received");
   }
 
   @Test
   void updateResetForgotPasswordToken() {
+    userService = mock(UserServiceImpl.class);
+
+    String email = "harsh.bhatt@dal.ca";
+    String token = "dummy";
+
+    User user = new User();
+    user.setForgotPasswordToken(token);
+
+    userService.updateResetForgotPasswordToken(token, email);
+
+    verify(userService, times(1)).updateResetForgotPasswordToken(token, email);
   }
 
   @Test
@@ -168,12 +315,12 @@ class UserServiceImplTest {
 
   @Test
   void getUserByToken() {
-    String token = "asasas";
+    String token = "dummy_token";
 
     User user = new User();
     user.setForgotPasswordToken(token);
 
-    when(userRepository.findByForgotPasswordToken(token)).thenReturn(Optional.of(user));
+    when(userRepository.findByForgotPasswordToken(token)).thenReturn(Optional.ofNullable(user));
 
     User fetchedUser = userService.getUserByToken(token);
 
@@ -183,26 +330,77 @@ class UserServiceImplTest {
 
   @Test
   void getUserProfileByUsername() {
-//    String username = "harsh";
-//
-//    UserProfile userProfile = new UserProfile();
-//    userProfile.setUsername(username);
-//
-//    User user = new User();
-//
-//    when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-//    when(userService.getUserProfileByUsername(username)).thenReturn(userProfile);
-//
-//    UserProfile fetchedUserProfile =
-//        userService.getUserProfileByUsername(username);
-//
-//    assertEquals(username, fetchedUserProfile.getUsername(), "Wrong user " +
-//        "was returned");
+    String username = "harsh";
 
+    UserProfile userProfile = new UserProfile();
+    userProfile.setUsername(username);
+
+    User user = new User();
+    user.setUsername(username);
+
+    when(userRepository.findByUsername(username)).thenReturn(Optional.ofNullable(user));
+
+    Optional<User> fetchedUserProfile = userRepository.findByUsername(username);
+
+    assertEquals(username, fetchedUserProfile.get().getUsername(), "Wrong " +
+        "user " +
+        "was returned");
   }
 
   @Test
-  void updateUserProfileByUsername() {
+  void updateUserProfileByUsernameTrue() {
+    User user = new User();
+    user.setFirstName("Test Name");
+    user.setId(1L);
+
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(userRepository.update(any(User.class))).thenReturn(true);
+
+    UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
+    updateProfileRequest.setFirstName("Test");
+    updateProfileRequest.setLastName("Last");
+    updateProfileRequest.setAddress("Demo Update");
+    updateProfileRequest.setBirthday(new Date());
+    updateProfileRequest.setCity("Demo City");
+    updateProfileRequest.setState("Demo State");
+    updateProfileRequest.setZipCode("987654");
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+
+    Boolean updatedUser =
+        userService.updateUserProfileByUsername(userPrincipal,
+            updateProfileRequest);
+
+    assertTrue(updatedUser, "False was returned");
+  }
+
+  @Test
+  void updateUserProfileByUsernameFalse() {
+    User user = new User();
+    user.setFirstName("Test Name");
+    user.setId(1000L);
+
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(userRepository.update(any(User.class))).thenReturn(false);
+
+    UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
+    updateProfileRequest.setFirstName("Test");
+    updateProfileRequest.setLastName("Last");
+    updateProfileRequest.setAddress("Demo Update");
+    updateProfileRequest.setBirthday(new Date());
+    updateProfileRequest.setCity("Demo City");
+    updateProfileRequest.setState("Demo State");
+    updateProfileRequest.setZipCode("987654");
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1000L);
+
+    Boolean updatedUser =
+        userService.updateUserProfileByUsername(userPrincipal,
+            updateProfileRequest);
+
+    assertFalse(updatedUser, "False was returned");
   }
 
 }
