@@ -2,7 +2,6 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
-import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ResignRepository;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
@@ -15,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -109,7 +107,6 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
                   Statement.RETURN_GENERATED_KEYS);
           ps.setDate(1, new java.sql.Date(now.getTime()));
           ps.setDate(2, new java.sql.Date(now.getTime()));
-//          ps.setDate(3, (java.sql.Date) resignRequest.getDate());
           ps.setDate(3, new java.sql.Date(resignRequest.getDate().getTime()));
           ps.setString(4, resignRequest.getReason());
           ps.setString(5, resignRequest.getRequestStatus().name());
@@ -138,4 +135,5 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignReposi
     Object[] args = new Object[]{resignId};
     jdbcTemplate.update(sql, args);
   }
+
 }
