@@ -8,13 +8,13 @@ import asd.group2.bms.payload.response.PagedResponse;
 
 public interface CreditCardService {
 
-    PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size);
+  PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size);
 
-    CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber);
+  CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber);
 
-    Boolean setCreditCardRequestStatus(Long creditCardNumber,
-                                 CreditCardStatus creditCardStatus);
+  Boolean setCreditCardRequestStatus(Long creditCardNumber,
+                                     CreditCardStatus creditCardStatus);
 
-    CreditCard createCreditCard(Account account);
+  CreditCard createCreditCard(Account account, Integer requestedTransactionLimit);
 
 }
