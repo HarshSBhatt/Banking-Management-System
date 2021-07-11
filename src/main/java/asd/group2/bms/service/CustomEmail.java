@@ -18,4 +18,10 @@ public interface CustomEmail {
   void sendBalanceDeductionMail(String email, String firstName,
                                 Double debitedAmount, Double newBalance) throws MessagingException, UnsupportedEncodingException;
 
+  void sendAccountActivityMail(String email, String firstName,
+                               Double amount,
+                               Double newBalance, String activityType,
+                               Long refId) throws MessagingException,
+      UnsupportedEncodingException;
+
 }
