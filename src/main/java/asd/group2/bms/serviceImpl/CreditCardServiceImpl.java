@@ -18,18 +18,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
 
   @Autowired
   CreditCardRepositoryImpl creditCardRepository;
+
+  @Autowired
+  CustomEmailImpl customEmail;
 
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
@@ -67,10 +69,21 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @return the updated status of the credit card having credit card number - creditCardNumber
    */
   public Boolean setCreditCardRequestStatus(Long creditCardNumber,
-                                            CreditCardStatus creditCardStatus) {
+                                            CreditCardStatus creditCardStatus
+  ) throws MessagingException,
+      UnsupportedEncodingException {
     CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
+    String email = creditCard.getAccount().getUser().getEmail();
+    String firstName = creditCard.getAccount().getUser().getFirstName();
+    Integer transactionLimit = creditCard.getTransactionLimit();
     creditCard.setCreditCardStatus(creditCardStatus);
-    return creditCardRepository.update(creditCard);
+    boolean response = creditCardRepository.update(creditCard);
+    if (response) {
+      customEmail.sendCreditCardApprovalMail(email, firstName,
+          transactionLimit);
+
+    }
+    return response;
   }
 
 
@@ -78,7 +91,8 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param account: account for which credit card would be created
    * @return This will return the debit card details
    */
-  public CreditCard createCreditCard(Account account) {
+  public CreditCard createCreditCard(Account account,
+                                     Integer requestedTransactionLimit) {
     Random random = new Random();
     Date date = new Date();
 
@@ -95,9 +109,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     String creditCardNumber = new Helper().generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
-        account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, CreditCardStatus.PENDING, expiryYear, expiryMonth, cvv, false);
+        account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
+        cvv, false);
 
     return creditCardRepository.save(creditCard);
   }
-
 }

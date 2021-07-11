@@ -3,6 +3,7 @@ package asd.group2.bms.controller;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
+import asd.group2.bms.payload.request.CreditCardRequest;
 import asd.group2.bms.payload.request.UpdateCreditCardStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.CreditCardListResponse;
@@ -18,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api")
@@ -50,7 +53,7 @@ public class CreditCardController {
   @PutMapping("/services/creditcards")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> updateCreditCardRequestStatus(
-      @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) {
+      @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
     Boolean isUpdated =
         creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
     if (isUpdated) {
@@ -68,10 +71,14 @@ public class CreditCardController {
   @PostMapping("/services/creditcards")
   @RolesAllowed({"ROLE_USER"})
   public CreditCard createCreditCard(
-      @CurrentLoggedInUser UserPrincipal currentUser) {
-    Long userid = currentUser.getId();
-    Account account = accountService.getAccountByUserId(userid);
-    return creditCardService.createCreditCard(account);
-  }
+      @CurrentLoggedInUser UserPrincipal currentUser,
+      @Valid @RequestBody CreditCardRequest creditCardRequest) {
+    Integer requestedTransactionLimit =
+        creditCardRequest.getExpectedTransactionLimit();
+    Long userId = currentUser.getId();
 
+    Account account = accountService.getAccountByUserId(userId);
+
+    return creditCardService.createCreditCard(account, requestedTransactionLimit);
+  }
 }

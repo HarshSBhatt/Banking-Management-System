@@ -1,7 +1,6 @@
 import { ROUTES } from "./constants";
 
 export const rootSubMenuKeys = [
-  "Dashboard",
   "Profile",
   "Account",
   "Cheque Services",
@@ -13,12 +12,7 @@ export const rootSubMenuKeys = [
   "Resign",
 ];
 
-export const siderMenu = [
-  {
-    link: ROUTES.MAIN,
-    label: "Dashboard",
-    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR", "ROLE_USER"],
-  },
+export const dashboardRoutes = [
   {
     link: ROUTES.PROFILE,
     label: "My Profile",
@@ -60,6 +54,11 @@ export const siderMenu = [
     allowedRoles: ["ROLE_USER"],
   },
   {
+    link: ROUTES.FUND_TRANSFER,
+    label: "Fund Transfer",
+    allowedRoles: ["ROLE_USER"],
+  },
+  {
     link: ROUTES.ADD_USER,
     label: "Add User",
     allowedRoles: ["ROLE_MANAGER", "ROLE_HR"],
@@ -75,13 +74,33 @@ export const siderMenu = [
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
   },
   {
-    link: ROUTES.LEAVE,
-    label: "Leave",
+    link: ROUTES.LEAVE_REQUEST,
+    label: "Leave Requests",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.RESIGNATION_REQUEST,
+    label: "Resign Requests",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.APPLY_LEAVE,
+    label: "Apply Leave",
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
   },
   {
-    link: ROUTES.RESIGN,
-    label: "Resign",
+    link: ROUTES.APPLY_RESIGNATION,
+    label: "Apply Resign",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.MY_LEAVES,
+    label: "My Resign",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.MY_RESIGN,
+    label: "My Resign",
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
   },
 ];

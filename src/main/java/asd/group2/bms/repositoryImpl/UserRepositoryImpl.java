@@ -103,7 +103,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
     int total =
         jdbcTemplate.queryForObject(
             rowCountSql,
-            new Object[]{accountStatus},
+            new Object[]{accountStatus.name()},
             (rs, rowNum) -> rs.getInt(1)
         );
 
@@ -114,7 +114,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
 
     List<User> users = jdbcTemplate.query(
         querySql,
-        new Object[]{accountStatus}, new UserRowMapper()
+        new Object[]{accountStatus.name()}, new UserRowMapper()
     );
 
     return new PageImpl<>(users, pageable, total);

@@ -36,7 +36,7 @@ public class TermDepositDetailController {
   }
 
   @PostMapping("/services/term-deposit")
-  public ResponseEntity<?> makeTermDepositRequest(@CurrentLoggedInUser UserPrincipal currentUser, @RequestBody TermDepositRequest termDepositRequest) {
+  public ResponseEntity<?> makeTermDepositRequest(@CurrentLoggedInUser UserPrincipal currentUser, @RequestBody TermDepositRequest termDepositRequest) throws Exception {
     Long currentUserId = currentUser.getId();
     String email = currentUser.getEmail();
     String firstName = currentUser.getFirstName();

@@ -101,4 +101,19 @@ public class AccountServiceImpl implements AccountService {
     return accountRepository.findAccountByUser_Id(userId).orElseThrow(() -> new ResourceNotFoundException("Account", "account", "this user"));
   }
 
+  /**
+   * @param accountNumber: account number of user whose account detail is
+   *                       requested
+   * @return This will return the account details of the user based on
+   * account number
+   */
+  public Account getAccountByAccountNumber(Long accountNumber) {
+    return accountRepository.findAccountByAccountNumber(accountNumber).orElseThrow(() -> new ResourceNotFoundException("Account", "account", accountNumber));
+  }
+
+  public Boolean updateAccountBalance(Account account) {
+
+    return accountRepository.update(account);
+  }
+
 }
