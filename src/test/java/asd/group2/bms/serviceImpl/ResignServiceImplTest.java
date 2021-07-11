@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ResignServiceImplTest {
@@ -99,5 +99,18 @@ public class ResignServiceImplTest {
 
     assertEquals(username, resign.get(0).getUserMetaResponse().getUsername());
     assertEquals(1, resign.size());
+  }
+
+  @Test
+  void getResignByIdTest() {
+    when(resignRepository.findById(1l)).thenReturn(Optional.of(new ResignRequest()));
+
+    resignService.getResignById(1l);
+    verify(resignRepository,times(1)).findById(any());
+  }
+
+  @Test
+  void setResignRequestStatus() {
+
   }
 }
