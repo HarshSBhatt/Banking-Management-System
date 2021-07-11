@@ -1,7 +1,17 @@
+import { useEffect, useState } from "react";
+
 //! Ant Imports
 
 import { Card } from "antd";
-import { useState } from "react";
+
+//! User Files
+
+import api from "common/api";
+import { toast } from "common/utils";
+import ServerError from "components/ServerError";
+import Loading from "components/Loading";
+import SetLimit from "./components/SetLimit";
+import SetPin from "./components/SetPin";
 
 const tabList = [
   {
@@ -18,16 +28,21 @@ const tabList = [
   },
 ];
 
-const contentList = {
-  tab1: <p>content1</p>,
-  tab2: <p>content2</p>,
-  tab3: <p>content3</p>,
-};
-
 function DebitCardServices() {
   const [state, setState] = useState({
     key: "tab1",
   });
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
+  const [accountData, setAccountData] = useState({});
+
+  const debitCardNumber = accountData?.debitCardNumber;
+
+  const contentList = {
+    tab1: <SetLimit debitCardNumber={debitCardNumber} />,
+    tab2: <p>content2</p>,
+    tab3: <SetPin debitCardNumber={debitCardNumber} />,
+  };
 
   const onTabChange = (key, type) => {
     setState({
@@ -36,8 +51,31 @@ function DebitCardServices() {
     });
   };
 
+  const fetchUserAccount = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get(`/account/me`);
+      const { data } = response;
+      setAccountData(data);
+    } catch (err) {
+      setErr(true);
+      toast({
+        message: "Something went wrong!",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserAccount();
+  }, []);
+
   const title = <span className="cb-text-strong">Debit Card Services</span>;
 
+  if (loading) return <Loading />;
+  if (err) return <ServerError />;
   return (
     <div>
       <Card
