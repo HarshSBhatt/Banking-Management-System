@@ -1,5 +1,58 @@
+//! Ant Imports
+
+import { Card } from "antd";
+import { useState } from "react";
+
+const tabList = [
+  {
+    key: "tab1",
+    tab: "Request a Credit Card",
+  },
+  {
+    key: "tab2",
+    tab: "Pay Credit Card Bills",
+  },
+  {
+    key: "tab3",
+    tab: "Set PIN",
+  },
+];
+
+const contentList = {
+  tab1: <p>content1</p>,
+  tab2: <p>content2</p>,
+  tab3: <p>content3</p>,
+};
+
 function CreditCardServices() {
-  return <div>Credit Card Services</div>;
+  const [state, setState] = useState({
+    key: "tab1",
+  });
+
+  const onTabChange = (key, type) => {
+    setState({
+      ...state,
+      [type]: key,
+    });
+  };
+
+  const title = <span className="cb-text-strong">Credit Card Services</span>;
+
+  return (
+    <div>
+      <Card
+        style={{ width: "100%" }}
+        title={title}
+        tabList={tabList}
+        activeTabKey={state.key}
+        onTabChange={(key) => {
+          onTabChange(key, "key");
+        }}
+      >
+        {contentList[state.key]}
+      </Card>
+    </div>
+  );
 }
 
 export default CreditCardServices;
