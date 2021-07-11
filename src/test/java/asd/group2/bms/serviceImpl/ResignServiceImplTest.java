@@ -115,7 +115,7 @@ public class ResignServiceImplTest {
   }
 
   @Test
-  void deleteResignationRequestByIdTestTrue() {
+  void deleteResignationRequestByIdTestSuccess() {
     User user = new User();
     user.setId(1l);
     ResignRequest resignRequest = new ResignRequest();
@@ -133,5 +133,21 @@ public class ResignServiceImplTest {
     verify(resignRepository,times(1)).delete(any());
   }
 
+  @Test
+  void deleteResignationRequestByIdTestFailNotAuthorised() {
+    User user = new User();
+    user.setId(1l);
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setResignId(2l);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(3l);
 
+    Optional<ResignRequest> request = Optional.of(resignRequest);
+
+    when(resignRepository.findById(2l)).thenReturn(request);
+
+    resignService.deleteResignationRequestById(userPrincipal, 2l);
+    verify(resignRepository,times(0)).delete(any());
+  }
 }
