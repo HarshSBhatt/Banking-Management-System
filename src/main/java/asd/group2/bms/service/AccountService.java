@@ -19,4 +19,8 @@ public interface AccountService {
 
   Account getAccountByUserId(Long userId);
 
+  Account getAccountByAccountNumber(Long accountNumber);
+
+  Boolean updateAccountBalance(Account account);
+
 }
