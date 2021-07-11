@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import moment from "moment";
 
 //! Ant Imports
 
@@ -16,30 +15,38 @@ import { DownOutlined, LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
-import { ACCOUNT_STATUS, TOKEN } from "common/constants";
+import {
+  CREDIT_CARD_STATUS,
+  MINIMUM_CREDIT_SCORE,
+  TOKEN,
+} from "common/constants";
 import CreditCardAccept from "./components/credit_card/CreditCardAccept";
 import CreditCardReject from "./components/credit_card/CreditCardReject";
 
 function CreditCardRequests() {
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [ccRequests, setCcRequests] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [accountStatus, setAccountStatus] = useState(ACCOUNT_STATUS.PENDING);
+  const [creditCardStatus, setCreditCardStatus] = useState(
+    CREDIT_CARD_STATUS.PENDING
+  );
   const [getColumnSearchProps] = useTableSearch();
 
   const pageSize = 6;
 
-  const handleUserListUpdate = (email) => {
-    setUsers(users.filter((user) => user.email !== email));
+  const handleCCListUpdate = (creditCardNumber) => {
+    setCcRequests(
+      ccRequests.filter((user) => user.creditCardNumber !== creditCardNumber)
+    );
   };
 
-  const fetchAccountList = async (page) => {
+  const fetchCCRequestList = async (page) => {
     setLoading(true);
     try {
-      const response = await api.get("/account/list", {
+      const response = await api.get("/services/creditcards", {
         params: {
-          accountStatus,
+          creditCardStatus,
           page,
           size: pageSize,
         },
@@ -49,7 +56,7 @@ function CreditCardRequests() {
       });
       const { data } = response;
       setTotalElements(data.totalElements);
-      setUsers(data.content);
+      setCcRequests(data.content);
     } catch (error) {
       console.log(error);
     } finally {
@@ -58,119 +65,108 @@ function CreditCardRequests() {
   };
 
   useEffect(() => {
-    fetchAccountList(currentPage);
+    fetchCCRequestList(currentPage);
     // eslint-disable-next-line
-  }, [accountStatus]);
+  }, [creditCardStatus]);
 
   const columns = [
     {
-      title: "Customer ID",
-      dataIndex: "id",
-      key: "id",
-      ...getColumnSearchProps("id"),
-      render: (id) => {
-        return <span>{`DAL${id}`}</span>;
+      title: "CC Number",
+      dataIndex: "creditCardNumber",
+      key: "creditCardNumber",
+      width: 250,
+      ...getColumnSearchProps("creditCardNumber"),
+    },
+    {
+      title: "Credit Score",
+      dataIndex: ["accountDetailResponse", "creditScore"],
+      key: "creditScore",
+      render: (creditScore) => {
+        return <span>{creditScore}</span>;
       },
     },
     {
-      title: "First Name",
-      dataIndex: "firstName",
-      key: "firstName",
-      ...getColumnSearchProps("firstName"),
+      title: "Account Number",
+      dataIndex: ["accountDetailResponse", "accountNumber"],
+      key: "accountNumber",
+      render: (accountNumber) => {
+        return <span>{accountNumber}</span>;
+      },
     },
     {
-      title: "Last Name",
-      dataIndex: "lastName",
-      key: "lastName",
-      ...getColumnSearchProps("lastName"),
+      title: "Customer ID",
+      dataIndex: ["accountDetailResponse", "userMetaResponse", "id"],
+      key: "id",
+      render: (id) => {
+        return <span>{id}</span>;
+      },
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: "Customer Email",
+      dataIndex: ["accountDetailResponse", "userMetaResponse", "email"],
       key: "email",
-      ...getColumnSearchProps("email"),
-    },
-    {
-      title: "Requested Account Type",
-      dataIndex: "requestedAccountType",
-      key: "requestedAccountType",
-      sorter: (a, b) =>
-        a.requestedAccountType.localeCompare(b.requestedAccountType),
-      ...getColumnSearchProps("requestedAccountType"),
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-      ...getColumnSearchProps("phone"),
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      ellipsis: { showTitle: true },
-      ...getColumnSearchProps("address"),
-    },
-    {
-      title: "Birthday",
-      dataIndex: "birthday",
-      key: "birthday",
-      ...getColumnSearchProps("birthday"),
-      render: (birthday) => {
-        return <span>{moment(birthday).format("Do MMM YYYY")}</span>;
+      render: (email) => {
+        return <span>{email}</span>;
       },
     },
     {
       title: "Action",
       key: "action",
       fixed: "right",
-      render: (record) => (
-        <Space size="middle">
-          <CreditCardAccept
-            record={record}
-            handleUserListUpdate={handleUserListUpdate}
-          />
-          {accountStatus !== ACCOUNT_STATUS.REJECTED && (
-            <CreditCardReject
-              record={record}
-              handleUserListUpdate={handleUserListUpdate}
-            />
-          )}
-        </Space>
-      ),
+      render: (record) => {
+        return (
+          <Space size="middle">
+            {creditCardStatus !== CREDIT_CARD_STATUS.APPROVED &&
+              record.accountDetailResponse.creditScore >=
+                MINIMUM_CREDIT_SCORE && (
+                <CreditCardAccept
+                  record={record}
+                  handleCCListUpdate={handleCCListUpdate}
+                />
+              )}
+            {creditCardStatus !== CREDIT_CARD_STATUS.DECLINED && (
+              <CreditCardReject
+                record={record}
+                handleCCListUpdate={handleCCListUpdate}
+              />
+            )}
+          </Space>
+        );
+      },
     },
   ];
 
   const onPageChange = (page) => {
     setCurrentPage(page - 1);
-    fetchAccountList(page - 1);
+    fetchCCRequestList(page - 1);
   };
 
   const handleMenuClick = ({ key }) => {
     setCurrentPage(0);
-    setAccountStatus(key);
+    setCreditCardStatus(key);
   };
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key={ACCOUNT_STATUS.PENDING}>Pending</Menu.Item>
-      <Menu.Item key={ACCOUNT_STATUS.REJECTED}>Rejected</Menu.Item>
+      <Menu.Item key={CREDIT_CARD_STATUS.PENDING}>Pending</Menu.Item>
+      <Menu.Item key={CREDIT_CARD_STATUS.APPROVED}>Approved</Menu.Item>
+      <Menu.Item key={CREDIT_CARD_STATUS.DECLINED}>Declined</Menu.Item>
     </Menu>
   );
 
   const title = (
     <div className="cb-flex-sb">
-      <span className="cb-text-strong">Users List</span>
+      <span className="cb-text-strong">Credit Cards Requests List</span>
       <span className="cb-flex-sb">
         <Button
           type="primary"
           shape="circle"
           icon={<RedoOutlined spin={loading} />}
-          onClick={() => fetchAccountList(currentPage)}
+          onClick={() => fetchCCRequestList(currentPage)}
         />
         <Dropdown overlay={menu}>
           <Button>
-            {accountStatus} <DownOutlined />
+            {creditCardStatus} <DownOutlined />
           </Button>
         </Dropdown>
       </span>
@@ -184,10 +180,9 @@ function CreditCardRequests() {
         className="bank-user-table"
         columns={columns}
         pagination={false}
-        dataSource={users}
-        scroll={{ x: 1500 }}
+        dataSource={ccRequests}
         sticky
-        rowKey="email"
+        rowKey="creditCardNumber"
       />
       <div className="user-pagination">
         <Pagination

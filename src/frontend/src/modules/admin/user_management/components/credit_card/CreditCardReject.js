@@ -14,7 +14,7 @@ import api from "common/api";
 import { toast } from "common/utils";
 import CreditCardRejectModal from "./CreditCardRejectModal";
 
-function CreditCardReject({ record, handleUserListUpdate }) {
+function CreditCardReject({ record, handleCCListUpdate }) {
   const [modalState, setModalState] = useState({
     visible: false,
     confirmLoading: false,
@@ -27,12 +27,12 @@ function CreditCardReject({ record, handleUserListUpdate }) {
     });
     try {
       const updateData = {
-        email: record.email,
-        accountStatus: "REJECTED",
+        creditCardNumber: record.creditCardNumber,
+        creditCardStatus: "DECLINED",
       };
-      const response = await api.put("/users/account/status", updateData);
+      const response = await api.put("/services/creditcards", updateData);
       const { data } = response;
-      handleUserListUpdate(record.email);
+      handleCCListUpdate(record.creditCardNumber);
       toast({
         message: data.message,
         type: "success",
@@ -56,7 +56,6 @@ function CreditCardReject({ record, handleUserListUpdate }) {
       });
     }
   };
-
   return (
     <>
       <Button

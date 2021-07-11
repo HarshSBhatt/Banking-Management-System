@@ -22,10 +22,8 @@ export const ROUTES = {
   ADD_USER: "/bank/user/create",
   ACCOUNT_OPENING_REQUEST: "/bank/customer/requests",
   CREDIT_CARD_REQUEST: "/bank/credit-card/requests",
-  LEAVE: "/bank/leave",
   APPLY_LEAVE: "/bank/leave/apply",
   LEAVE_REQUEST: "/bank/leave/requests",
-  RESIGN: "/bank/resign",
   APPLY_RESIGNATION: "/bank/resign/apply",
   RESIGNATION_REQUEST: "/bank/resign/requests",
   MY_LEAVES: "/my-leaves",
@@ -39,6 +37,12 @@ export const ACCOUNT_STATUS = {
   ACTIVE: "ACTIVE",
   REJECTED: "REJECTED",
   CLOSED: "CLOSED",
+};
+
+export const CREDIT_CARD_STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  DECLINED: "DECLINED",
 };
 
 export const LEAVE_STATUS = {
