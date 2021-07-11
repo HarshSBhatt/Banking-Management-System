@@ -71,7 +71,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void isEmailAvailableTrue() {
+  void isEmailAvailableTrueTest() {
     String email = "random@dal.ca";
 
     when(userRepository.existsByEmail(email)).thenReturn(false);
@@ -82,7 +82,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void isEmailAvailableFalse() {
+  void isEmailAvailableFalseTest() {
     String email = "harsh.bhatt@dal.ca";
 
     when(userRepository.existsByEmail(email)).thenReturn(true);
@@ -93,7 +93,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void isUsernameAvailableTrue() {
+  void isUsernameAvailableTrueTest() {
     String username = "random_name";
 
     when(userRepository.existsByUsername(username)).thenReturn(false);
@@ -104,7 +104,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void isUsernameAvailableFalse() {
+  void isUsernameAvailableFalseTest() {
     String username = "harsh";
 
     when(userRepository.existsByUsername(username)).thenReturn(true);
@@ -115,7 +115,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void createUser() {
+  void createUserTest() {
     String username = "test__harsh";
     String email = "test__harsh.bhatt@dal.ca";
 
@@ -148,7 +148,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void setUserAccountStatusSuccess() throws MessagingException,
+  void setUserAccountStatusSuccessTest() throws MessagingException,
       UnsupportedEncodingException {
     String email = "harsh.bhatt@dal.ca";
     AccountStatus accountStatus = AccountStatus.PENDING;
@@ -169,7 +169,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void setUserAccountStatusFailure() throws MessagingException,
+  void setUserAccountStatusFailureTest() throws MessagingException,
       UnsupportedEncodingException {
     String email = "harsh.bhatt@dal.ca";
     AccountStatus accountStatus = AccountStatus.PENDING;
@@ -190,7 +190,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void changePasswordTrue() {
+  void changePasswordTrueTest() {
     String oldPassword = "abc";
     String newPassword = "def";
     String email = "harsh.bhatt@dal.ca";
@@ -217,7 +217,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void changePasswordFalse() {
+  void changePasswordFalseTest() {
     String oldPassword = "abc";
     String newPassword = "abc";
     String email = "harsh.bhatt@dal.ca";
@@ -239,7 +239,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void resetPasswordTrue() {
+  void resetPasswordTrueTest() {
     String newPassword = "abc";
     String confirmNewPassword = "abc";
     String email = "harsh.bhatt@dal.ca";
@@ -263,7 +263,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void resetPasswordFalse() {
+  void resetPasswordFalseTest() {
     String newPassword = "abcd";
     String confirmNewPassword = "abc";
     String email = "harsh.bhatt@dal.ca";
@@ -285,7 +285,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void updateResetForgotPasswordToken() {
+  void updateResetForgotPasswordTokenTest() {
     userService = mock(UserServiceImpl.class);
 
     String email = "harsh.bhatt@dal.ca";
@@ -300,7 +300,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void getUserByEmail() {
+  void getUserByEmailTest() {
     String email = "harsh.bhatt@dal.ca";
 
     User user = new User();
@@ -314,7 +314,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void getUserByToken() {
+  void getUserByTokenTest() {
     String token = "dummy_token";
 
     User user = new User();
@@ -329,7 +329,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void getUserProfileByUsername() {
+  void getUserProfileByUsernameTest() {
     String username = "harsh";
 
     UserProfile userProfile = new UserProfile();
@@ -348,7 +348,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void updateUserProfileByUsernameTrue() {
+  void updateUserProfileByUsernameTrueTest() {
     User user = new User();
     user.setFirstName("Test Name");
     user.setId(1L);
@@ -376,7 +376,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void updateUserProfileByUsernameFalse() {
+  void updateUserProfileByUsernameFalseTest() {
     User user = new User();
     user.setFirstName("Test Name");
     user.setId(1000L);
