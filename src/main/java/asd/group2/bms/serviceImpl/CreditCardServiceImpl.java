@@ -78,7 +78,8 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param account: account for which credit card would be created
    * @return This will return the debit card details
    */
-  public CreditCard createCreditCard(Account account) {
+  public CreditCard createCreditCard(Account account,
+                                     Integer requestedTransactionLimit) {
     Random random = new Random();
     Date date = new Date();
 
@@ -95,7 +96,8 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     String creditCardNumber = new Helper().generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
-        account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, CreditCardStatus.PENDING, expiryYear, expiryMonth, cvv, false);
+        account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
+        cvv, false);
 
     return creditCardRepository.save(creditCard);
   }
