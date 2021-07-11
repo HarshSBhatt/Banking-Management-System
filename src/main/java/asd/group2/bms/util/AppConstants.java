@@ -15,4 +15,6 @@ public interface AppConstants {
   int MINIMUM_TRANSACTION_LIMIT = 5000;
   int MAXIMUM_TRANSACTION_LIMIT = 50000;
 
+  int MINIMUM_BALANCE = 100;
+
 }
