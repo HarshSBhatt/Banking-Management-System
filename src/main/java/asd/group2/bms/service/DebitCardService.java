@@ -9,6 +9,8 @@ public interface DebitCardService {
 
   DebitCard getDebitCardByNumber(Long debitCardNumber);
 
+  DebitCard getDebitCardByAccountNumber(Long accountNumber);
+
   Boolean setDebitCardLimit(Long debitCardNumber, Integer transactionLimit);
 
   Boolean setDebitCardPin(Long debitCardNumber, String pin);

@@ -34,10 +34,11 @@ function Account() {
   const lastName = user?.lastName;
   const phone = user?.phone;
   const email = user?.email;
+  const debitCardNumber = accountData?.debitCardNumber;
 
   const title = <span className="cb-text-strong">My Account</span>;
 
-  const fetchUserProfile = async () => {
+  const fetchUserAccount = async () => {
     setLoading(true);
     try {
       const response = await api.get(`/account/me`);
@@ -55,7 +56,7 @@ function Account() {
   };
 
   useEffect(() => {
-    fetchUserProfile();
+    fetchUserAccount();
     // eslint-disable-next-line
   }, []);
 
@@ -122,6 +123,13 @@ function Account() {
           title={<InnerTitle title="Phone" />}
         >
           <span>{phone}</span>
+        </Card>
+        <Card
+          type="inner"
+          bordered={false}
+          title={<InnerTitle title="Debit Card Number" />}
+        >
+          <span>{debitCardNumber}</span>
         </Card>
         <Card
           type="inner"

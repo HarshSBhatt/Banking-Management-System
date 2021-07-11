@@ -8,9 +8,15 @@ public interface DebitCardRepository {
 
   /**
    * @param debitCardNumber: number of the debit card
-   * @return This will return user based on user id.
+   * @return This will return debit card based on card number.
    */
   Optional<DebitCard> findById(Long debitCardNumber);
+
+  /**
+   * @param accountNumber: account number of user
+   * @return This will return debit card based on account number.
+   */
+  Optional<DebitCard> findByAccountNumber(Long accountNumber);
 
   /**
    * @param debitCard: Debit Card details
