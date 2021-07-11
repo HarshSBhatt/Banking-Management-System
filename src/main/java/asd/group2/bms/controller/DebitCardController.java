@@ -28,7 +28,7 @@ public class DebitCardController {
      * @param debitCardSetLimitRequest: Set transaction limit for the debit card
      * @return Returns whether transaction limit is updated
      */
-    @PutMapping("/services/debitcard")
+    @PutMapping("/services/debitCard")
     @RolesAllowed({"ROLE_USER"})
     public ResponseEntity<?> debitCardSetLimit(
             @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
@@ -54,7 +54,7 @@ public class DebitCardController {
      * @param debitCardSetPinRequest: Request to set pin for the given debit card
      * @return Returns whether pin is updated
      */
-    @PutMapping("/services/debitcard/pin")
+    @PutMapping("/services/debitCard/pin")
     @RolesAllowed({"ROLE_USER"})
     public ResponseEntity<?> debitCardSetPin(
             @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
