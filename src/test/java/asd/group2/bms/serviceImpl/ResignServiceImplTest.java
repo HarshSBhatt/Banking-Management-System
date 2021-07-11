@@ -23,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -75,8 +76,28 @@ public class ResignServiceImplTest {
         resignService.getResignListByStatus(requestStatus, page, size);
 
     assertEquals(username,
-        resignations.getContent().get(0).getUserMetaResponse().getUsername(),
-        "Wrong " +
-            "user was returned");
+        resignations.getContent().get(0).getUserMetaResponse().getUsername());
+  }
+
+  @Test
+  void getResignListByUserIdTest() {
+    String username = "aditya";
+
+    User user = new User();
+    user.setUsername("aditya");
+    user.setId(1L);
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(resignRepository.findByUser_Id(user.getId())).thenReturn(resigns);
+
+    List<ResignListResponse> resign = resignService.getResignListByUserId(user.getId());
+
+    assertEquals(username, resign.get(0).getUserMetaResponse().getUsername());
+    assertEquals(1, resign.size());
   }
 }
