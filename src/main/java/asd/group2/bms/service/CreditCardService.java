@@ -6,6 +6,9 @@ import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+
 public interface CreditCardService {
 
   PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size);
@@ -13,7 +16,7 @@ public interface CreditCardService {
   CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber);
 
   Boolean setCreditCardRequestStatus(Long creditCardNumber,
-                                     CreditCardStatus creditCardStatus);
+                                     CreditCardStatus creditCardStatus) throws MessagingException, UnsupportedEncodingException;
 
   CreditCard createCreditCard(Account account, Integer requestedTransactionLimit);
 
