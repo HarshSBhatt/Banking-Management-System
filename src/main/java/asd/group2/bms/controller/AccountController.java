@@ -2,6 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.AccountRequest;
@@ -13,6 +14,7 @@ import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.serviceImpl.AccountServiceImpl;
+import asd.group2.bms.serviceImpl.DebitCardServiceImpl;
 import asd.group2.bms.serviceImpl.UserServiceImpl;
 import asd.group2.bms.util.AppConstants;
 import asd.group2.bms.serviceImpl.CustomEmailImpl;
@@ -41,6 +43,9 @@ public class AccountController {
 
   @Autowired
   CustomEmailImpl customEmail;
+
+  @Autowired
+  DebitCardServiceImpl debitCardService;
 
   /**
    * Users list based on the account status of the users
@@ -86,6 +91,9 @@ public class AccountController {
         user.getPhone()
     );
     accountDetailResponse.setUserMetaResponse(userMetaResponse);
+    DebitCard debitCard =
+        debitCardService.getDebitCardByAccountNumber(account.getAccountNumber());
+    accountDetailResponse.setDebitCardNumber(debitCard.getDebitCardNumber());
     return accountDetailResponse;
   }
 

@@ -1,6 +1,7 @@
 package asd.group2.bms.payload.response;
 
 import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.cards.debit.DebitCard;
 
 import java.time.Instant;
 
@@ -23,6 +24,8 @@ public class AccountDetailResponse {
 
   private UserMetaResponse userMetaResponse;
 
+  private Long debitCardNumber;
+
   public AccountDetailResponse() {
   }
 
@@ -34,6 +37,17 @@ public class AccountDetailResponse {
     this.accountCreatedAt = accountCreatedAt;
     this.lastActivityAt = lastActivityAt;
     this.userMetaResponse = userMetaResponse;
+  }
+
+  public AccountDetailResponse(Long accountNumber, AccountType accountType, Double balance, int creditScore, Instant accountCreatedAt, Instant lastActivityAt, UserMetaResponse userMetaResponse, Long debitCardNumber) {
+    this.accountNumber = accountNumber;
+    this.accountType = accountType;
+    this.balance = balance;
+    this.creditScore = creditScore;
+    this.accountCreatedAt = accountCreatedAt;
+    this.lastActivityAt = lastActivityAt;
+    this.userMetaResponse = userMetaResponse;
+    this.debitCardNumber = debitCardNumber;
   }
 
   public Long getAccountNumber() {
@@ -90,6 +104,14 @@ public class AccountDetailResponse {
 
   public void setUserMetaResponse(UserMetaResponse userMetaResponse) {
     this.userMetaResponse = userMetaResponse;
+  }
+
+  public Long getDebitCardNumber() {
+    return debitCardNumber;
+  }
+
+  public void setDebitCardNumber(Long debitCardNumber) {
+    this.debitCardNumber = debitCardNumber;
   }
 
 }
