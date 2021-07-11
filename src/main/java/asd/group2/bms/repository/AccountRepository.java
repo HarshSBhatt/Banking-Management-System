@@ -20,6 +20,14 @@ public interface AccountRepository {
   Optional<Account> findAccountByUser_Id(Long userId);
 
   /**
+   * @param accountNumber: account number of user whose account detail is
+   *                       requested
+   * @return This will return the account details of the user based on
+   * account number
+   */
+  Optional<Account> findAccountByAccountNumber(Long accountNumber);
+
+  /**
    * @param account: Account details
    * @return This will return account if inserted in the database.
    */
