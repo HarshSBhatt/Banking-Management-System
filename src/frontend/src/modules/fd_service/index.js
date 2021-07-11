@@ -2,6 +2,8 @@
 
 import { Card } from "antd";
 import { useState } from "react";
+import MyFdAccounts from "./components/MyFdAccounts";
+import OpenFDAccount from "./components/OpenFDAccount";
 
 const tabList = [
   {
@@ -16,12 +18,17 @@ const tabList = [
     key: "tab3",
     tab: "Close FD Account",
   },
+  {
+    key: "tab4",
+    tab: "My FD Accounts",
+  },
 ];
 
 const contentList = {
-  tab1: <p>content1</p>,
+  tab1: <OpenFDAccount />,
   tab2: <p>content2</p>,
   tab3: <p>content3</p>,
+  tab4: <MyFdAccounts />,
 };
 
 function FDServices() {
@@ -49,7 +56,15 @@ function FDServices() {
           onTabChange(key, "key");
         }}
       >
-        {contentList[state.key]}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 0",
+          }}
+        >
+          {contentList[state.key]}
+        </div>
       </Card>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { Card } from "antd";
 import { useState } from "react";
+import RequestCreditCard from "./components/RequestCreditCard";
 
 const tabList = [
   {
@@ -19,7 +20,7 @@ const tabList = [
 ];
 
 const contentList = {
-  tab1: <p>content1</p>,
+  tab1: <RequestCreditCard />,
   tab2: <p>content2</p>,
   tab3: <p>content3</p>,
 };
@@ -49,7 +50,15 @@ function CreditCardServices() {
           onTabChange(key, "key");
         }}
       >
-        {contentList[state.key]}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 0",
+          }}
+        >
+          {contentList[state.key]}
+        </div>
       </Card>
     </div>
   );

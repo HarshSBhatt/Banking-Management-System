@@ -49,7 +49,15 @@ function ChequeServices() {
           onTabChange(key, "key");
         }}
       >
-        {contentList[state.key]}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 0",
+          }}
+        >
+          {contentList[state.key]}
+        </div>
       </Card>
     </div>
   );
