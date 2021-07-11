@@ -16,6 +16,7 @@ import CreditCardServices from "modules/credit_card_service";
 import Dashboard from "modules/dashboard";
 import DebitCardServices from "modules/debit_card_service";
 import FDServices from "modules/fd_service";
+import FundTransfer from "modules/fund_transfer";
 import Profile from "modules/profile";
 import UpdateProfile from "modules/profile/components/UpdateProfile";
 import { ROUTES } from "./constants";
@@ -79,6 +80,12 @@ export const routesList = [
     link: ROUTES.FD_SERVICES,
     label: "FD Services",
     view: FDServices,
+    allowedRoles: ["ROLE_USER"],
+  },
+  {
+    link: ROUTES.FUND_TRANSFER,
+    label: "Fund Transfer",
+    view: FundTransfer,
     allowedRoles: ["ROLE_USER"],
   },
   {

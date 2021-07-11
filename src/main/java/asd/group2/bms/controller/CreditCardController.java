@@ -19,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api")
@@ -51,7 +53,7 @@ public class CreditCardController {
   @PutMapping("/services/creditcards")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> updateCreditCardRequestStatus(
-      @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) {
+      @Valid @RequestBody UpdateCreditCardStatusRequest updateCreditCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
     Boolean isUpdated =
         creditCardService.setCreditCardRequestStatus(updateCreditCardStatusRequest.getCreditCardNumber(), updateCreditCardStatusRequest.getCreditCardStatus());
     if (isUpdated) {
@@ -79,5 +81,4 @@ public class CreditCardController {
 
     return creditCardService.createCreditCard(account, requestedTransactionLimit);
   }
-
 }

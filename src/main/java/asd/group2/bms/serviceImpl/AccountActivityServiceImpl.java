@@ -27,6 +27,14 @@ public class AccountActivityServiceImpl implements AccountActivityService {
   @Autowired
   CustomEmailImpl customEmail;
 
+  /**
+   * @param senderAccountNumber:   sender's account number
+   * @param receiverAccountNumber: receiver's account number
+   * @param comment:               comment for this transaction
+   * @param transactionAmount:     amount to be transferred to and from
+   * @return
+   * @throws Exception Any exception that might happen during transaction
+   */
   @Override
   public ResponseEntity<?> fundTransfer(Long senderAccountNumber,
                                         Long receiverAccountNumber,
