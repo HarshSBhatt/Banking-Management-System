@@ -109,8 +109,19 @@ public class ResignServiceImplTest {
     verify(resignRepository,times(1)).findById(any());
   }
 
-  @Test
+  @Test()
   void setResignRequestStatus() {
+    User user = new User();
 
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+
+    Optional<ResignRequest> request = Optional.of(resignRequest);
+    when(resignRepository.findById(1l)).thenReturn(request);
+
+    resignService.setResignRequestStatus(1l, RequestStatus.PENDING);
+    assertEquals(RequestStatus.PENDING, resignRequest.getRequestStatus());
+    verify(resignRepository,times(1)).findById(any());
+    verify(resignRepository,times(1)).update(any());
   }
 }
