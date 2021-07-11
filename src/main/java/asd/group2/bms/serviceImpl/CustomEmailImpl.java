@@ -111,4 +111,27 @@ public class CustomEmailImpl implements CustomEmail {
     javaMailSender.send(message);
   }
 
+  @Override
+  public void sendAccountActivityMail(String email, String firstName,
+                                      Double amount, Double newBalance,
+                                      String activityType,
+                                      Long refId) throws MessagingException,
+      UnsupportedEncodingException {
+    MimeMessage message = javaMailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+
+    helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+    helper.setTo(email);
+
+    String subject = "Amount " + activityType + "!";
+    String content = "<p>Dear " + firstName + ",</p>" +
+        "<p>Amount " + activityType + ": " + amount + "</p>" +
+        "<p>Your available balance: " + newBalance + "</p>" +
+        "<p>Reference id for this transaction: " + refId + "</p>" +
+        "<p>Happy Banking!</p>";
+    helper.setSubject(subject);
+    helper.setText(content, true);
+    javaMailSender.send(message);
+  }
+
 }

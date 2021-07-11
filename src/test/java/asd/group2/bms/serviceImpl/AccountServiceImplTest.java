@@ -131,4 +131,46 @@ class AccountServiceImplTest {
         "was returned");
   }
 
+  @Test
+  void getAccountByAccountNumberTest() {
+    Long accountNumber = 1L;
+    Double accountBalance = 5000.0;
+
+    Account account = new Account();
+    account.setBalance(accountBalance);
+
+    when(accountRepository.findAccountByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+
+    Account fetchedAccount = accountService.getAccountByAccountNumber(accountNumber);
+
+    assertEquals(accountBalance, fetchedAccount.getBalance(), "Wrong balance " +
+        "was returned");
+  }
+
+  @Test
+  void updateAccountBalanceSuccessTest() {
+    Double accountBalance = 5000.0;
+    Account account = new Account();
+    account.setBalance(accountBalance);
+
+    when(accountRepository.update(any(Account.class))).thenReturn(true);
+
+    Boolean isUpdated = accountService.updateAccountBalance(account);
+
+    assertTrue(isUpdated, "False was returned");
+  }
+
+  @Test
+  void updateAccountBalanceFailureTest() {
+    Double accountBalance = 5000.0;
+    Account account = new Account();
+    account.setBalance(accountBalance);
+
+    when(accountRepository.update(any(Account.class))).thenReturn(false);
+
+    Boolean isUpdated = accountService.updateAccountBalance(account);
+
+    assertFalse(isUpdated, "True was returned");
+  }
+
 }
