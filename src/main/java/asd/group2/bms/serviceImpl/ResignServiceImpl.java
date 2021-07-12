@@ -37,6 +37,7 @@ public class ResignServiceImpl implements ResignService {
    * @param size:          Size of the response data
    * @return This will return all the resignations having status resignStatus
    */
+  @Override
   public PagedResponse<ResignListResponse> getResignListByStatus(RequestStatus requestStatus, int page, int size) {
     // Making list in ascending order
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
@@ -57,6 +58,7 @@ public class ResignServiceImpl implements ResignService {
    * @param userId: id of the user
    * @return This will return all the resignations having user id userId
    */
+  @Override
   public List<ResignListResponse> getResignListByUserId(Long userId) {
     // Making list in ascending order
     List<ResignRequest> resigns = resignRepository.findByUser_Id(userId);
@@ -71,15 +73,17 @@ public class ResignServiceImpl implements ResignService {
    * @param resignId: id of the resign
    * @return a resign based on id
    */
+  @Override
   public ResignRequest getResignById(Long resignId) {
     return resignRepository.findById(resignId).orElseThrow(() -> new ResourceNotFoundException("Resign ID", "resignId", resignId));
   }
 
   /**
-   * @param resignId :      id of the resign
+   * @param resignId      :      id of the resign
    * @param requestStatus : Status of the resign (APPROVED, REJECTED, PENDING)
    * @return the updated status of the resign having id - resignId
    */
+  @Override
   public boolean setResignRequestStatus(Long resignId, RequestStatus requestStatus) {
     ResignRequest resignRequest = getResignById(resignId);
     resignRequest.setRequestStatus(requestStatus);
@@ -91,6 +95,7 @@ public class ResignServiceImpl implements ResignService {
    * @param resignId:    id of the resign
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> deleteResignationRequestById(UserPrincipal currentUser, Long resignId) {
     try {
       ResignRequest resignRequest = getResignById(resignId);
@@ -114,6 +119,7 @@ public class ResignServiceImpl implements ResignService {
    * @param reason: reason of the resign
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> makeResignRequest(User user, Date date, String reason) {
     try {
       ResignRequest resignRequest = new ResignRequest(user, date, reason, RequestStatus.PENDING);
