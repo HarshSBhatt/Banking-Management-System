@@ -18,6 +18,7 @@ export const ROUTES = {
   DEBIT_CARD_SERVICES: "/service/debit-card",
   CREDIT_CARD_SERVICES: "/service/credit-card",
   FD_SERVICES: "/service/fd",
+  FUND_TRANSFER: "/service/fund-transfer",
   /* Bank */
   ADD_USER: "/bank/user/create",
   ACCOUNT_OPENING_REQUEST: "/bank/customer/requests",

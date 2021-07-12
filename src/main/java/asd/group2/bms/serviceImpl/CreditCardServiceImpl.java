@@ -18,12 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
@@ -31,12 +30,16 @@ public class CreditCardServiceImpl implements CreditCardService {
   @Autowired
   CreditCardRepositoryImpl creditCardRepository;
 
+  @Autowired
+  CustomEmailImpl customEmail;
+
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
    * @param page:             Page Number
    * @param size:             Size of the response data
    * @description: This will return all the credit cards having status resignStatus
    */
+  @Override
   public PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size) {
     // Making list in ascending order
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
@@ -57,6 +60,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param creditCardNumber: credit card number
    * @return credit card based on credit card number
    */
+  @Override
   public CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber) {
     return creditCardRepository.findById(creditCardNumber).orElseThrow(() -> new ResourceNotFoundException("Credit Card Number", "creditCardNumber", creditCardNumber));
   }
@@ -66,11 +70,23 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param creditCardStatus: Status of the credit card (APPROVED, REJECTED, PENDING)
    * @return the updated status of the credit card having credit card number - creditCardNumber
    */
+  @Override
   public Boolean setCreditCardRequestStatus(Long creditCardNumber,
-                                            CreditCardStatus creditCardStatus) {
+                                            CreditCardStatus creditCardStatus
+  ) throws MessagingException,
+      UnsupportedEncodingException {
     CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
+    String email = creditCard.getAccount().getUser().getEmail();
+    String firstName = creditCard.getAccount().getUser().getFirstName();
+    Integer transactionLimit = creditCard.getTransactionLimit();
     creditCard.setCreditCardStatus(creditCardStatus);
-    return creditCardRepository.update(creditCard);
+    boolean response = creditCardRepository.update(creditCard);
+    if (response) {
+      customEmail.sendCreditCardApprovalMail(email, firstName,
+          transactionLimit);
+
+    }
+    return response;
   }
 
 
@@ -78,6 +94,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param account: account for which credit card would be created
    * @return This will return the debit card details
    */
+  @Override
   public CreditCard createCreditCard(Account account,
                                      Integer requestedTransactionLimit) {
     Random random = new Random();

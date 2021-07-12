@@ -1,6 +1,5 @@
 package asd.group2.bms.payload.request;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class FundTransferRequest {

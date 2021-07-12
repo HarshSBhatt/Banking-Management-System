@@ -4,17 +4,14 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.resign.ResignRequest;
-import asd.group2.bms.model.term_deposit.TermDepositDetail;
-import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.*;
 
 public class ModelMapper {
 
   /**
-   * @param leaveRequest
-   * @return leaveListResponse
-   * @description returns list of leave requests
+   * @param leaveRequest: Leave request body
+   * @return list of leave requests
    */
   public static LeaveListResponse mapLeavesToLeaveListResponse(LeaveRequest leaveRequest) {
     LeaveListResponse leaveListResponse = new LeaveListResponse();
@@ -38,9 +35,8 @@ public class ModelMapper {
   }
 
   /**
-   * @param resignRequest
-   * @return resignListResponse
-   * @description returns list of resign requests
+   * @param resignRequest: resign request body
+   * @return list of resign requests
    */
   public static ResignListResponse mapResignsToResignListResponse(ResignRequest resignRequest) {
     ResignListResponse resignListResponse = new ResignListResponse();
@@ -64,9 +60,8 @@ public class ModelMapper {
 
 
   /**
-   * @param creditCard
-   * @return creditCardListResponse
-   * @description returns list of credit cards
+   * @param creditCard: credit card model
+   * @return returns list of credit cards
    */
   public static CreditCardListResponse mapCreditCardToCreditCardListResponse(CreditCard creditCard) {
     CreditCardListResponse creditCardListResponse = new CreditCardListResponse();

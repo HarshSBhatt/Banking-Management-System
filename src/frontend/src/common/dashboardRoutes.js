@@ -54,6 +54,11 @@ export const dashboardRoutes = [
     allowedRoles: ["ROLE_USER"],
   },
   {
+    link: ROUTES.FUND_TRANSFER,
+    label: "Fund Transfer",
+    allowedRoles: ["ROLE_USER"],
+  },
+  {
     link: ROUTES.ADD_USER,
     label: "Add User",
     allowedRoles: ["ROLE_MANAGER", "ROLE_HR"],

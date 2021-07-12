@@ -25,7 +25,9 @@ function Dashboard() {
     return (
       isAuthorizedUser && (
         <Link to={route.link}>
-          <Card.Grid style={gridStyle}>{route.label}</Card.Grid>
+          <Card.Grid style={gridStyle}>
+            <span className="cb-text-strong">{route.label}</span>
+          </Card.Grid>
         </Link>
       )
     );

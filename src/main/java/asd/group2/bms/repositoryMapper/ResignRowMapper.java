@@ -2,7 +2,6 @@ package asd.group2.bms.repositoryMapper;
 
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
-import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -33,4 +32,5 @@ public class ResignRowMapper implements RowMapper<ResignRequest> {
 
     return resignRequest;
   }
+
 }

@@ -16,6 +16,7 @@ public class CustomEmailImpl implements CustomEmail {
   @Autowired
   JavaMailSender javaMailSender;
 
+  @Override
   public void sendResetPasswordEmail(String email, String forgotPasswordLink) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -34,6 +35,7 @@ public class CustomEmailImpl implements CustomEmail {
     javaMailSender.send(message);
   }
 
+  @Override
   public void sendAccountCreationMail(String email, String firstName) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -52,6 +54,7 @@ public class CustomEmailImpl implements CustomEmail {
     javaMailSender.send(message);
   }
 
+  @Override
   public void sendUserAccountStatusChangeMail(String email, String firstName, String accountStatus) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -71,6 +74,7 @@ public class CustomEmailImpl implements CustomEmail {
     javaMailSender.send(message);
   }
 
+  @Override
   public void sendDebitCardGenerationMail(String email, String firstName, Long debitCardNumber, String debitCardPin, String expiryMonth, String expiryYear, String cvv) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -93,6 +97,7 @@ public class CustomEmailImpl implements CustomEmail {
     javaMailSender.send(message);
   }
 
+  @Override
   public void sendBalanceDeductionMail(String email, String firstName, Double debitedAmount, Double newBalance) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -112,11 +117,7 @@ public class CustomEmailImpl implements CustomEmail {
   }
 
   @Override
-  public void sendAccountActivityMail(String email, String firstName,
-                                      Double amount, Double newBalance,
-                                      String activityType,
-                                      Long refId) throws MessagingException,
-      UnsupportedEncodingException {
+  public void sendAccountActivityMail(String email, String firstName, Double amount, Double newBalance, String activityType, Long refId) throws MessagingException, UnsupportedEncodingException {
     MimeMessage message = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
 
@@ -132,6 +133,24 @@ public class CustomEmailImpl implements CustomEmail {
     helper.setSubject(subject);
     helper.setText(content, true);
     javaMailSender.send(message);
+
   }
 
+  @Override
+  public void sendCreditCardApprovalMail(String email, String firstName, Integer transactionLimit) throws MessagingException, UnsupportedEncodingException {
+    MimeMessage message = javaMailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+
+    helper.setFrom("dalbank07@gmail.com", "Group 2 Bank Account Team");
+    helper.setTo(email);
+
+    String subject = "Credit Card Approved";
+    String content = "<p>Dear " + firstName + ",</p>" +
+        "<p>Your request for credit card has been approved.</p>" +
+        "<p>Your transaction limit is " + transactionLimit + "</p>" +
+        "<p>Happy Banking!</p>";
+    helper.setSubject(subject);
+    helper.setText(content, true);
+    javaMailSender.send(message);
+  }
 }

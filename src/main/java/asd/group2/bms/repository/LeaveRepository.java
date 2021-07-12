@@ -2,7 +2,6 @@ package asd.group2.bms.repository;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

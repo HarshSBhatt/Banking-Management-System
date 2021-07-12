@@ -6,7 +6,6 @@ import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.repositoryImpl.TermDepositDetailRepositoryImpl;
-import asd.group2.bms.security.CustomTransactional;
 import asd.group2.bms.service.TermDepositDetailService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@CustomTransactional
 @Service
 public class TermDepositDetailServiceImpl implements TermDepositDetailService {
 
@@ -32,7 +30,7 @@ public class TermDepositDetailServiceImpl implements TermDepositDetailService {
   @Autowired
   CustomEmailImpl customEmail;
 
-
+  @Override
   public ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
                                                   String firstName,
                                                   Double fdAmount,
@@ -95,10 +93,12 @@ public class TermDepositDetailServiceImpl implements TermDepositDetailService {
 
   }
 
+  @Override
   public TermDepositDetail getTermDepositDetailById(Long id) {
     return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
   }
 
+  @Override
   public List<TermDepositDetail> getTermDepositDetail(Long userId) {
 
     Account account = accountService.getAccountByUserId(userId);
