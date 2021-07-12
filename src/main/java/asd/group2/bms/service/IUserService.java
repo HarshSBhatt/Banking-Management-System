@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
-public interface UserService {
+public interface IUserService {
 
   Boolean isEmailAvailable(String email);
 

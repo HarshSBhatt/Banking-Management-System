@@ -9,9 +9,10 @@ import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserProfile;
-import asd.group2.bms.repositoryImpl.RoleRepositoryImpl;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.IRoleRepository;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
+import asd.group2.bms.service.ICustomEmail;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,16 +44,16 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
 
   @Mock
-  RoleRepositoryImpl roleRepository;
+  IRoleRepository roleRepository;
 
   @Mock
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   @Mock
   PasswordEncoder passwordEncoder;
 
   @Mock
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   @InjectMocks
   UserServiceImpl userService;

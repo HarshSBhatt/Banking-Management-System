@@ -5,7 +5,7 @@ import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
+import asd.group2.bms.repository.IResignRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 public class ResignServiceImplTest {
 
   @Mock
-  ResignRepositoryImpl resignRepository;
+  IResignRepository resignRepository;
 
   @InjectMocks
   ResignServiceImpl resignService;

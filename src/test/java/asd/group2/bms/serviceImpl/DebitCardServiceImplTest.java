@@ -1,7 +1,7 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.cards.debit.DebitCard;
-import asd.group2.bms.repositoryImpl.DebitCardRepositoryImpl;
+import asd.group2.bms.repository.IDebitCardRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class DebitCardServiceImplTest {
 
   @Mock
-  DebitCardRepositoryImpl debitCardRepository;
+  IDebitCardRepository debitCardRepository;
 
   @InjectMocks
   DebitCardServiceImpl debitCardService;

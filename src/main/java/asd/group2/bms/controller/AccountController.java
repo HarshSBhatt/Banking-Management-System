@@ -10,14 +10,14 @@ import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.UserMetaResponse;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.serviceImpl.AccountServiceImpl;
-import asd.group2.bms.serviceImpl.DebitCardServiceImpl;
-import asd.group2.bms.serviceImpl.UserServiceImpl;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.IDebitCardService;
+import asd.group2.bms.service.IUserService;
 import asd.group2.bms.util.AppConstants;
-import asd.group2.bms.serviceImpl.CustomEmailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +33,19 @@ import java.io.UnsupportedEncodingException;
 public class AccountController {
 
   @Autowired
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   @Autowired
-  UserServiceImpl userService;
+  IUserService userService;
 
   @Autowired
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   @Autowired
-  DebitCardServiceImpl debitCardService;
+  IDebitCardService debitCardService;
 
   /**
    * Users list based on the account status of the users

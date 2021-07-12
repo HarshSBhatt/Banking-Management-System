@@ -4,7 +4,7 @@ import asd.group2.bms.model.cards.debit.DebitCard;
 
 import java.util.Optional;
 
-public interface DebitCardRepository {
+public interface IDebitCardRepository {
 
   /**
    * @param debitCardNumber: number of the debit card

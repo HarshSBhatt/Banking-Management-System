@@ -5,8 +5,10 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.repositoryImpl.TermDepositDetailRepositoryImpl;
-import asd.group2.bms.service.TermDepositDetailService;
+import asd.group2.bms.repository.ITermDepositDetailRepository;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.ITermDepositDetailService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,16 +21,16 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TermDepositDetailServiceImpl implements TermDepositDetailService {
+public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
   @Autowired
-  TermDepositDetailRepositoryImpl termDepositDetailRepository;
+  ITermDepositDetailRepository termDepositDetailRepository;
 
   @Autowired
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   @Override
   public ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
