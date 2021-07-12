@@ -5,9 +5,11 @@ import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.IAccountRepository;
 import asd.group2.bms.repository.IUserRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.service.IDebitCardService;
 import org.junit.jupiter.api.AfterEach;
@@ -173,6 +175,43 @@ class AccountServiceImplTest {
     Boolean isUpdated = accountService.updateAccountBalance(account);
 
     assertFalse(isUpdated, "True was returned");
+  }
+
+  @Test
+  void getAccountDetailsTest() {
+    Long debitCardNumber = 1L;
+    Long userId = 1L;
+    Double accountBalance = 5000.0;
+    String username = "test__harsh";
+    String email = "test__harsh.bhatt@dal.ca";
+
+    UserPrincipal currentUser = new UserPrincipal();
+    currentUser.setId(userId);
+
+    DebitCard debitCard = new DebitCard();
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    User user = new User();
+    user.setId(userId);
+    user.setFirstName("f_name");
+    user.setLastName("l_name");
+    user.setUsername(username);
+    user.setEmail(email);
+    user.setPhone("9876543210");
+
+    Account account = new Account();
+    account.setBalance(accountBalance);
+    account.setUser(user);
+
+    when(accountRepository.findAccountByUser_Id(userId)).thenReturn(Optional.of(account));
+    when(debitCardService.getDebitCardByAccountNumber(account.getAccountNumber())).thenReturn(debitCard);
+
+    AccountDetailResponse accountDetailResponse =
+        accountService.getAccountDetails(currentUser);
+
+    assertEquals(accountBalance, accountDetailResponse.getBalance(),
+        "Wrong " +
+            "account detail was returned");
   }
 
 }
