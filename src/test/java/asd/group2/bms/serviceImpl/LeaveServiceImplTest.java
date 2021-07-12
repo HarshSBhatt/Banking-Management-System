@@ -1,6 +1,6 @@
 package asd.group2.bms.serviceImpl;
 
-import asd.group2.bms.repositoryImpl.LeaveRepositoryImpl;
+import asd.group2.bms.repository.ILeaveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 class LeaveServiceImplTest {
 
   @MockBean
-  private LeaveRepositoryImpl leaveRepository;
+  private ILeaveRepository leaveRepository;
 
   @InjectMocks
   private LeaveServiceImpl leaveService;

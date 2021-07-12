@@ -4,8 +4,10 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
-import asd.group2.bms.service.AccountActivityService;
+import asd.group2.bms.repository.IAccountActivityRepository;
+import asd.group2.bms.service.IAccountActivityService;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountActivityServiceImpl implements AccountActivityService {
+public class AccountActivityServiceImpl implements IAccountActivityService {
 
   @Autowired
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   @Autowired
-  AccountActivityRepositoryImpl accountActivityRepository;
+  IAccountActivityRepository accountActivityRepository;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   /**
    * @param senderAccountNumber:   sender's account number

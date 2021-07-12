@@ -1,7 +1,7 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.repository.AccountRepository;
+import asd.group2.bms.repository.IAccountRepository;
 import asd.group2.bms.repositoryMapper.AccountRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Repository
-public class AccountRepositoryImpl extends JdbcDaoSupport implements AccountRepository {
+public class AccountRepositoryImpl extends JdbcDaoSupport implements IAccountRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

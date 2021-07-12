@@ -2,7 +2,7 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
-import asd.group2.bms.repository.RoleRepository;
+import asd.group2.bms.repository.IRoleRepository;
 import asd.group2.bms.repositoryMapper.RoleRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
+public class RoleRepositoryImpl extends JdbcDaoSupport implements IRoleRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

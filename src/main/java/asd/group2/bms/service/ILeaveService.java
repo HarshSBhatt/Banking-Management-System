@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Date;
 import java.util.List;
 
-public interface LeaveService {
+public interface ILeaveService {
 
     PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size);
 

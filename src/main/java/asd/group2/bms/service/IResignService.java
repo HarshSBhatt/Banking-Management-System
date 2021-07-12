@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Date;
 import java.util.List;
 
-public interface ResignService {
+public interface IResignService {
 
   PagedResponse<ResignListResponse> getResignListByStatus(RequestStatus requestStatus, int page, int size);
 

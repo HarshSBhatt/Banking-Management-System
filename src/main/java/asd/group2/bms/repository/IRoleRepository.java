@@ -6,7 +6,7 @@ import asd.group2.bms.model.user.RoleType;
 
 import java.util.Optional;
 
-public interface RoleRepository {
+public interface IRoleRepository {
 
   /**
    * @param roleName: role of the user

@@ -8,8 +8,8 @@ import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.serviceImpl.LeaveServiceImpl;
-import asd.group2.bms.serviceImpl.UserServiceImpl;
+import asd.group2.bms.service.ILeaveService;
+import asd.group2.bms.service.IUserService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,10 @@ import java.util.List;
 public class LeaveController {
 
   @Autowired
-  UserServiceImpl userService;
+  IUserService userService;
 
   @Autowired
-  LeaveServiceImpl leaveService;
+  ILeaveService leaveService;
 
   /**
    * Leaves list based on the leave status of the users

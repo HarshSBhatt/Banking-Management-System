@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Date;
 import java.util.List;
 
-public interface TermDepositDetailService {
+public interface ITermDepositDetailService {
 
   ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
                                            String firstName, Double fdAmount,

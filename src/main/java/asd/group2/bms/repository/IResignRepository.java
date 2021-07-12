@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface ResignRepository {
+public interface IResignRepository {
 
   /**
    * @param requestStatus: request status

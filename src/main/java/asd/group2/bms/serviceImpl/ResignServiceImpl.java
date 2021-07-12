@@ -7,9 +7,9 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
+import asd.group2.bms.repository.IResignRepository;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.ResignService;
+import asd.group2.bms.service.IResignService;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ResignServiceImpl implements ResignService {
+public class ResignServiceImpl implements IResignService {
 
   @Autowired
-  ResignRepositoryImpl resignRepository;
+  IResignRepository resignRepository;
 
   /**
    * @param requestStatus: Resign Status (PENDING, APPROVED, REJECTED)

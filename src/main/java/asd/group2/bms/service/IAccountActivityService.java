@@ -2,7 +2,7 @@ package asd.group2.bms.service;
 
 import org.springframework.http.ResponseEntity;
 
-public interface AccountActivityService {
+public interface IAccountActivityService {
 
   ResponseEntity<?> fundTransfer(Long senderAccountNumber,
                                  Long receiverAccountNumber,
