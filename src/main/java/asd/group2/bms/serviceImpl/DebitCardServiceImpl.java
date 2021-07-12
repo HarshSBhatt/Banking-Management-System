@@ -42,9 +42,9 @@ public class DebitCardServiceImpl implements DebitCardService {
 
     String debitCardNumber = new Helper().generateRandomDigits(16);
     DebitCard debitCard = new DebitCard(Long.parseLong(debitCardNumber),
-            account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, DebitCardStatus.ACTIVE, expiryYear,
-            expiryMonth,
-            cvv);
+        account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, DebitCardStatus.ACTIVE, expiryYear,
+        expiryMonth,
+        cvv);
 
     return debitCardRepository.save(debitCard);
   }
@@ -55,6 +55,14 @@ public class DebitCardServiceImpl implements DebitCardService {
    */
   public DebitCard getDebitCardByNumber(Long debitCardNumber) {
     return debitCardRepository.findById(debitCardNumber).orElseThrow(() -> new ResourceNotFoundException("DebitCard Number", "debitCardNumber", debitCardNumber));
+  }
+
+  /**
+   * @param accountNumber: Account Number
+   * @return Returns Debit card of the to change transaction limit
+   */
+  public DebitCard getDebitCardByAccountNumber(Long accountNumber) {
+    return debitCardRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new ResourceNotFoundException("DebitCard Number", "debitCardNumber", "Wrong debit card number"));
   }
 
   /**

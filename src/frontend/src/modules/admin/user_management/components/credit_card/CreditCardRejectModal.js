@@ -4,11 +4,12 @@ import { Modal } from "antd";
 
 function CreditCardRejectModal({ record, modalState, onCreate, onCancel }) {
   const { visible, confirmLoading } = modalState;
+  const { firstName, lastName } = record.accountDetailResponse.userMetaResponse;
 
   return (
     <Modal
       visible={visible}
-      title={`Reject customer request: ${record.firstName} ${record.lastName}`}
+      title={`Reject customer request: ${firstName} ${lastName}`}
       okText="Reject"
       cancelText="Cancel"
       onCancel={onCancel}

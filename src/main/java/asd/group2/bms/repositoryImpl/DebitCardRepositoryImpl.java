@@ -48,6 +48,21 @@ public class DebitCardRepositoryImpl extends JdbcDaoSupport implements DebitCard
     }
   }
 
+  @Override
+  public Optional<DebitCard> findByAccountNumber(Long accountNumber) {
+
+    String sql = "SELECT * FROM debit_cards dc INNER JOIN accounts a ON dc.account_number = a.account_number " +
+        "INNER JOIN users u ON a.user_id = u.id INNER JOIN user_roles ur ON " +
+        "u.id = ur.user_id INNER JOIN roles r ON r.id = ur.role_id WHERE dc.account_number = ?";
+
+    try {
+      return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+          new Object[]{accountNumber},
+          new DebitCardRowMapper()));
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+  }
 
   @Override
   public DebitCard save(DebitCard debitCard) {
