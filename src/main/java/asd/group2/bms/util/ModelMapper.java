@@ -98,4 +98,26 @@ public class ModelMapper {
     return creditCardListResponse;
   }
 
+  public static AccountDetailResponse mapAccountToAccountDetailResponse(Account account) {
+    AccountDetailResponse accountDetailResponse = new AccountDetailResponse();
+    accountDetailResponse.setAccountNumber(account.getAccountNumber());
+    accountDetailResponse.setAccountType(account.getAccountType());
+    accountDetailResponse.setBalance(account.getBalance());
+    accountDetailResponse.setCreditScore(account.getCreditScore());
+    accountDetailResponse.setAccountCreatedAt(account.getCreatedAt());
+    accountDetailResponse.setLastActivityAt(account.getUpdatedAt());
+    User user = account.getUser();
+    UserMetaResponse userMetaResponse = new UserMetaResponse(
+        user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getPhone()
+    );
+    accountDetailResponse.setUserMetaResponse(userMetaResponse);
+
+    return accountDetailResponse;
+  }
+
 }

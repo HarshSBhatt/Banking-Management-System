@@ -6,13 +6,16 @@ import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.IAccountRepository;
 import asd.group2.bms.repository.IUserRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.Helper;
+import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -126,5 +129,18 @@ public class AccountServiceImpl implements IAccountService {
 
     return accountRepository.update(account);
   }
+
+  @Override
+  public AccountDetailResponse getAccountDetails(UserPrincipal currentUser) {
+    Account account = getAccountByUserId(currentUser.getId());
+    AccountDetailResponse accountDetailResponse =
+        ModelMapper.mapAccountToAccountDetailResponse(account);
+    DebitCard debitCard =
+        debitCardService.getDebitCardByAccountNumber(account.getAccountNumber());
+    accountDetailResponse.setDebitCardNumber(debitCard.getDebitCardNumber());
+
+    return accountDetailResponse;
+  }
+
 
 }

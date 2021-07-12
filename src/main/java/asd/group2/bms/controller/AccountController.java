@@ -1,15 +1,12 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
-import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.AccountRequest;
 import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.payload.response.UserMetaResponse;
 import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
@@ -73,28 +70,7 @@ public class AccountController {
   @GetMapping("/account/me")
   @RolesAllowed({"ROLE_USER"})
   public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
-    Account account = accountService.getAccountByUserId(currentUser.getId());
-    AccountDetailResponse accountDetailResponse = new AccountDetailResponse();
-    accountDetailResponse.setAccountNumber(account.getAccountNumber());
-    accountDetailResponse.setAccountType(account.getAccountType());
-    accountDetailResponse.setBalance(account.getBalance());
-    accountDetailResponse.setCreditScore(account.getCreditScore());
-    accountDetailResponse.setAccountCreatedAt(account.getCreatedAt());
-    accountDetailResponse.setLastActivityAt(account.getUpdatedAt());
-    User user = account.getUser();
-    UserMetaResponse userMetaResponse = new UserMetaResponse(
-        user.getId(),
-        user.getFirstName(),
-        user.getLastName(),
-        user.getUsername(),
-        user.getEmail(),
-        user.getPhone()
-    );
-    accountDetailResponse.setUserMetaResponse(userMetaResponse);
-    DebitCard debitCard =
-        debitCardService.getDebitCardByAccountNumber(account.getAccountNumber());
-    accountDetailResponse.setDebitCardNumber(debitCard.getDebitCardNumber());
-    return accountDetailResponse;
+    return accountService.getAccountDetails(currentUser);
   }
 
   /**

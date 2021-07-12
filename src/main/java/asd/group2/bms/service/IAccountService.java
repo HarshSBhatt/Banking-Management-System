@@ -4,7 +4,9 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.PagedResponse;
+import asd.group2.bms.security.UserPrincipal;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -22,5 +24,7 @@ public interface IAccountService {
   Account getAccountByAccountNumber(Long accountNumber);
 
   Boolean updateAccountBalance(Account account);
+
+  AccountDetailResponse getAccountDetails(UserPrincipal currentUser);
 
 }
