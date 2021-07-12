@@ -5,7 +5,6 @@ import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
-import asd.group2.bms.security.CustomTransactional;
 import asd.group2.bms.service.AccountActivityService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
-@CustomTransactional
 @Service
 public class AccountActivityServiceImpl implements AccountActivityService {
 
@@ -27,6 +24,14 @@ public class AccountActivityServiceImpl implements AccountActivityService {
   @Autowired
   CustomEmailImpl customEmail;
 
+  /**
+   * @param senderAccountNumber:   sender's account number
+   * @param receiverAccountNumber: receiver's account number
+   * @param comment:               comment for this transaction
+   * @param transactionAmount:     amount to be transferred to and from
+   * @return
+   * @throws Exception Any exception that might happen during transaction
+   */
   @Override
   public ResponseEntity<?> fundTransfer(Long senderAccountNumber,
                                         Long receiverAccountNumber,

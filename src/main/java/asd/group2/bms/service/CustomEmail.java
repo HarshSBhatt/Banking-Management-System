@@ -24,4 +24,7 @@ public interface CustomEmail {
                                Long refId) throws MessagingException,
       UnsupportedEncodingException;
 
+  void sendCreditCardApprovalMail(String email, String firstName,
+                                  Integer transactionLimit) throws MessagingException, UnsupportedEncodingException;
+
 }

@@ -1,12 +1,11 @@
 package asd.group2.bms.payload.response;
 
 import asd.group2.bms.model.account.AccountType;
-import asd.group2.bms.model.cards.debit.DebitCard;
 
 import java.time.Instant;
 
 /**
- * @description: This class will be responsible to return accoint details.
+ * @description: This class will be responsible to return account details.
  */
 public class AccountDetailResponse {
 

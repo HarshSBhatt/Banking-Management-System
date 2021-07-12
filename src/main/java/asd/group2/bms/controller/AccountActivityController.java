@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -18,7 +19,14 @@ public class AccountActivityController {
   @Autowired
   AccountActivityServiceImpl accountActivityService;
 
+  /**
+   * @param fundTransferRequest: Fund transfer request body that contains the
+   *                             transaction related information
+   * @return
+   * @throws Exception Any exception that might happen during transaction
+   */
   @PostMapping("/account/activity")
+  @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> fundTransfer(@Valid @RequestBody FundTransferRequest fundTransferRequest) throws Exception {
     Long senderAccountNumber = fundTransferRequest.getSenderAccountNumber();
     Long receiverAccountNumber = fundTransferRequest.getReceiverAccountNumber();

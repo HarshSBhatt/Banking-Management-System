@@ -41,6 +41,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param size:          Size of the response data
    * @return This will return all the leave request having status requestStatus
    */
+  @Override
   public PagedResponse<LeaveListResponse> getLeavesByStatus(RequestStatus requestStatus, int page, int size) {
     // Making list in ascending order to get early applied application first
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
@@ -61,6 +62,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param userId: id of the user
    * @return This will return all the leaves having user id userId
    */
+  @Override
   public List<LeaveListResponse> getLeaveListByUserId(Long userId) {
     List<LeaveRequest> leaves = leaveRepository.findByUser_Id(userId);
     List<LeaveListResponse> leaveRequests = new ArrayList<>();
@@ -74,6 +76,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param leaveId: id of the leave
    * @return a leave based on id
    */
+  @Override
   public LeaveRequest getLeaveById(Long leaveId) {
     return leaveRepository.findById(leaveId).orElseThrow(() -> new ResourceNotFoundException("Leave ID", "leaveId", leaveId));
   }
@@ -83,6 +86,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param requestStatus: Status of the leave (APPROVED, REJECTED, PENDING)
    * @return the updated status of the leave having id - leaveId
    */
+  @Override
   public boolean setLeaveRequestStatus(Long leaveId, RequestStatus requestStatus) {
     LeaveRequest leaveRequest = getLeaveById(leaveId);
     leaveRequest.setRequestStatus(requestStatus);
@@ -94,6 +98,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param leaveId:     id of the leave
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
     try {
       LeaveRequest leaveRequest = getLeaveById(leaveId);
@@ -118,6 +123,7 @@ public class LeaveServiceImpl implements LeaveService {
    * @param reason:   reason of the leave
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
     try {
       LeaveRequest leaveRequest = new LeaveRequest(user, fromDate, toDate, reason,
@@ -140,4 +146,5 @@ public class LeaveServiceImpl implements LeaveService {
           HttpStatus.BAD_REQUEST);
     }
   }
+
 }

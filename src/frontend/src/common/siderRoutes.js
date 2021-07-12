@@ -69,6 +69,11 @@ export const siderMenu = {
     label: "FD Services",
     allowedRoles: ["ROLE_USER"],
   },
+  "Fund Transfer": {
+    link: ROUTES.FUND_TRANSFER,
+    label: "Fund Transfer",
+    allowedRoles: ["ROLE_USER"],
+  },
   "User Management": {
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
     views: [
