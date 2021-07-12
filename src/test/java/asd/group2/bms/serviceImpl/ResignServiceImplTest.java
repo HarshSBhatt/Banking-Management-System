@@ -6,6 +6,7 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
+import asd.group2.bms.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,7 +110,7 @@ public class ResignServiceImplTest {
   }
 
   @Test()
-  void setResignRequestStatus() {
+  void setResignRequestStatusTest() {
     User user = new User();
 
     ResignRequest resignRequest = new ResignRequest();
@@ -124,4 +125,40 @@ public class ResignServiceImplTest {
     verify(resignRepository, times(1)).update(any());
   }
 
+  @Test
+  void deleteResignationRequestByIdTestSuccess() {
+    User user = new User();
+    user.setId(1L);
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setResignId(2L);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+
+    Optional<ResignRequest> request = Optional.of(resignRequest);
+
+    when(resignRepository.findById(2L)).thenReturn(request);
+    doNothing().when(resignRepository).delete(2L);
+
+    resignService.deleteResignationRequestById(userPrincipal, 2L);
+    verify(resignRepository,times(1)).delete(any());
+  }
+
+  @Test
+  void deleteResignationRequestByIdTestFailNotAuthorised() {
+    User user = new User();
+    user.setId(1L);
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setResignId(2L);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(3L);
+
+    Optional<ResignRequest> request = Optional.of(resignRequest);
+
+    when(resignRepository.findById(2L)).thenReturn(request);
+
+    resignService.deleteResignationRequestById(userPrincipal, 2L);
+    verify(resignRepository,times(0)).delete(any());
+  }
 }
