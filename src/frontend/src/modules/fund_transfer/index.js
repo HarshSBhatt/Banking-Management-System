@@ -116,7 +116,40 @@ function FundTransfer() {
             { pattern: REGEX.NUMBER, message: "Only digits are allowed" },
           ]}
         >
-          <Input placeholder="Receiver Account Number" />
+          <Input.Password
+            type="password"
+            placeholder="Receiver Account Number"
+          />
+        </Form.Item>
+        <Form.Item
+          name="confirm"
+          dependencies={["receiverAccountNumber"]}
+          rules={[
+            {
+              required: true,
+              message: "Please confirm account number!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  !value ||
+                  getFieldValue("receiverAccountNumber") === value
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error(
+                    "The two account numbers that you entered do not match!"
+                  )
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            type="password"
+            placeholder="Confirm Receiver Account Number"
+          />
         </Form.Item>
         <Form.Item
           name="transactionAmount"

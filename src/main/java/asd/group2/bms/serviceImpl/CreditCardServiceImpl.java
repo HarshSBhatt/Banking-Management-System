@@ -39,6 +39,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param size:             Size of the response data
    * @description: This will return all the credit cards having status resignStatus
    */
+  @Override
   public PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size) {
     // Making list in ascending order
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
@@ -59,6 +60,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param creditCardNumber: credit card number
    * @return credit card based on credit card number
    */
+  @Override
   public CreditCard getCreditCardByCreditCardNumber(Long creditCardNumber) {
     return creditCardRepository.findById(creditCardNumber).orElseThrow(() -> new ResourceNotFoundException("Credit Card Number", "creditCardNumber", creditCardNumber));
   }
@@ -68,6 +70,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param creditCardStatus: Status of the credit card (APPROVED, REJECTED, PENDING)
    * @return the updated status of the credit card having credit card number - creditCardNumber
    */
+  @Override
   public Boolean setCreditCardRequestStatus(Long creditCardNumber,
                                             CreditCardStatus creditCardStatus
   ) throws MessagingException,
@@ -91,6 +94,7 @@ public class CreditCardServiceImpl implements CreditCardService {
    * @param account: account for which credit card would be created
    * @return This will return the debit card details
    */
+  @Override
   public CreditCard createCreditCard(Account account,
                                      Integer requestedTransactionLimit) {
     Random random = new Random();
@@ -114,4 +118,5 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     return creditCardRepository.save(creditCard);
   }
+
 }

@@ -44,6 +44,7 @@ public class AccountServiceImpl implements AccountService {
    * @param size:          Size of the response data
    * @return This will return all the user having status accountStatus
    */
+  @Override
   public PagedResponse<User> getUserAccountListByStatus(AccountStatus accountStatus, int page, int size) {
 
     // Making list in ascending order to get early applied application first
@@ -71,6 +72,7 @@ public class AccountServiceImpl implements AccountService {
    * @throws MessagingException:           This will throw MessagingException
    * @throws UnsupportedEncodingException: This will throw UnsupportedEncodingException
    */
+  @Override
   public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) throws MessagingException, UnsupportedEncodingException {
     String accountNumber = new Helper().generateRandomDigits(10);
     Account account = new Account(Long.parseLong(accountNumber), accountType, balance,
@@ -97,6 +99,7 @@ public class AccountServiceImpl implements AccountService {
    * @param userId: User id of user whose account detail is requested
    * @return This will return the account details of the user based on user id
    */
+  @Override
   public Account getAccountByUserId(Long userId) {
     return accountRepository.findAccountByUser_Id(userId).orElseThrow(() -> new ResourceNotFoundException("Account", "account", "this user"));
   }
@@ -107,10 +110,16 @@ public class AccountServiceImpl implements AccountService {
    * @return This will return the account details of the user based on
    * account number
    */
+  @Override
   public Account getAccountByAccountNumber(Long accountNumber) {
     return accountRepository.findAccountByAccountNumber(accountNumber).orElseThrow(() -> new ResourceNotFoundException("Account", "account", accountNumber));
   }
 
+  /**
+   * @param account: Account model object
+   * @return True of false based on updated or not
+   */
+  @Override
   public Boolean updateAccountBalance(Account account) {
 
     return accountRepository.update(account);
