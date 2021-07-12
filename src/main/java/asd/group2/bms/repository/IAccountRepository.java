@@ -4,7 +4,7 @@ import asd.group2.bms.model.account.Account;
 
 import java.util.Optional;
 
-public interface AccountRepository {
+public interface IAccountRepository {
 
   /*
     @param accountNumber: account number of the user

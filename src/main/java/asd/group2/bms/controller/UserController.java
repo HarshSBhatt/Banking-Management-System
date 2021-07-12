@@ -8,10 +8,10 @@ import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserIdentityAvailability;
 import asd.group2.bms.payload.response.UserProfile;
 import asd.group2.bms.payload.response.UserSummary;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.serviceImpl.UserServiceImpl;
+import asd.group2.bms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +30,10 @@ import java.io.UnsupportedEncodingException;
 public class UserController {
 
   @Autowired
-  UserServiceImpl userService;
+  IUserService userService;
 
   @Autowired
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   /**
    * @param currentUser: logged in user

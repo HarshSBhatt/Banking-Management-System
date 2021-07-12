@@ -2,12 +2,10 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.repositoryImpl.LeaveRepositoryImpl;
+import asd.group2.bms.repository.ILeaveRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -31,13 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-//import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class LeaveServiceImplTest {
 
   @Mock
-  LeaveRepositoryImpl leaveRepository;
+  ILeaveRepository leaveRepository;
 
   @InjectMocks
   LeaveServiceImpl leaveService;

@@ -5,7 +5,7 @@ import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import java.util.List;
 import java.util.Optional;
 
-public interface TermDepositDetailRepository {
+public interface ITermDepositDetailRepository {
 
   /**
    * @param accountNumber: bank account number of the user

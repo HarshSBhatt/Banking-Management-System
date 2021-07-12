@@ -1,7 +1,7 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.payload.request.FundTransferRequest;
-import asd.group2.bms.serviceImpl.AccountActivityServiceImpl;
+import asd.group2.bms.service.IAccountActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 public class AccountActivityController {
 
   @Autowired
-  AccountActivityServiceImpl accountActivityService;
+  IAccountActivityService accountActivityService;
 
   /**
    * @param fundTransferRequest: Fund transfer request body that contains the

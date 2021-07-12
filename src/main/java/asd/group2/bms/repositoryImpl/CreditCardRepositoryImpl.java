@@ -2,7 +2,7 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
-import asd.group2.bms.repository.CreditCardRepository;
+import asd.group2.bms.repository.ICreditCardRepository;
 import asd.group2.bms.repositoryMapper.CreditCardRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CreditCardRepositoryImpl extends JdbcDaoSupport implements CreditCardRepository {
+public class CreditCardRepositoryImpl extends JdbcDaoSupport implements ICreditCardRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

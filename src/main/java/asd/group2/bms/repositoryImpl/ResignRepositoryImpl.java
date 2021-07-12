@@ -3,7 +3,7 @@ package asd.group2.bms.repositoryImpl;
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.repository.ResignRepository;
+import asd.group2.bms.repository.IResignRepository;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ResignRepositoryImpl extends JdbcDaoSupport implements ResignRepository {
+public class ResignRepositoryImpl extends JdbcDaoSupport implements IResignRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

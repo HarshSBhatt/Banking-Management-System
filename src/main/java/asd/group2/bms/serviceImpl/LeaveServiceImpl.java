@@ -7,10 +7,11 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repositoryImpl.LeaveRepositoryImpl;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.ILeaveRepository;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.LeaveService;
+import asd.group2.bms.service.ILeaveService;
+import asd.group2.bms.service.IUserService;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,16 +25,16 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class LeaveServiceImpl implements LeaveService {
+public class LeaveServiceImpl implements ILeaveService {
 
   @Autowired
-  LeaveRepositoryImpl leaveRepository;
+  ILeaveRepository leaveRepository;
 
   @Autowired
-  UserServiceImpl userService;
+  IUserService userService;
 
   @Autowired
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   /**
    * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)

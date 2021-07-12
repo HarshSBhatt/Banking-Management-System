@@ -4,8 +4,8 @@ import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
-import asd.group2.bms.repositoryImpl.DebitCardRepositoryImpl;
-import asd.group2.bms.service.DebitCardService;
+import asd.group2.bms.repository.IDebitCardRepository;
+import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.AppConstants;
 import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import java.util.Date;
 import java.util.Random;
 
 @Service
-public class DebitCardServiceImpl implements DebitCardService {
+public class DebitCardServiceImpl implements IDebitCardService {
 
   @Autowired
-  DebitCardRepositoryImpl debitCardRepository;
+  IDebitCardRepository debitCardRepository;
 
   /**
    * @param account: Account of user whose debit card is being created
