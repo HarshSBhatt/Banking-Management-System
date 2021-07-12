@@ -13,13 +13,14 @@ import { LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { TOKEN } from "common/constants";
+import GetFDReceipt from "./GetFDReceipt";
 
 function MyFdAccounts() {
   const [loading, setLoading] = useState(false);
   const [fdAccounts, setFdAccounts] = useState([]);
   const [getColumnSearchProps] = useTableSearch();
 
-  const fetchCCRequestList = async () => {
+  const fetchFDAccountsList = async () => {
     setLoading(true);
     try {
       const response = await api.get("/services/term-deposit", {
@@ -37,7 +38,7 @@ function MyFdAccounts() {
   };
 
   useEffect(() => {
-    fetchCCRequestList();
+    fetchFDAccountsList();
     // eslint-disable-next-line
   }, []);
 
@@ -84,31 +85,13 @@ function MyFdAccounts() {
         return <span>${parseFloat(maturityAmount).toFixed(2)}</span>;
       },
     },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   fixed: "right",
-    //   render: (record) => {
-    //     return (
-    //       <Space size="middle">
-    //         {creditCardStatus !== CREDIT_CARD_STATUS.APPROVED &&
-    //           record.accountDetailResponse.creditScore >=
-    //             MINIMUM_CREDIT_SCORE && (
-    //             <CreditCardAccept
-    //               record={record}
-    //               handleCCListUpdate={handleCCListUpdate}
-    //             />
-    //           )}
-    //         {creditCardStatus !== CREDIT_CARD_STATUS.DECLINED && (
-    //           <CreditCardReject
-    //             record={record}
-    //             handleCCListUpdate={handleCCListUpdate}
-    //           />
-    //         )}
-    //       </Space>
-    //     );
-    //   },
-    // },
+    {
+      title: "Receipt",
+      key: "receipt",
+      render: (record) => {
+        return <GetFDReceipt record={record} />;
+      },
+    },
   ];
 
   const title = (
@@ -118,9 +101,8 @@ function MyFdAccounts() {
         <Button
           type="primary"
           shape="circle"
-          loading={loading}
           icon={<RedoOutlined spin={loading} />}
-          onClick={() => fetchCCRequestList()}
+          onClick={() => fetchFDAccountsList()}
         />
       </span>
     </div>
