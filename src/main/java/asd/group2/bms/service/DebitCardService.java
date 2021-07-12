@@ -19,4 +19,6 @@ public interface DebitCardService {
 
   Boolean setDebitCardPin(Long debitCardNumber, String pin);
 
+  Boolean setDebitCardRequestStatus(Long debitCardNumber, DebitCardStatus debitCardStatus);
+
 }
