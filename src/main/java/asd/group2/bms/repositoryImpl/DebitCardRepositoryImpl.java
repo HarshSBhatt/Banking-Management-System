@@ -1,7 +1,7 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.cards.debit.DebitCard;
-import asd.group2.bms.repository.DebitCardRepository;
+import asd.group2.bms.repository.IDebitCardRepository;
 import asd.group2.bms.repositoryMapper.DebitCardRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Repository
-public class DebitCardRepositoryImpl extends JdbcDaoSupport implements DebitCardRepository {
+public class DebitCardRepositoryImpl extends JdbcDaoSupport implements IDebitCardRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

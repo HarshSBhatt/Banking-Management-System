@@ -3,7 +3,7 @@ package asd.group2.bms.service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
-public interface CustomEmail {
+public interface ICustomEmail {
 
   void sendResetPasswordEmail(String email, String forgotPasswordLink) throws MessagingException, UnsupportedEncodingException;
 

@@ -2,7 +2,7 @@ package asd.group2.bms.repository;
 
 import asd.group2.bms.model.account.AccountActivity;
 
-public interface AccountActivityRepository {
+public interface IAccountActivityRepository {
 
   /**
    * @param accountActivity: Account activity details

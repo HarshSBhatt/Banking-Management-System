@@ -3,7 +3,9 @@ package asd.group2.bms.serviceImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
+import asd.group2.bms.repository.IAccountActivityRepository;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +31,13 @@ import static org.mockito.Mockito.when;
 class AccountActivityServiceImplTest {
 
   @Mock
-  AccountActivityRepositoryImpl accountActivityRepository;
+  IAccountActivityRepository accountActivityRepository;
 
   @Mock
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   @Mock
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   @InjectMocks
   AccountActivityServiceImpl accountActivityService;

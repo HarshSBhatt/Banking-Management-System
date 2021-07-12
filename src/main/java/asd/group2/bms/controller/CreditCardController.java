@@ -10,8 +10,8 @@ import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.serviceImpl.AccountServiceImpl;
-import asd.group2.bms.serviceImpl.CreditCardServiceImpl;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICreditCardService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +28,10 @@ import java.io.UnsupportedEncodingException;
 public class CreditCardController {
 
   @Autowired
-  CreditCardServiceImpl creditCardService;
+  ICreditCardService creditCardService;
 
   @Autowired
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   /**
    * @param creditCardStatus: Credit card status
