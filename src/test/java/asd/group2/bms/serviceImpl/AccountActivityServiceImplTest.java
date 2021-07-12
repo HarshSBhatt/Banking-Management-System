@@ -1,7 +1,7 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.model.account.AccountActivity;;
+import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
 import org.junit.jupiter.api.AfterEach;

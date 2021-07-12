@@ -2,7 +2,6 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
-import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
@@ -103,10 +102,10 @@ public class ResignServiceImplTest {
 
   @Test
   void getResignByIdTest() {
-    when(resignRepository.findById(1l)).thenReturn(Optional.of(new ResignRequest()));
+    when(resignRepository.findById(1L)).thenReturn(Optional.of(new ResignRequest()));
 
-    resignService.getResignById(1l);
-    verify(resignRepository,times(1)).findById(any());
+    resignService.getResignById(1L);
+    verify(resignRepository, times(1)).findById(any());
   }
 
   @Test()
@@ -117,11 +116,12 @@ public class ResignServiceImplTest {
     resignRequest.setUser(user);
 
     Optional<ResignRequest> request = Optional.of(resignRequest);
-    when(resignRepository.findById(1l)).thenReturn(request);
+    when(resignRepository.findById(1L)).thenReturn(request);
 
-    resignService.setResignRequestStatus(1l, RequestStatus.PENDING);
+    resignService.setResignRequestStatus(1L, RequestStatus.PENDING);
     assertEquals(RequestStatus.PENDING, resignRequest.getRequestStatus());
-    verify(resignRepository,times(1)).findById(any());
-    verify(resignRepository,times(1)).update(any());
+    verify(resignRepository, times(1)).findById(any());
+    verify(resignRepository, times(1)).update(any());
   }
+
 }

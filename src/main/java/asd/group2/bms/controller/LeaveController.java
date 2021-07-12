@@ -1,6 +1,5 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.model.leaves.LeaveRequest;
 import asd.group2.bms.model.leaves.RequestStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.UpdateLeaveStatusRequest;

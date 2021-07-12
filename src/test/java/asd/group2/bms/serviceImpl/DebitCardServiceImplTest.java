@@ -16,114 +16,113 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DebitCardServiceImplTest {
 
-    @Mock
-    DebitCardRepositoryImpl debitCardRepository;
+  @Mock
+  DebitCardRepositoryImpl debitCardRepository;
 
-    @InjectMocks
-    DebitCardServiceImpl debitCardService;
+  @InjectMocks
+  DebitCardServiceImpl debitCardService;
 
-    @Test
-    void createDebitCard() {
+  @Test
+  void createDebitCardTest() {
 
-    }
+  }
 
-    @Test
-    void getDebitCardByNumberTest() {
-        Long debitCardNumber = 6L;
+  @Test
+  void getDebitCardByNumberTest() {
+    Long debitCardNumber = 6L;
 
-        DebitCard debitCard = new DebitCard();
-        debitCard.setDebitCardNumber(debitCardNumber);
+    DebitCard debitCard = new DebitCard();
+    debitCard.setDebitCardNumber(debitCardNumber);
 
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.of(debitCard));
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.of(debitCard));
 
-        DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
 
-        assertEquals(debitCardNumber, fetchDebitCard.getDebitCardNumber(), "Wrong debitCard is returned");
-    }
+    assertEquals(debitCardNumber, fetchDebitCard.getDebitCardNumber(), "Wrong debitCard is returned");
+  }
 
-    @Test
-    void setDebitCardLimitSuccess() {
-        Long debitCardNumber = 6L;
-        Integer transactionLimit = 6000;
+  @Test
+  void setDebitCardLimitSuccessTest() {
+    Long debitCardNumber = 6L;
+    Integer transactionLimit = 6000;
 
-        DebitCard debitCard = new DebitCard();
+    DebitCard debitCard = new DebitCard();
 
-        debitCard.setTransactionLimit(transactionLimit);
-        debitCard.setDebitCardNumber(debitCardNumber);
+    debitCard.setTransactionLimit(transactionLimit);
+    debitCard.setDebitCardNumber(debitCardNumber);
 
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
-        DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
 
-        when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
+    when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
 
-        Boolean updatePin = debitCardService.setDebitCardLimit(debitCardNumber, transactionLimit);
+    Boolean updatePin = debitCardService.setDebitCardLimit(debitCardNumber, transactionLimit);
 
-        assertTrue(updatePin, "Transaction Limit not updated");
-    }
+    assertTrue(updatePin, "Transaction Limit not updated");
+  }
 
-    @Test
-    void setDebitCardLimitFailure() {
-        Long debitCardNumber = 6L;
-        Integer transactionLimit = 52000;
+  @Test
+  void setDebitCardLimitFailureTest() {
+    Long debitCardNumber = 6L;
+    Integer transactionLimit = 52000;
 
-        DebitCard debitCard = new DebitCard();
+    DebitCard debitCard = new DebitCard();
 
-        debitCard.setTransactionLimit(transactionLimit);
-        debitCard.setDebitCardNumber(debitCardNumber);
+    debitCard.setTransactionLimit(transactionLimit);
+    debitCard.setDebitCardNumber(debitCardNumber);
 
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
-        DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
 
-        when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
+    when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
 
-        Boolean updatePin = debitCardService.setDebitCardLimit(debitCardNumber, transactionLimit);
+    Boolean updatePin = debitCardService.setDebitCardLimit(debitCardNumber, transactionLimit);
 
-        assertFalse(updatePin, "Transaction Limit updated");
-    }
+    assertFalse(updatePin, "Transaction Limit updated");
+  }
 
-    @Test
-    void setDebitCardPinSuccess() {
-        Long debitCardNumber = 6L;
-        String pin = "9999";
+  @Test
+  void setDebitCardPinSuccessTest() {
+    Long debitCardNumber = 6L;
+    String pin = "9999";
 
-        DebitCard debitCard = new DebitCard();
+    DebitCard debitCard = new DebitCard();
 
-        debitCard.setPin(pin);
-        debitCard.setDebitCardNumber(debitCardNumber);
+    debitCard.setPin(pin);
+    debitCard.setDebitCardNumber(debitCardNumber);
 
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
-        DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
 
-        when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
+    when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
 
-        Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
 
-        assertTrue(updatePin, "Pin not updated");
+    assertTrue(updatePin, "Pin not updated");
+  }
 
-    }
+  @Test
+  void setDebitCardPinFailureTest() {
+    Long debitCardNumber = 6L;
+    String pin = "9999";
 
-    @Test
-    void setDebitCardPinFailure() {
-        Long debitCardNumber = 6L;
-        String pin = "9999";
+    DebitCard debitCard = new DebitCard();
 
-        DebitCard debitCard = new DebitCard();
+    debitCard.setPin(pin);
+    debitCard.setDebitCardNumber(debitCardNumber);
 
-        debitCard.setPin(pin);
-        debitCard.setDebitCardNumber(debitCardNumber);
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
-        when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
 
-        DebitCard fetchDebitCard = debitCardService.getDebitCardByNumber(debitCardNumber);
+    when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
 
-        when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
 
-        Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
+    assertFalse(updatePin, "Pin updated");
+  }
 
-        assertFalse(updatePin, "Pin updated");
-
-    }
 }
