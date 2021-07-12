@@ -1,6 +1,6 @@
 package asd.group2.bms.serviceImpl;
 
-import asd.group2.bms.service.CustomEmail;
+import asd.group2.bms.service.ICustomEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 
 @Service
-public class CustomEmailImpl implements CustomEmail {
+public class CustomEmailImpl implements ICustomEmail {
 
   @Autowired
   JavaMailSender javaMailSender;

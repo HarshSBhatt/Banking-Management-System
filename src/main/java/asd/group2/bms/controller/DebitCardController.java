@@ -3,8 +3,8 @@ package asd.group2.bms.controller;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.service.DebitCardService;
-import asd.group2.bms.serviceImpl.AccountServiceImpl;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.IDebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,10 @@ import javax.validation.Valid;
 public class DebitCardController {
 
     @Autowired
-    DebitCardService debitCardService;
+    IDebitCardService debitCardService;
 
     @Autowired
-    AccountServiceImpl accountService;
+    IAccountService accountService;
 
     /**
      *

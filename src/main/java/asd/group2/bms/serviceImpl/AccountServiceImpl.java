@@ -7,9 +7,11 @@ import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repositoryImpl.AccountRepositoryImpl;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
-import asd.group2.bms.service.AccountService;
+import asd.group2.bms.repository.IAccountRepository;
+import asd.group2.bms.repository.IUserRepository;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,19 +26,19 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements IAccountService {
 
   @Autowired
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   @Autowired
-  AccountRepositoryImpl accountRepository;
+  IAccountRepository accountRepository;
 
   @Autowired
-  DebitCardServiceImpl debitCardService;
+  IDebitCardService debitCardService;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   /**
    * @param accountStatus: Account Status (PENDING, APPROVED, REJECTED)

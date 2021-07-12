@@ -9,7 +9,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
-public interface AccountService {
+public interface IAccountService {
 
   PagedResponse<User> getUserAccountListByStatus(AccountStatus accountStatus,
                                                  int page, int size);

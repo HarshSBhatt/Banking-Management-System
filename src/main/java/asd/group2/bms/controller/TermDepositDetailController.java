@@ -5,7 +5,7 @@ import asd.group2.bms.payload.request.TermDepositRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.serviceImpl.TermDepositDetailServiceImpl;
+import asd.group2.bms.service.ITermDepositDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.List;
 public class TermDepositDetailController {
 
   @Autowired
-  TermDepositDetailServiceImpl termDepositDetailService;
+  ITermDepositDetailService termDepositDetailService;
 
   /**
    * @description: Return all the term deposits of current user

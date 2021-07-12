@@ -6,8 +6,10 @@ import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repositoryImpl.AccountRepositoryImpl;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.IAccountRepository;
+import asd.group2.bms.repository.IUserRepository;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.IDebitCardService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,16 +39,16 @@ import static org.mockito.Mockito.when;
 class AccountServiceImplTest {
 
   @Mock
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   @Mock
-  AccountRepositoryImpl accountRepository;
+  IAccountRepository accountRepository;
 
   @Mock
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   @Mock
-  DebitCardServiceImpl debitCardService;
+  IDebitCardService debitCardService;
 
   @InjectMocks
   AccountServiceImpl accountService;
