@@ -15,9 +15,6 @@ build:
     paths:
       - Group2/target
   script: mvn clean install
-  except:
-    - master
-    - test
 
 test:
   image: maven:3.8.1-openjdk-16
@@ -30,9 +27,6 @@ test:
       junit:
         - Group2/target/surefire-reports/TEST-*.xml
   script: mvn verify
-  except:
-    - master
-    - test
 
 staging:
   type: deploy
