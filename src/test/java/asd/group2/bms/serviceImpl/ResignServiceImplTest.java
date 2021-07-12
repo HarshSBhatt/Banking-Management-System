@@ -8,6 +8,7 @@ import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
 import asd.group2.bms.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,6 +78,27 @@ public class ResignServiceImplTest {
 
     assertEquals(username,
         resignations.getContent().get(0).getUserMetaResponse().getUsername());
+  }
+
+  @Test
+  void getResignListByStatusTestEmpty() {
+    RequestStatus requestStatus = RequestStatus.PENDING;
+    int page = 0;
+    int size = 3;
+
+    Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+
+    List<ResignRequest> resigns = new ArrayList<>();
+
+    Page<ResignRequest> pagedResigns = new PageImpl<>(resigns);
+
+    when(resignRepository.findByRequestStatusEquals(requestStatus, pageable)).thenReturn(pagedResigns);
+
+    PagedResponse<ResignListResponse> resignations =
+        resignService.getResignListByStatus(requestStatus, page, size);
+
+    assertEquals(0,
+        resignations.getSize());
   }
 
   @Test
@@ -161,4 +183,26 @@ public class ResignServiceImplTest {
     resignService.deleteResignationRequestById(userPrincipal, 2L);
     verify(resignRepository,times(0)).delete(any());
   }
+
+//  @Test
+//  void deleteResignationRequestByIdTestFailException() throws Exception{
+//    User user = new User();
+//    user.setId(1L);
+//    ResignRequest resignRequest = new ResignRequest();
+//    resignRequest.setUser(user);
+//    resignRequest.setResignId(2L);
+//    UserPrincipal userPrincipal = new UserPrincipal();
+//    userPrincipal.setId(1L);
+//
+//    Optional<ResignRequest> request = Optional.of(resignRequest);
+//
+//    when(resignRepository.findById(2L)).thenReturn(request);
+////    doThrow(Exception.class).when(resignRepository).delete(2L);
+//    doThrow(new Exception()).when(resignRepository).delete(2L);
+//
+//    resignService.deleteResignationRequestById(userPrincipal, 2L);
+//    Assertions.assertThrows(Exception.class,
+//        () -> {resignRepository.delete(2L);});
+//
+//  }
 }
