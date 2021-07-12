@@ -4,7 +4,7 @@ import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.User;
-import asd.group2.bms.repository.UserRepository;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.repositoryMapper.UserRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository {
+public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -103,7 +103,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
     int total =
         jdbcTemplate.queryForObject(
             rowCountSql,
-            new Object[]{accountStatus},
+            new Object[]{accountStatus.name()},
             (rs, rowNum) -> rs.getInt(1)
         );
 
@@ -114,7 +114,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
 
     List<User> users = jdbcTemplate.query(
         querySql,
-        new Object[]{accountStatus}, new UserRowMapper()
+        new Object[]{accountStatus.name()}, new UserRowMapper()
     );
 
     return new PageImpl<>(users, pageable, total);

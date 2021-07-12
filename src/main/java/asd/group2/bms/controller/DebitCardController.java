@@ -3,8 +3,8 @@ package asd.group2.bms.controller;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.service.DebitCardService;
-import asd.group2.bms.serviceImpl.AccountServiceImpl;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.IDebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +18,17 @@ import javax.validation.Valid;
 public class DebitCardController {
 
     @Autowired
-    DebitCardService debitCardService;
+    IDebitCardService debitCardService;
 
     @Autowired
-    AccountServiceImpl accountService;
+    IAccountService accountService;
 
     /**
      *
      * @param debitCardSetLimitRequest: Set transaction limit for the debit card
      * @return Returns whether transaction limit is updated
      */
-    @PutMapping("/services/debitcard")
+    @PutMapping("/services/debitCard")
     @RolesAllowed({"ROLE_USER"})
     public ResponseEntity<?> debitCardSetLimit(
             @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
@@ -54,7 +54,7 @@ public class DebitCardController {
      * @param debitCardSetPinRequest: Request to set pin for the given debit card
      * @return Returns whether pin is updated
      */
-    @PutMapping("/services/debitcard/pin")
+    @PutMapping("/services/debitCard/pin")
     @RolesAllowed({"ROLE_USER"})
     public ResponseEntity<?> debitCardSetPin(
             @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {

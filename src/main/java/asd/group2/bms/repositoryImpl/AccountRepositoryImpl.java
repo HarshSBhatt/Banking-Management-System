@@ -1,7 +1,7 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.repository.AccountRepository;
+import asd.group2.bms.repository.IAccountRepository;
 import asd.group2.bms.repositoryMapper.AccountRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Repository
-public class AccountRepositoryImpl extends JdbcDaoSupport implements AccountRepository {
+public class AccountRepositoryImpl extends JdbcDaoSupport implements IAccountRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -43,7 +43,20 @@ public class AccountRepositoryImpl extends JdbcDaoSupport implements AccountRepo
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
+  }
 
+  @Override
+  public Optional<Account> findAccountByAccountNumber(Long accountNumber) {
+    String sql = "SELECT * FROM accounts a INNER JOIN users u ON a.user_id = u.id " +
+        "INNER JOIN user_roles ur ON u.id = ur.user_id INNER JOIN roles r ON " +
+        "r.id = ur.role_id WHERE a.account_number = ?";
+    try {
+      return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+          new Object[]{accountNumber},
+          new AccountRowMapper()));
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override

@@ -5,9 +5,10 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
-import asd.group2.bms.repositoryImpl.AccountRepositoryImpl;
-import asd.group2.bms.repositoryImpl.TermDepositDetailRepositoryImpl;
-import asd.group2.bms.service.TermDepositDetailService;
+import asd.group2.bms.repository.ITermDepositDetailRepository;
+import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.ITermDepositDetailService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,46 +21,50 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TermDepositDetailServiceImpl implements TermDepositDetailService {
+public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
   @Autowired
-  TermDepositDetailRepositoryImpl termDepositDetailRepository;
+  ITermDepositDetailRepository termDepositDetailRepository;
 
   @Autowired
-  AccountServiceImpl accountService;
+  IAccountService accountService;
 
   @Autowired
-  AccountRepositoryImpl accountRepository;
+  ICustomEmail customEmail;
 
-  @Autowired
-  CustomEmailImpl customEmail;
-
-
-  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email, String firstName, Double fdAmount, Date currentDate, int duration) {
+  @Override
+  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
+                                                  String firstName,
+                                                  Double fdAmount,
+                                                  Date currentDate,
+                                                  int duration) throws Exception {
     try {
       Account account = accountService.getAccountByUserId(userId);
-      if (fdAmount < 1000) {
-        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to create Fixed Deposit is $1000!"),
+      if (fdAmount < AppConstants.MINIMUM_BALANCE) {
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to" +
+            " create Fixed Deposit is $" + AppConstants.MINIMUM_BALANCE),
             HttpStatus.BAD_REQUEST);
       }
       if (account.getBalance() < fdAmount) {
         return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
             HttpStatus.BAD_REQUEST);
       }
-      if (account.getBalance() - 1000 < fdAmount) {
-        return new ResponseEntity<>(new ApiResponse(false, "Minimum $1000 is required after creating Fixed Deposit in your account!"),
+      if (account.getBalance() - AppConstants.MINIMUM_BALANCE < fdAmount) {
+        return new ResponseEntity<>(new ApiResponse(false,
+            "Minimum $" + AppConstants.MINIMUM_BALANCE + " is " +
+                "required after creating Fixed Deposit in your account!"),
             HttpStatus.BAD_REQUEST);
       }
 
       // Balance Updated
       Double newBalance = account.getBalance() - fdAmount;
       account.setBalance(newBalance);
-      Boolean isUpdated = accountRepository.update(account);
+      Boolean isUpdated = accountService.updateAccountBalance(account);
 
       if (!isUpdated) {
         return new ResponseEntity<>(new ApiResponse(false, "Something went " +
             "wrong while updating balance!"),
-            HttpStatus.BAD_REQUEST);
+            HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
       //Sending email
@@ -84,15 +89,18 @@ public class TermDepositDetailServiceImpl implements TermDepositDetailService {
       return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
     } catch (Exception e) {
       e.printStackTrace();
-      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(new ApiResponse(false, "Something went " +
+          "wrong!"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
 
+  @Override
   public TermDepositDetail getTermDepositDetailById(Long id) {
     return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
   }
 
+  @Override
   public List<TermDepositDetail> getTermDepositDetail(Long userId) {
 
     Account account = accountService.getAccountByUserId(userId);

@@ -10,10 +10,11 @@ import asd.group2.bms.payload.request.SignUpRequest;
 import asd.group2.bms.payload.request.UpdateProfileRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.UserProfile;
-import asd.group2.bms.repositoryImpl.RoleRepositoryImpl;
-import asd.group2.bms.repositoryImpl.UserRepositoryImpl;
+import asd.group2.bms.repository.IRoleRepository;
+import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
-import asd.group2.bms.service.UserService;
+import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,24 +28,25 @@ import java.net.URI;
 import java.util.Collections;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
 
   @Autowired
-  UserRepositoryImpl userRepository;
+  IUserRepository userRepository;
 
   @Autowired
-  RoleRepositoryImpl roleRepository;
+  IRoleRepository roleRepository;
 
   @Autowired
   PasswordEncoder passwordEncoder;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   /**
    * @param email: email
    * @return true or false based on email availability
    */
+  @Override
   public Boolean isEmailAvailable(String email) {
     return !userRepository.existsByEmail(email);
   }
@@ -53,6 +55,7 @@ public class UserServiceImpl implements UserService {
    * @param username: username
    * @return true or false based on username availability
    */
+  @Override
   public Boolean isUsernameAvailable(String username) {
     return !userRepository.existsByUsername(username);
   }
@@ -124,6 +127,7 @@ public class UserServiceImpl implements UserService {
    * @param accountStatus: ACTIVE, REJECTED, PENDING, CLOSED
    * @return the updated status of the user having email - email
    */
+  @Override
   public Boolean setUserAccountStatus(String email, AccountStatus accountStatus) throws MessagingException, UnsupportedEncodingException {
     User user = getUserByEmail(email);
     user.setAccountStatus(accountStatus);
@@ -137,6 +141,7 @@ public class UserServiceImpl implements UserService {
    * @param currentUser: current logged in user
    * @return success or failure response with appropriate message
    */
+  @Override
   public ApiResponse changePassword(String oldPassword, String newPassword, UserPrincipal currentUser) {
     if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
       User user = getUserByEmail(currentUser.getEmail());
@@ -160,6 +165,7 @@ public class UserServiceImpl implements UserService {
    * @param user:               User model object
    * @return success or failure response with appropriate message
    */
+  @Override
   public ResponseEntity<?> resetPassword(String newPassword, String confirmNewPassword, User user) {
     if (newPassword.equals(confirmNewPassword)) {
       user.setPassword(passwordEncoder.encode(newPassword));
@@ -180,6 +186,7 @@ public class UserServiceImpl implements UserService {
    * @param token: Reset token received via email
    * @param email: email of the user
    */
+  @Override
   public void updateResetForgotPasswordToken(String token, String email) {
     User user = getUserByEmail(email);
     user.setForgotPasswordToken(token);
@@ -192,6 +199,7 @@ public class UserServiceImpl implements UserService {
    * @param email: email of the user
    * @return a user based on email
    */
+  @Override
   public User getUserByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Email", "email", email));
   }
@@ -202,6 +210,7 @@ public class UserServiceImpl implements UserService {
    * @param token: token of the user
    * @return a user based on token
    */
+  @Override
   public User getUserByToken(String token) {
     return userRepository.findByForgotPasswordToken(token).orElseThrow(() -> new ResourceNotFoundException("Reset Password Token", "token", token));
   }
@@ -212,6 +221,7 @@ public class UserServiceImpl implements UserService {
    * @param username: username of the user
    * @return a user profile based on username
    */
+  @Override
   public UserProfile getUserProfileByUsername(String username) {
     User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -237,6 +247,7 @@ public class UserServiceImpl implements UserService {
    * @param updateProfileRequest: required foields to update the data of the user
    * @return true or false based on update status
    */
+  @Override
   public Boolean updateUserProfileByUsername(UserPrincipal currentUser, UpdateProfileRequest updateProfileRequest) {
     User user = userRepository.findById(currentUser.getId())
         .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));

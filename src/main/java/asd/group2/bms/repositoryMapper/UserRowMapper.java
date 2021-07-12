@@ -10,22 +10,20 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 @Component
 public class UserRowMapper implements RowMapper<User> {
 
   @Override
   public User mapRow(ResultSet resultSet, int i) throws SQLException {
+    CommonMapping commonMapping = new CommonMapping();
     User user = new User();
     Role role = new Role();
 
-    LocalDate createdAt = resultSet.getDate("created_at").toLocalDate();
-    LocalDate updatedAt = resultSet.getDate("updated_at").toLocalDate();
-
-    user.setCreatedAt(createdAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    user.setUpdatedAt(updatedAt.atStartOfDay(ZoneOffset.UTC).toInstant());
+    user.setCreatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "created_at").toLocalDate()));
+    user.setUpdatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "updated_at").toLocalDate()));
     user.setId(resultSet.getLong("id"));
     user.setFirstName(resultSet.getString("first_name"));
     user.setLastName(resultSet.getString("last_name"));

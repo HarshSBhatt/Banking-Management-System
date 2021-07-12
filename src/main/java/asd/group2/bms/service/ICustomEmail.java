@@ -3,7 +3,7 @@ package asd.group2.bms.service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
-public interface CustomEmail {
+public interface ICustomEmail {
 
   void sendResetPasswordEmail(String email, String forgotPasswordLink) throws MessagingException, UnsupportedEncodingException;
 
@@ -17,5 +17,14 @@ public interface CustomEmail {
 
   void sendBalanceDeductionMail(String email, String firstName,
                                 Double debitedAmount, Double newBalance) throws MessagingException, UnsupportedEncodingException;
+
+  void sendAccountActivityMail(String email, String firstName,
+                               Double amount,
+                               Double newBalance, String activityType,
+                               Long refId) throws MessagingException,
+      UnsupportedEncodingException;
+
+  void sendCreditCardApprovalMail(String email, String firstName,
+                                  Integer transactionLimit) throws MessagingException, UnsupportedEncodingException;
 
 }

@@ -32,7 +32,6 @@ public class AccountActivity extends DateAudit {
   @NotNull
   private Double transactionAmount;
 
-  @NotNull
   private String comment;
 
   public AccountActivity() {
