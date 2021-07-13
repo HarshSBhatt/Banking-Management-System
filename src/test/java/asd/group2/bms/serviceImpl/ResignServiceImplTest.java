@@ -5,8 +5,8 @@ import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
-import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.repository.IResignRepository;
+import asd.group2.bms.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -127,9 +127,10 @@ public class ResignServiceImplTest {
 
   @Test
   void getResignByIdTest() {
-    when(resignRepository.findById(1L)).thenReturn(Optional.of(new ResignRequest()));
+    Long resignId = 1L;
+    when(resignRepository.findById(resignId)).thenReturn(Optional.of(new ResignRequest()));
 
-    resignService.getResignById(1L);
+    resignService.getResignById(resignId);
     verify(resignRepository, times(1)).findById(any());
   }
 
@@ -161,10 +162,12 @@ public class ResignServiceImplTest {
 
     Optional<ResignRequest> request = Optional.of(resignRequest);
 
-    when(resignRepository.findById(2L)).thenReturn(request);
-    doNothing().when(resignRepository).delete(2L);
+    Long resignId = 2L;
 
-    resignService.deleteResignationRequestById(userPrincipal, 2L);
+    when(resignRepository.findById(resignId)).thenReturn(request);
+    doNothing().when(resignRepository).delete(resignId);
+
+    resignService.deleteResignationRequestById(userPrincipal, resignId);
     verify(resignRepository, times(1)).delete(any());
   }
 
@@ -178,11 +181,13 @@ public class ResignServiceImplTest {
     UserPrincipal userPrincipal = new UserPrincipal();
     userPrincipal.setId(3L);
 
+    Long resignId = 2L;
+
     Optional<ResignRequest> request = Optional.of(resignRequest);
 
-    when(resignRepository.findById(2L)).thenReturn(request);
+    when(resignRepository.findById(resignId)).thenReturn(request);
 
-    resignService.deleteResignationRequestById(userPrincipal, 2L);
+    resignService.deleteResignationRequestById(userPrincipal, resignId);
     verify(resignRepository, times(0)).delete(any());
   }
 
@@ -195,11 +200,13 @@ public class ResignServiceImplTest {
     UserPrincipal userPrincipal = new UserPrincipal();
     userPrincipal.setId(1L);
 
+    Long resignId = 2L;
+
     Optional<ResignRequest> request = Optional.of(resignRequest);
 
-    when(resignRepository.findById(2L)).thenThrow(new RuntimeException());
+    when(resignRepository.findById(resignId)).thenThrow(new RuntimeException());
     ResponseEntity<?> responseEntity =
-        resignService.deleteResignationRequestById(userPrincipal, 2L);
+        resignService.deleteResignationRequestById(userPrincipal, resignId);
 
     assertEquals(HttpStatus.BAD_REQUEST.toString(),
         responseEntity.getStatusCode().toString());
@@ -281,4 +288,5 @@ public class ResignServiceImplTest {
 
     assertEquals(HttpStatus.NOT_ACCEPTABLE, resign.getStatusCode());
   }
+
 }
