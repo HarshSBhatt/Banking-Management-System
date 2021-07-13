@@ -251,6 +251,25 @@ public class ResignServiceImplTest {
   }
 
   @Test
+  void makeResignRequestTestAPPROVED() {
+    User user = new User();
+    Date date = new Date();
+    String reason = "reason";
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setRequestStatus(RequestStatus.APPROVED);
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(resignRepository.findByUserOrderByCreatedAtDesc(user)).thenReturn(resigns);
+
+    ResponseEntity<?> resign = resignService.makeResignRequest(user, date, reason);
+
+    assertEquals(HttpStatus.NOT_ACCEPTABLE, resign.getStatusCode());
+  }
+
+  @Test
   void deleteResignationRequestByIdTestFailException(){
 //    User user = new User();
 //    user.setId(1L);
