@@ -1,24 +1,21 @@
 package asd.group2.bms.util;
 
-import asd.group2.bms.model.user.RoleType;
-import asd.group2.bms.payload.request.LoginRequest;
-import asd.group2.bms.security.UserPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Random;
 
+@Component
 public class Helper {
 
   static final private String DIGITS = "0123456789";
 
   final private Random random = new SecureRandom();
 
-  @Autowired
-  AuthenticationManager authenticationManager;
+  final private Date date = new Date();
 
   char randomChar() {
     return DIGITS.charAt(random.nextInt(DIGITS.length()));
@@ -33,28 +30,26 @@ public class Helper {
     return sb.toString();
   }
 
-  public UserPrincipal getLoggedInUser(RoleType role) {
-    LoginRequest loginRequest = new LoginRequest();
+  public CardDetails generateCardDetails() {
+    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    if (role.equals(RoleType.ROLE_USER)) {
-      loginRequest.setUsernameOrEmail("customer");
-      loginRequest.setPassword("harsh1234");
-    } else if (role.equals(RoleType.ROLE_HR)) {
-      loginRequest.setUsernameOrEmail("bankhr");
-      loginRequest.setPassword("bankhr1234");
-    } else if (role.equals(RoleType.ROLE_EMPLOYEE)) {
-      loginRequest.setUsernameOrEmail("employee");
-      loginRequest.setPassword("aditya1234");
-    } else {
-      loginRequest.setUsernameOrEmail("harsh");
-      loginRequest.setPassword("harsh1234");
-    }
+    int month = localDate.getMonthValue();
+    int currentYear = localDate.getYear();
 
-    Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(),
-            loginRequest.getPassword()));
+    String expiryMonth = String.valueOf(month);
+    String expiryYear = String.valueOf(currentYear + 4);
 
-    return (UserPrincipal) authentication.getPrincipal();
+    String pin = String.format("%04d", random.nextInt(AppConstants.FOUR_DIGIT));
+    String cvv =
+        String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
+
+    CardDetails cardDetails = new CardDetails();
+    cardDetails.setExpiryMonth(expiryMonth);
+    cardDetails.setExpiryYear(expiryYear);
+    cardDetails.setPin(pin);
+    cardDetails.setCvv(cvv);
+
+    return cardDetails;
   }
 
 }

@@ -9,7 +9,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ICreditCardRepository;
 import asd.group2.bms.service.ICreditCardService;
 import asd.group2.bms.service.ICustomEmail;
-import asd.group2.bms.util.AppConstants;
+import asd.group2.bms.util.CardDetails;
 import asd.group2.bms.util.Helper;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -33,6 +31,9 @@ public class CreditCardServiceImpl implements ICreditCardService {
 
   @Autowired
   ICustomEmail customEmail;
+
+  @Autowired
+  Helper helper;
 
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)
@@ -98,21 +99,14 @@ public class CreditCardServiceImpl implements ICreditCardService {
   @Override
   public CreditCard createCreditCard(Account account,
                                      Integer requestedTransactionLimit) {
-    Random random = new Random();
-    Date date = new Date();
+    CardDetails cardDetails = helper.generateCardDetails();
 
-    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    String expiryMonth = cardDetails.getExpiryMonth();
+    String expiryYear = cardDetails.getExpiryYear();
+    String pin = cardDetails.getPin();
+    String cvv = cardDetails.getCvv();
 
-    int month = localDate.getMonthValue();
-    int currentYear = localDate.getYear();
-
-    String expiryMonth = String.valueOf(month);
-    String expiryYear = String.valueOf(currentYear + 4);
-
-    String pin = String.format("%04d", random.nextInt(AppConstants.FOUR_DIGIT));
-    String cvv = String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
-
-    String creditCardNumber = new Helper().generateRandomDigits(16);
+    String creditCardNumber = helper.generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
         account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
         cvv, false);

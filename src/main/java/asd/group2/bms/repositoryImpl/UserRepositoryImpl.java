@@ -193,8 +193,8 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepositor
         roleRepository.findByName(user.getRoles().iterator().next().getName()).orElseThrow(() -> new ResourceNotFoundException("Role", "role", "Role not found"));
 
     String roleSql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
-    jdbcTemplate.update(roleSql, new Object[]{keyHolder.getKey().longValue(),
-        role.getId()});
+    jdbcTemplate.update(roleSql, keyHolder.getKey().longValue(),
+        role.getId());
 
     return user;
   }

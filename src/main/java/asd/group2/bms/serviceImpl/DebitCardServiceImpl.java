@@ -7,14 +7,10 @@ import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.repository.IDebitCardRepository;
 import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.AppConstants;
+import asd.group2.bms.util.CardDetails;
 import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Random;
 
 @Service
 public class DebitCardServiceImpl implements IDebitCardService {
@@ -22,26 +18,23 @@ public class DebitCardServiceImpl implements IDebitCardService {
   @Autowired
   IDebitCardRepository debitCardRepository;
 
+  @Autowired
+  Helper helper;
+
   /**
    * @param account: Account of user whose debit card is being created
    * @return This will return the debit card details
    */
   @Override
   public DebitCard createDebitCard(Account account) {
-    Random random = new Random();
-    Date date = new Date();
-    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    CardDetails cardDetails = helper.generateCardDetails();
 
-    int month = localDate.getMonthValue();
-    int currentYear = localDate.getYear();
+    String expiryMonth = cardDetails.getExpiryMonth();
+    String expiryYear = cardDetails.getExpiryYear();
+    String pin = cardDetails.getPin();
+    String cvv = cardDetails.getCvv();
 
-    String expiryMonth = String.valueOf(month);
-    String expiryYear = String.valueOf(currentYear + 4);
-
-    String pin = String.format("%04d", random.nextInt(AppConstants.FOUR_DIGIT));
-    String cvv = String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
-
-    String debitCardNumber = new Helper().generateRandomDigits(16);
+    String debitCardNumber = helper.generateRandomDigits(16);
     DebitCard debitCard = new DebitCard(Long.parseLong(debitCardNumber),
         account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, DebitCardStatus.ACTIVE, expiryYear,
         expiryMonth,

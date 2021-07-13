@@ -8,10 +8,8 @@ import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ILeaveRepository;
-import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ILeaveService;
-import asd.group2.bms.service.IUserService;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,12 +27,6 @@ public class LeaveServiceImpl implements ILeaveService {
 
   @Autowired
   ILeaveRepository leaveRepository;
-
-  @Autowired
-  IUserService userService;
-
-  @Autowired
-  IUserRepository userRepository;
 
   /**
    * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
