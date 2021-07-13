@@ -11,6 +11,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICreditCardBillService;
 import asd.group2.bms.service.ICreditCardService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,17 @@ public class CreditCardController {
     Account account = accountService.getAccountByUserId(userId);
 
     return creditCardService.createCreditCard(account, requestedTransactionLimit);
+  }
+
+  @PutMapping("/services/creditcards/PayCreditCard")
+  @RolesAllowed({"ROLE_USER"})
+  public Boolean payCreditCard(
+          @CurrentLoggedInUser UserPrincipal currentUser)
+  {
+    Long userid = currentUser.getId();
+    Account account = accountService.getAccountByUserId(userid);
+    Long accountNumber = account.getAccountNumber();
+    return ICreditCardBillService.payCreditCardBill(ICreditCardBillService.getCreditCardByAccountNumber(accountNumber));
+
   }
 }
