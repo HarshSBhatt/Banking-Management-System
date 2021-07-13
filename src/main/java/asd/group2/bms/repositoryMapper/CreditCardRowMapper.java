@@ -7,22 +7,19 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 public class CreditCardRowMapper implements RowMapper<CreditCard> {
 
   @Override
   public CreditCard mapRow(ResultSet resultSet, int i) throws SQLException {
     CreditCard creditCard = new CreditCard();
+    CommonMapping commonMapping = new CommonMapping();
     AccountRowMapper accountRowMapper = new AccountRowMapper();
 
-    LocalDate createdAt = resultSet.getDate("created_at").toLocalDate();
-    LocalDate updatedAt = resultSet.getDate("updated_at").toLocalDate();
-
-    creditCard.setCreatedAt(createdAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    creditCard.setUpdatedAt(updatedAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-
+    creditCard.setCreatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "created_at").toLocalDate()));
+    creditCard.setUpdatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "updated_at").toLocalDate()));
     creditCard.setCreditCardNumber(resultSet.getLong("credit_card_number"));
     creditCard.setCreditCardStatus(CreditCardStatus.valueOf(resultSet.getString(
         "credit_card_status")));

@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
 
-import asd.group2.bms.repository.TermDepositDetailRepository;
+import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.repositoryMapper.TermDepositDetailRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 
 
 @Repository
-public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements TermDepositDetailRepository {
+public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements ITermDepositDetailRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

@@ -9,7 +9,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
-public interface CreditCardService {
+public interface ICreditCardService {
 
   PagedResponse<CreditCardListResponse> getCreditCardListByStatus(CreditCardStatus creditCardStatus, int page, int size);
 

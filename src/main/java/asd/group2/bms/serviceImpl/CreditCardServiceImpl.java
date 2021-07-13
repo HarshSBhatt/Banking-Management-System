@@ -6,8 +6,9 @@ import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
-import asd.group2.bms.repositoryImpl.CreditCardRepositoryImpl;
-import asd.group2.bms.service.CreditCardService;
+import asd.group2.bms.repository.ICreditCardRepository;
+import asd.group2.bms.service.ICreditCardService;
+import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.util.AppConstants;
 import asd.group2.bms.util.Helper;
 import asd.group2.bms.util.ModelMapper;
@@ -25,13 +26,13 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Service
-public class CreditCardServiceImpl implements CreditCardService {
+public class CreditCardServiceImpl implements ICreditCardService {
 
   @Autowired
-  CreditCardRepositoryImpl creditCardRepository;
+  ICreditCardRepository creditCardRepository;
 
   @Autowired
-  CustomEmailImpl customEmail;
+  ICustomEmail customEmail;
 
   /**
    * @param creditCardStatus: Credit Card Status (PENDING, APPROVED, REJECTED)

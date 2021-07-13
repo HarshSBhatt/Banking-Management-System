@@ -24,7 +24,7 @@ function Dashboard() {
     const isAuthorizedUser = route.allowedRoles.includes(role);
     return (
       isAuthorizedUser && (
-        <Link to={route.link}>
+        <Link key={route.link} to={route.link}>
           <Card.Grid style={gridStyle}>
             <span className="cb-text-strong">{route.label}</span>
           </Card.Grid>

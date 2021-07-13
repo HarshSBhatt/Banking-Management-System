@@ -1,7 +1,7 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.AccountActivity;
-import asd.group2.bms.repository.AccountActivityRepository;
+import asd.group2.bms.repository.IAccountActivityRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.Date;
 
 @Repository
-public class AccountActivityRepositoryImpl extends JdbcDaoSupport implements AccountActivityRepository {
+public class AccountActivityRepositoryImpl extends JdbcDaoSupport implements IAccountActivityRepository {
 
   private final JdbcTemplate jdbcTemplate;
 

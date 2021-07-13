@@ -7,8 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 public class DebitCardRowMapper implements RowMapper<DebitCard> {
 
@@ -16,14 +14,13 @@ public class DebitCardRowMapper implements RowMapper<DebitCard> {
   public DebitCard mapRow(ResultSet resultSet, int i) throws SQLException {
 
     DebitCard debitCard = new DebitCard();
+    CommonMapping commonMapping = new CommonMapping();
     AccountRowMapper accountRowMapper = new AccountRowMapper();
 
-    LocalDate createdAt = resultSet.getDate("created_at").toLocalDate();
-    LocalDate updatedAt = resultSet.getDate("updated_at").toLocalDate();
-
-    debitCard.setCreatedAt(createdAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-    debitCard.setUpdatedAt(updatedAt.atStartOfDay(ZoneOffset.UTC).toInstant());
-
+    debitCard.setCreatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "created_at").toLocalDate()));
+    debitCard.setUpdatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
+        "updated_at").toLocalDate()));
     debitCard.setDebitCardNumber(resultSet.getLong("debit_card_number"));
     debitCard.setCvv(resultSet.getString("cvv"));
     debitCard.setDebitCardStatus(DebitCardStatus.valueOf(resultSet.getString("debit_card_status")));
@@ -38,4 +35,5 @@ public class DebitCardRowMapper implements RowMapper<DebitCard> {
 
     return debitCard;
   }
+
 }
