@@ -6,6 +6,7 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ILeaveRepository;
+import asd.group2.bms.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,14 +16,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -81,12 +84,34 @@ class LeaveServiceImplTest {
   }
 
   @Test
+  void getLeavesByStatusTestEmpty() {
+
+    RequestStatus requestStatus = RequestStatus.PENDING;
+    int page = 0;
+    int size = 3;
+
+    Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+
+    List<LeaveRequest> leaves = new ArrayList<>();
+
+    Page<LeaveRequest> pagedLeaves = new PageImpl<>(leaves);
+
+    when(leaveRepository.findByRequestStatusEquals(requestStatus, pageable)).thenReturn(pagedLeaves);
+
+    PagedResponse<LeaveListResponse> resignations =
+            leaveService.getLeavesByStatus(requestStatus, page, size);
+
+    assertEquals(0,
+            resignations.getSize());
+  }
+
+  @Test
   void getLeaveListByUserIdTest() {
     String username = "shivam";
-
+    Long userId = 1L;
     User user = new User();
     user.setUsername("shivam");
-    user.setId(1L);
+    user.setId(userId);
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
@@ -104,35 +129,206 @@ class LeaveServiceImplTest {
 
   @Test
   void getLeaveByIdTest() {
-    when(leaveRepository.findById(1L)).thenReturn(Optional.of(new LeaveRequest()));
+    Long leaveId = 1L;
 
-    leaveService.getLeaveById(1L);
+    User user = new User();
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setUser(user);
+
+    when(leaveRepository.findById(leaveId)).thenReturn(Optional.of(leaveRequest));
+
+    leaveService.getLeaveById(leaveId);
     verify(leaveRepository, times(1)).findById(any());
   }
 
   @Test
   void setLeaveRequestStatusTest() {
     User user = new User();
+    Long leaveId = 1L;
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
 
     Optional<LeaveRequest> request = Optional.of(leaveRequest);
-    when(leaveRepository.findById(1L)).thenReturn(request);
+    when(leaveRepository.findById(leaveId)).thenReturn(request);
 
-    leaveService.setLeaveRequestStatus(1L, asd.group2.bms.model.leaves.RequestStatus.PENDING);
+    leaveService.setLeaveRequestStatus(leaveId, asd.group2.bms.model.leaves.RequestStatus.PENDING);
     assertEquals(asd.group2.bms.model.leaves.RequestStatus.PENDING, leaveRequest.getRequestStatus());
     verify(leaveRepository, times(1)).findById(any());
     verify(leaveRepository, times(1)).update(any());
   }
 
   @Test
-  void deleteLeaveRequestByIdTest() {
+  void deleteLeaveRequestByIdSuccessTest() {
 
+    Long userId = 1L;
+    Long leaveId = 2L;
+
+    User user = new User();
+    user.setId(userId);
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setUser(user);
+    leaveRequest.setLeaveId(leaveId);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(userId);
+
+    Optional<LeaveRequest> request = Optional.of(leaveRequest);
+
+    when(leaveRepository.findById(leaveId)).thenReturn(request);
+    doNothing().when(leaveRepository).delete(leaveId);
+
+    leaveService.deleteLeaveRequestById(userPrincipal, leaveId);
+    verify(leaveRepository, times(1)).delete(any());
   }
 
   @Test
-  void makeLeaveRequestTest() {
+  void deleteLeaveRequestByIdFailNotAuthorisedTest() {
 
+    Long userId = 1L;
+    Long leaveId = 2L;
+    Long secondUserId = 3L;
+
+    User user = new User();
+    user.setId(userId);
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setUser(user);
+    leaveRequest.setLeaveId(leaveId);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(secondUserId);
+
+    Optional<LeaveRequest> request = Optional.of(leaveRequest);
+
+    when(leaveRepository.findById(leaveId)).thenReturn(request);
+
+    leaveService.deleteLeaveRequestById(userPrincipal, leaveId);
+    verify(leaveRepository, times(0)).delete(any());
+  }
+
+  @Test
+  void deleteLeaveRequestByIdFailExceptionTest() {
+
+    Long userId = 1L;
+    Long leaveId = 2L;
+
+    User user = new User();
+    user.setId(userId);
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setLeaveId(leaveId);
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(userId);
+
+    Optional<LeaveRequest> request = Optional.of(leaveRequest);
+
+    when(leaveRepository.findById(leaveId)).thenThrow(new RuntimeException());
+    ResponseEntity<?> responseEntity =
+            leaveService.deleteLeaveRequestById(userPrincipal, leaveId);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+            responseEntity.getStatusCode().toString());
+  }
+
+  @Test
+  void makeLeaveRequestNewTest() throws ParseException {
+
+    Long leaveId = 1L;
+    String fromDateStr = "2021/07/20";
+    Date fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(fromDateStr);
+    String toDateStr = "2021/07/25";
+    Date toDate = new SimpleDateFormat("yyyy/MM/dd").parse(toDateStr);
+
+    User user = new User();
+    String reason = "reason";
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setLeaveId(leaveId);
+    leaveRequest.setUser(user);
+    leaveRequest.setFromDate(fromDate);
+    leaveRequest.setToDate(toDate);
+    leaveRequest.setReason(reason);
+    leaveRequest.setRequestStatus(RequestStatus.PENDING);
+
+    when(leaveRepository.save(any())).thenReturn(leaveRequest);
+
+    ResponseEntity<?> leave = leaveService.makeLeaveRequest(user, fromDate, toDate, reason);
+
+    assertEquals(HttpStatus.OK, leave.getStatusCode());
+    verify(leaveRepository, times(1)).save(any());
+  }
+
+  @Test
+  void makeLeaveRequestExceptionTest() throws ParseException {
+
+    Long userId = 1L;
+    User user = new User();
+    user.setId(userId);
+    String fromDateStr = "2021/07/20";
+    Date fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(fromDateStr);
+    String toDateStr = "2021/07/25";
+    Date toDate = new SimpleDateFormat("yyyy/MM/dd").parse(toDateStr);
+    String reason = "reason";
+    LeaveRequest leaveRequest = new LeaveRequest();
+
+    List<LeaveRequest> leaves = new ArrayList<>();
+
+    when(leaveRepository.findByUser_Id(userId)).thenReturn(leaves);
+
+    when(leaveRepository.save(leaveRequest)).thenReturn(leaveRequest);
+
+    ResponseEntity<?> leave = leaveService.makeLeaveRequest(user, fromDate, toDate, reason);
+
+    assertEquals(HttpStatus.BAD_REQUEST, leave.getStatusCode());
+  }
+
+  @Test
+  void makeLeaveRequestPendingTest() throws ParseException {
+    Long userId = 1L;
+    User user = new User();
+    user.setId(userId);
+    String fromDateStr = "2021/07/20";
+    Date fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(fromDateStr);
+    String toDateStr = "2021/07/25";
+    Date toDate = new SimpleDateFormat("yyyy/MM/dd").parse(toDateStr);
+    String reason = "reason";
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setUser(user);
+    leaveRequest.setFromDate(fromDate);
+    leaveRequest.setToDate(toDate);
+    leaveRequest.setReason(reason);
+    leaveRequest.setRequestStatus(RequestStatus.PENDING);
+
+    List<LeaveRequest> leaves = new ArrayList<>();
+    leaves.add(leaveRequest);
+
+    when(leaveRepository.findByUser_Id(userId)).thenReturn(leaves);
+
+    ResponseEntity<?> leave = leaveService.makeLeaveRequest(user, fromDate, toDate, reason);
+
+    assertEquals(HttpStatus.NOT_ACCEPTABLE, leave.getStatusCode());
+  }
+
+  @Test
+  void makeLeaveRequestApprovedTest() throws ParseException {
+    Long userId = 1L;
+    User user = new User();
+    user.setId(userId);
+    String fromDateStr = "2021/07/20";
+    Date fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(fromDateStr);
+    String toDateStr = "2021/07/25";
+    Date toDate = new SimpleDateFormat("yyyy/MM/dd").parse(toDateStr);
+    String reason = "reason";
+    LeaveRequest leaveRequest = new LeaveRequest();
+    leaveRequest.setUser(user);
+    leaveRequest.setFromDate(fromDate);
+    leaveRequest.setToDate(toDate);
+    leaveRequest.setReason(reason);
+    leaveRequest.setRequestStatus(RequestStatus.APPROVED);
+
+    List<LeaveRequest> leaves = new ArrayList<>();
+    leaves.add(leaveRequest);
+
+    when(leaveRepository.findByUser_Id(userId)).thenReturn(leaves);
+
+    ResponseEntity<?> leave = leaveService.makeLeaveRequest(user, fromDate, toDate, reason);
+
+    assertEquals(HttpStatus.NOT_ACCEPTABLE, leave.getStatusCode());
   }
 }
