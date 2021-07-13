@@ -8,10 +8,8 @@ import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.LeaveListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ILeaveRepository;
-import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ILeaveService;
-import asd.group2.bms.service.IUserService;
 import asd.group2.bms.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,12 +28,6 @@ public class LeaveServiceImpl implements ILeaveService {
   @Autowired
   ILeaveRepository leaveRepository;
 
-  @Autowired
-  IUserService userService;
-
-  @Autowired
-  IUserRepository userRepository;
-
   /**
    * @param requestStatus: Request Status (PENDING, APPROVED, REJECTED)
    * @param page:          Page Number
@@ -50,13 +42,13 @@ public class LeaveServiceImpl implements ILeaveService {
 
     if (leaves.getNumberOfElements() == 0) {
       return new PagedResponse<>(Collections.emptyList(), leaves.getNumber(),
-          leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
+              leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
     }
 
     List<LeaveListResponse> leaveListResponses = leaves.map(ModelMapper::mapLeavesToLeaveListResponse).getContent();
 
     return new PagedResponse<>(leaveListResponses, leaves.getNumber(),
-        leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
+            leaves.getSize(), leaves.getTotalElements(), leaves.getTotalPages(), leaves.isLast());
   }
 
   /**
@@ -105,13 +97,13 @@ public class LeaveServiceImpl implements ILeaveService {
       LeaveRequest leaveRequest = getLeaveById(leaveId);
       if (leaveRequest.getUser().getId() != currentUser.getId()) {
         return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
-            HttpStatus.FORBIDDEN);
+                HttpStatus.FORBIDDEN);
       }
       leaveRepository.delete(leaveId);
       return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
-          HttpStatus.BAD_REQUEST);
+              HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -128,14 +120,14 @@ public class LeaveServiceImpl implements ILeaveService {
   public ResponseEntity<?> makeLeaveRequest(User user, Date fromDate, Date toDate, String reason) {
     try {
       LeaveRequest leaveRequest = new LeaveRequest(user, fromDate, toDate, reason,
-          RequestStatus.PENDING);
+              RequestStatus.PENDING);
       List<LeaveRequest> leavesList = leaveRepository.findByUser_Id(user.getId());
       if (leavesList.size() > 0) {
         for (LeaveRequest leaves : leavesList) {
           if (leaves.getRequestStatus() == RequestStatus.PENDING || leaves.getRequestStatus() == RequestStatus.APPROVED) {
             if ((!fromDate.before(leaves.getFromDate()) && !fromDate.after(leaves.getToDate())) || (!toDate.before(leaves.getFromDate()) && !toDate.after(leaves.getToDate()))) {
               return new ResponseEntity<>(new ApiResponse(false, "Dates overlapping with existing requests."),
-                  HttpStatus.NOT_ACCEPTABLE);
+                      HttpStatus.NOT_ACCEPTABLE);
             }
           }
         }
@@ -144,8 +136,7 @@ public class LeaveServiceImpl implements ILeaveService {
       return ResponseEntity.ok(new ApiResponse(true, "Request made successfully!"));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
-          HttpStatus.BAD_REQUEST);
+              HttpStatus.BAD_REQUEST);
     }
   }
-
 }
