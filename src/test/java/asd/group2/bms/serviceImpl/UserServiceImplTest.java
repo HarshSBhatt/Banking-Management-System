@@ -149,6 +149,91 @@ class UserServiceImplTest {
   }
 
   @Test
+  void createUserTestUsernameDoesNotExist() {
+    String username = "test__harsh";
+    String email = "test__harsh.bhatt@dal.ca";
+
+    SignUpRequest signUpRequest = new SignUpRequest();
+    signUpRequest.setUsername(username);
+    signUpRequest.setEmail(email);
+    signUpRequest.setRole(RoleType.ROLE_USER);
+
+    when(userRepository.existsByUsername(username)).thenReturn(true);
+
+    ResponseEntity<?> responseEntity = userService.createUser(signUpRequest);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "User find by username test failed");
+  }
+
+  @Test
+  void createUserTestEmailDoesNotExist() {
+    String username = "test__harsh";
+    String email = "test__harsh.bhatt@dal.ca";
+
+    SignUpRequest signUpRequest = new SignUpRequest();
+    signUpRequest.setUsername(username);
+    signUpRequest.setEmail(email);
+    signUpRequest.setRole(RoleType.ROLE_USER);
+
+    when(userRepository.existsByEmail(email)).thenReturn(true);
+
+    ResponseEntity<?> responseEntity = userService.createUser(signUpRequest);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "User find by email test failed");
+  }
+
+  @Test
+  void createUserRoleNullTest() {
+    String username = "test__harsh";
+    String email = "test__harsh.bhatt@dal.ca";
+
+    Role role = new Role();
+
+    SignUpRequest signUpRequest = new SignUpRequest();
+    signUpRequest.setUsername(username);
+    signUpRequest.setEmail(email);
+
+    when(roleRepository.findByName(RoleType.ROLE_USER)).thenReturn(java.util.Optional.of(role));
+    when(userRepository.existsByUsername(username)).thenReturn(false);
+    when(userRepository.existsByEmail(email)).thenReturn(false);
+    when(userRepository.save(any(User.class))).then(returnsFirstArg());
+
+    ResponseEntity<?> responseEntity = userService.createUser(signUpRequest);
+
+    assertEquals(HttpStatus.CREATED.toString(),
+        responseEntity.getStatusCode().toString(),
+        "User without role test failed");
+  }
+
+  @Test
+  void createUserWithBankRoleTest() {
+    String username = "test__harsh";
+    String email = "test__harsh.bhatt@dal.ca";
+
+    Role role = new Role();
+
+    SignUpRequest signUpRequest = new SignUpRequest();
+    signUpRequest.setUsername(username);
+    signUpRequest.setEmail(email);
+    signUpRequest.setRole(RoleType.ROLE_EMPLOYEE);
+
+    when(roleRepository.findByName(RoleType.ROLE_EMPLOYEE)).thenReturn(java.util.Optional.of(role));
+    when(userRepository.existsByUsername(username)).thenReturn(false);
+    when(userRepository.existsByEmail(email)).thenReturn(false);
+    when(userRepository.save(any(User.class))).then(returnsFirstArg());
+
+    ResponseEntity<?> responseEntity = userService.createUser(signUpRequest);
+
+    assertEquals(HttpStatus.CREATED.toString(),
+        responseEntity.getStatusCode().toString(),
+        "User with admin role test failed");
+  }
+
+  @Test
   void setUserAccountStatusSuccessTest() throws MessagingException,
       UnsupportedEncodingException {
     String email = "harsh.bhatt@dal.ca";
@@ -240,6 +325,33 @@ class UserServiceImplTest {
   }
 
   @Test
+  void changePasswordNotUpdatedTest() {
+    String oldPassword = "abc";
+    String newPassword = "def";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    when(passwordEncoder.matches(oldPassword, userPrincipal.getPassword())).thenReturn(true);
+    when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+    User fetchedUser = userService.getUserByEmail(email);
+
+    when(userRepository.update(fetchedUser)).thenReturn(false);
+
+    ApiResponse apiResponse = userService.changePassword(oldPassword,
+        newPassword, userPrincipal);
+
+    assertFalse(apiResponse.getSuccess(), "False was returned");
+  }
+
+  @Test
   void resetPasswordTrueTest() {
     String newPassword = "abc";
     String confirmNewPassword = "abc";
@@ -265,6 +377,30 @@ class UserServiceImplTest {
 
   @Test
   void resetPasswordFalseTest() {
+    String newPassword = "same";
+    String confirmNewPassword = "same";
+    String email = "harsh.bhatt@dal.ca";
+
+    UserPrincipal userPrincipal = new UserPrincipal();
+    userPrincipal.setId(1L);
+    userPrincipal.setPassword("hash_password");
+    userPrincipal.setEmail(email);
+
+    User user = new User();
+    user.setEmail(email);
+
+    when(userRepository.update(user)).thenReturn(false);
+
+    ResponseEntity<?> responseEntity = userService.resetPassword(newPassword,
+        confirmNewPassword, user);
+
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Correct status code not received");
+  }
+
+  @Test
+  void resetPasswordNotUpdatedTest() {
     String newPassword = "abcd";
     String confirmNewPassword = "abc";
     String email = "harsh.bhatt@dal.ca";
@@ -287,17 +423,18 @@ class UserServiceImplTest {
 
   @Test
   void updateResetForgotPasswordTokenTest() {
-    userService = mock(UserServiceImpl.class);
-
     String email = "harsh.bhatt@dal.ca";
     String token = "dummy";
 
     User user = new User();
     user.setForgotPasswordToken(token);
 
+    when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
     userService.updateResetForgotPasswordToken(token, email);
 
-    verify(userService, times(1)).updateResetForgotPasswordToken(token, email);
+    verify(userRepository, times(1)).findByEmail(any());
+    verify(userRepository, times(1)).update(any());
   }
 
   @Test
@@ -341,11 +478,11 @@ class UserServiceImplTest {
 
     when(userRepository.findByUsername(username)).thenReturn(Optional.ofNullable(user));
 
-    Optional<User> fetchedUserProfile = userRepository.findByUsername(username);
+    UserProfile fetchedUserProfile =
+        userService.getUserProfileByUsername(username);
 
-    assertEquals(username, fetchedUserProfile.get().getUsername(), "Wrong " +
-        "user " +
-        "was returned");
+    assertEquals(username, fetchedUserProfile.getUsername(), "Wrong " +
+        "user was returned");
   }
 
   @Test
