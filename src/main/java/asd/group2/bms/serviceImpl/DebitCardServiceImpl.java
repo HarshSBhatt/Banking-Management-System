@@ -29,12 +29,12 @@ public class DebitCardServiceImpl implements IDebitCardService {
   public DebitCard createDebitCard(Account account) {
     CardDetails cardDetails = helper.generateCardDetails();
 
+    String debitCardNumber = cardDetails.getCardNumber();
     String expiryMonth = cardDetails.getExpiryMonth();
     String expiryYear = cardDetails.getExpiryYear();
     String pin = cardDetails.getPin();
     String cvv = cardDetails.getCvv();
 
-    String debitCardNumber = helper.generateRandomDigits(16);
     DebitCard debitCard = new DebitCard(Long.parseLong(debitCardNumber),
         account, pin, AppConstants.DEFAULT_TRANSACTION_LIMIT, DebitCardStatus.ACTIVE, expiryYear,
         expiryMonth,

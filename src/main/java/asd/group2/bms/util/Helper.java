@@ -36,6 +36,7 @@ public class Helper {
     int month = localDate.getMonthValue();
     int currentYear = localDate.getYear();
 
+    String cardNumber = generateRandomDigits(16);
     String expiryMonth = String.valueOf(month);
     String expiryYear = String.valueOf(currentYear + 4);
 
@@ -44,6 +45,7 @@ public class Helper {
         String.format("%06d", random.nextInt(AppConstants.SIX_DIGIT));
 
     CardDetails cardDetails = new CardDetails();
+    cardDetails.setCardNumber(cardNumber);
     cardDetails.setExpiryMonth(expiryMonth);
     cardDetails.setExpiryYear(expiryYear);
     cardDetails.setPin(pin);

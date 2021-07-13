@@ -101,12 +101,12 @@ public class CreditCardServiceImpl implements ICreditCardService {
                                      Integer requestedTransactionLimit) {
     CardDetails cardDetails = helper.generateCardDetails();
 
+    String creditCardNumber = cardDetails.getCardNumber();
     String expiryMonth = cardDetails.getExpiryMonth();
     String expiryYear = cardDetails.getExpiryYear();
     String pin = cardDetails.getPin();
     String cvv = cardDetails.getCvv();
 
-    String creditCardNumber = helper.generateRandomDigits(16);
     CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
         account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
         cvv, false);

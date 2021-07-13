@@ -2,6 +2,8 @@ package asd.group2.bms.util;
 
 public class CardDetails {
 
+  private String cardNumber;
+
   private String expiryMonth;
 
   private String expiryYear;
@@ -9,6 +11,14 @@ public class CardDetails {
   private String pin;
 
   private String cvv;
+
+  public String getCardNumber() {
+    return cardNumber;
+  }
+
+  public void setCardNumber(String cardNumber) {
+    this.cardNumber = cardNumber;
+  }
 
   public String getExpiryMonth() {
     return expiryMonth;
