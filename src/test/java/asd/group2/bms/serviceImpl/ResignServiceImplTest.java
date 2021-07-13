@@ -1,8 +1,10 @@
 package asd.group2.bms.serviceImpl;
 
+import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.payload.response.ResignListResponse;
 import asd.group2.bms.repositoryImpl.ResignRepositoryImpl;
@@ -16,13 +18,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -184,12 +192,35 @@ public class ResignServiceImplTest {
     verify(resignRepository,times(0)).delete(any());
   }
 
-//  @Test
-//  void deleteResignationRequestByIdTestFailException() throws Exception{
+  @Test
+  void makeResignRequestTestNew() {
+    User user = new User();
+    Date date = new Date();
+    String reason = "reason";
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setResignId(1L);
+    resignRequest.setUser(user);
+    resignRequest.setDate(date);
+    resignRequest.setReason(reason);
+    resignRequest.setRequestStatus(RequestStatus.PENDING);
+    List<ResignRequest> resigns = new ArrayList<>();
+
+    when(resignRepository.findByUserOrderByCreatedAtDesc(user)).thenReturn(resigns);
+    when(resignRepository.save(any())).thenReturn(resignRequest);
+
+    ResponseEntity<?> resign = resignService.makeResignRequest(user, date, reason);
+
+    assertEquals(HttpStatus.OK, resign.getStatusCode());
+    verify(resignRepository,times(1)).save(any());
+  }
+
+
+
+  @Test
+  void deleteResignationRequestByIdTestFailException(){
 //    User user = new User();
 //    user.setId(1L);
 //    ResignRequest resignRequest = new ResignRequest();
-//    resignRequest.setUser(user);
 //    resignRequest.setResignId(2L);
 //    UserPrincipal userPrincipal = new UserPrincipal();
 //    userPrincipal.setId(1L);
@@ -197,12 +228,9 @@ public class ResignServiceImplTest {
 //    Optional<ResignRequest> request = Optional.of(resignRequest);
 //
 //    when(resignRepository.findById(2L)).thenReturn(request);
-////    doThrow(Exception.class).when(resignRepository).delete(2L);
 //    doThrow(new Exception()).when(resignRepository).delete(2L);
 //
-//    resignService.deleteResignationRequestById(userPrincipal, 2L);
 //    Assertions.assertThrows(Exception.class,
-//        () -> {resignRepository.delete(2L);});
-//
-//  }
+//        () -> {resignService.deleteResignationRequestById(userPrincipal, 2L);});
+     }
 }
