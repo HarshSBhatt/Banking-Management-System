@@ -86,8 +86,7 @@ public class CreditCardRepositoryImpl extends JdbcDaoSupport implements ICreditC
         "account_number, cvv, expiry_month, expiry_year) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    jdbcTemplate.update(creditCardSql, new Object[]{
-        creditCard.getCreditCardNumber(),
+    jdbcTemplate.update(creditCardSql, creditCard.getCreditCardNumber(),
         new java.sql.Date(now.getTime()),
         new java.sql.Date(now.getTime()),
         creditCard.getCreditCardStatus().name(),
@@ -97,8 +96,10 @@ public class CreditCardRepositoryImpl extends JdbcDaoSupport implements ICreditC
         creditCard.getAccount().getAccountNumber(),
         creditCard.getCvv(),
         creditCard.getExpiryMonth(),
-        creditCard.getExpiryYear()
-    });
+        creditCard.getExpiryYear());
+
+    creditCard.setCreatedAt(now.toInstant());
+    creditCard.setUpdatedAt(now.toInstant());
 
     return creditCard;
   }

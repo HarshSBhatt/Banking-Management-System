@@ -68,15 +68,13 @@ public class AccountRepositoryImpl extends JdbcDaoSupport implements IAccountRep
         "account_type, balance, credit_Score, user_id) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    jdbcTemplate.update(accountSql, new Object[]{
-        account.getAccountNumber(),
+    jdbcTemplate.update(accountSql, account.getAccountNumber(),
         new java.sql.Date(now.getTime()),
         new java.sql.Date(now.getTime()),
         account.getAccountType().name(),
         account.getBalance(),
         account.getCreditScore(),
-        account.getUser().getId()
-    });
+        account.getUser().getId());
 
     return account;
   }
