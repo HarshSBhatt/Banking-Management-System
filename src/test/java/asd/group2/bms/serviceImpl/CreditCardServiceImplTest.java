@@ -3,12 +3,13 @@ package asd.group2.bms.serviceImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ICreditCardRepository;
 import asd.group2.bms.service.ICustomEmail;
+import asd.group2.bms.util.CardDetails;
+import asd.group2.bms.util.Helper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ public class CreditCardServiceImplTest {
 
   @Mock
   ICustomEmail customEmail;
+
+  @Mock
+  Helper helper;
 
   @InjectMocks
   CreditCardServiceImpl creditCardService;
@@ -137,4 +141,27 @@ public class CreditCardServiceImplTest {
     verify(creditCardRepository,times(1)).update(any());
   }
 
+  @Test
+  void createCreditCardTest() {
+    Account account = new Account();
+    account.setAccountNumber(123L);
+    Integer requestedTransactionLimit = 1000;
+
+    CreditCard card = new CreditCard();
+    card.setCreditCardNumber(123456L);
+    CardDetails cardDetails = new CardDetails();
+    cardDetails.setCardNumber("123456");
+    cardDetails.setExpiryMonth("12");
+    cardDetails.setExpiryYear("2022");
+    cardDetails.setPin("1234");
+    cardDetails.setCvv("123");
+
+    when(helper.generateCardDetails()).thenReturn(cardDetails);
+    when(creditCardRepository.save(any())).thenReturn(card);
+
+    CreditCard creditCard = creditCardService.createCreditCard(account,
+        requestedTransactionLimit);
+
+    assertEquals(123456L, creditCard.getCreditCardNumber());
+  }
 }
