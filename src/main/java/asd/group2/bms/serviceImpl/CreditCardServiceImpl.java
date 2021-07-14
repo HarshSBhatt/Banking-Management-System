@@ -4,6 +4,7 @@ import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
+import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ICreditCardRepository;
@@ -112,6 +113,18 @@ public class CreditCardServiceImpl implements ICreditCardService {
         cvv, false);
 
     return creditCardRepository.save(creditCard);
+  }
+
+  /**
+   * @param creditCardNumber: credit card number for which request is made
+   * @param pin: new PIN to be set
+   * @return: boolean result
+   */
+  @Override
+  public Boolean setCreditCardPin(Long creditCardNumber, String pin) {
+    CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
+    creditCard.setPin(pin);
+    return creditCardRepository.update(creditCard);
   }
 
 }
