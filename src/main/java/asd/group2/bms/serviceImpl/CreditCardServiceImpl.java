@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class CreditCardServiceImpl implements ICreditCardService {
@@ -114,4 +115,21 @@ public class CreditCardServiceImpl implements ICreditCardService {
     return creditCardRepository.save(creditCard);
   }
 
+  /**
+   * @param creditCardNumber : credit card number for which request is made
+   * @param pin              : new PIN to be set
+   * @param id
+   * @return: boolean result
+   */
+  @Override
+  public Boolean setCreditCardPin(Long creditCardNumber, String pin, Long id) throws Exception {
+    CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
+    Long userId = creditCard.getAccount().getUser().getId();
+    if (userId == id) {
+      creditCard.setPin(pin);
+      return creditCardRepository.update(creditCard);
+    } else {
+      throw new Exception("You are not authorized to perform this operation");
+    }
+  }
 }
