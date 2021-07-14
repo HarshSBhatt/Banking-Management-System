@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -138,7 +139,7 @@ public class CreditCardServiceImplTest {
         any());
 
     creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
-    verify(creditCardRepository,times(1)).update(any());
+    verify(creditCardRepository, times(1)).update(any());
   }
 
   @Test
@@ -178,6 +179,38 @@ public class CreditCardServiceImplTest {
     creditCard.setAccount(account);
 
     when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
-    creditCardService.setCreditCardPin(card, pin, id);
+    when(creditCardRepository.update(any())).thenReturn(true);
+
+    Boolean response = creditCardService.setCreditCardPin(card, pin, id);
+
+    verify(creditCardRepository, times(1)).update(any());
+    assertEquals(true, response);
   }
+
+  @Test
+  void setCreditCardPinTestFail() throws Exception {
+    Long card = 123L;
+    String pin = "1234";
+    Long id = 2L;
+    User user = new User();
+    user.setId(1L);
+    Account account = new Account();
+    account.setUser(user);
+    CreditCard creditCard = new CreditCard();
+    creditCard.setAccount(account);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+
+
+    Exception exception = assertThrows(Exception.class,
+        () -> {
+          creditCardService.setCreditCardPin(card, pin, id);
+        });
+
+    String expectedMessage = "You are not authorized to perform this operation";
+
+    assertEquals(expectedMessage, exception.getMessage());
+
+  }
+
 }
