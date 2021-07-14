@@ -56,7 +56,7 @@ function ApplyLeave() {
       {
         type: "array",
         required: true,
-        message: "Please select time!",
+        message: "Please select date!",
       },
     ],
   };

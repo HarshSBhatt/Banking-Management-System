@@ -27,33 +27,40 @@ function FundTransfer() {
 
   const onFinish = async (values) => {
     setLoading(true);
-    try {
-      const response = await api.post("/account/activity", values);
-      const { data } = response;
-      if (data?.success) {
-        toast({
-          message: data.message,
-          type: "success",
-        });
-        form.resetFields();
+    if (values.senderAccountNumber === Number(values.receiverAccountNumber)) {
+      toast({
+        message: "Sender and Receiver must be different",
+        type: "info",
+      });
+    } else {
+      try {
+        const response = await api.post("/account/activity", values);
+        const { data } = response;
+        if (data?.success) {
+          toast({
+            message: data.message,
+            type: "success",
+          });
+          form.resetFields();
+        }
+      } catch (err) {
+        if (err.response?.data) {
+          toast({
+            message:
+              err.response.data.message === "Bad credentials"
+                ? "Please check your credentials"
+                : err.response.data.message,
+            type: "error",
+          });
+        } else {
+          toast({
+            message: "Something went wrong!",
+            type: "error",
+          });
+        }
       }
-    } catch (err) {
-      if (err.response?.data) {
-        toast({
-          message:
-            err.response.data.message === "Bad credentials"
-              ? "Please check your credentials"
-              : err.response.data.message,
-          type: "error",
-        });
-      } else {
-        toast({
-          message: "Something went wrong!",
-          type: "error",
-        });
-      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchUserAccount = async () => {
