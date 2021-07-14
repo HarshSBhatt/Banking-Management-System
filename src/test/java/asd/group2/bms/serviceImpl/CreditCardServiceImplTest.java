@@ -8,6 +8,7 @@ import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ICreditCardRepository;
+import asd.group2.bms.service.ICustomEmail;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +37,9 @@ public class CreditCardServiceImplTest {
 
   @Mock
   ICreditCardRepository creditCardRepository;
+
+  @Mock
+  ICustomEmail customEmail;
 
   @InjectMocks
   CreditCardServiceImpl creditCardService;
@@ -101,12 +107,34 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void getCreditCardByCreditCardNumber() {
+  void getCreditCardByCreditCardNumberTest() {
     Long creditCardNumber = 123L;
     when(creditCardRepository.findById(creditCardNumber)).thenReturn(Optional.of(new CreditCard()));
 
     creditCardService.getCreditCardByCreditCardNumber(creditCardNumber);
     verify(creditCardRepository, times(1)).findById(any());
+  }
+
+  @Test
+  void setCreditCardRequestStatusTest() throws MessagingException, UnsupportedEncodingException {
+    CreditCard creditCard = new CreditCard();
+    Long card = 123L;
+    User user = new User();
+    user.setEmail("abc");
+    user.setFirstName("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    creditCard.setAccount(account);
+    CreditCardStatus creditCardStatus = CreditCardStatus.PENDING;
+    creditCard.setCreditCardNumber(card);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    when(creditCardRepository.update(any())).thenReturn(true);
+    doNothing().when(customEmail).sendCreditCardApprovalMail(any(), any(),
+        any());
+
+    creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
+    verify(creditCardRepository,times(1)).update(any());
   }
 
 }
