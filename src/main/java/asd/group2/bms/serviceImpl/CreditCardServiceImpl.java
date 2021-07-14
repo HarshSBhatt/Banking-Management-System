@@ -4,7 +4,6 @@ import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
-import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.ICreditCardRepository;
@@ -22,7 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class CreditCardServiceImpl implements ICreditCardService {
@@ -126,5 +126,4 @@ public class CreditCardServiceImpl implements ICreditCardService {
     creditCard.setPin(pin);
     return creditCardRepository.update(creditCard);
   }
-
 }
