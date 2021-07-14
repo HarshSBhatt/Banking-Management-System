@@ -35,6 +35,13 @@ public class TermDepositDetailController {
     }
   }
 
+  /**
+   *
+   * @param currentUser
+   * @param termDepositRequest
+   * @return
+   * @throws Exception
+   */
   @PostMapping("/services/term-deposit")
   public ResponseEntity<?> makeTermDepositRequest(@CurrentLoggedInUser UserPrincipal currentUser, @RequestBody TermDepositRequest termDepositRequest) throws Exception {
     Long currentUserId = currentUser.getId();
@@ -45,8 +52,8 @@ public class TermDepositDetailController {
 
   @GetMapping("/services/term-deposit/{termDepositId}")
   public TermDepositDetail getTermDepositDetailById(@PathVariable(name = "termDepositId") String termDepositId) {
-    Long id = Long.parseLong(termDepositId);
-    return termDepositDetailService.getTermDepositDetailById(id);
+    Long fdId = Long.parseLong(termDepositId);
+    return termDepositDetailService.getTermDepositDetailById(fdId);
   }
 
 }
