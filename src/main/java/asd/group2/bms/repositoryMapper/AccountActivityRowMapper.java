@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AccountActivityMapper implements RowMapper<AccountActivity> {
+public class AccountActivityRowMapper implements RowMapper<AccountActivity> {
 
   @Override
   public AccountActivity mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -26,7 +26,6 @@ public class AccountActivityMapper implements RowMapper<AccountActivity> {
     accountActivity.setComment(resultSet.getString("comment"));
 
     Account account = accountRowMapper.mapRow(resultSet, i);
-
     accountActivity.setAccount(account);
 
     return accountActivity;
