@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class TermDepositDetailController {
    * @description: Return all the term deposits of current user
    */
   @GetMapping("/services/term-deposit")
+  @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> getTermDepositDetail(@CurrentLoggedInUser UserPrincipal currentUser) {
     List<TermDepositDetail> termDepositDetailList = termDepositDetailService.getTermDepositDetail(currentUser.getId());
     if (termDepositDetailList != null) {
@@ -43,6 +45,7 @@ public class TermDepositDetailController {
    * @throws Exception
    */
   @PostMapping("/services/term-deposit")
+  @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> makeTermDepositRequest(@CurrentLoggedInUser UserPrincipal currentUser, @RequestBody TermDepositRequest termDepositRequest) throws Exception {
     Long currentUserId = currentUser.getId();
     String email = currentUser.getEmail();
@@ -51,6 +54,7 @@ public class TermDepositDetailController {
   }
 
   @GetMapping("/services/term-deposit/{termDepositId}")
+  @RolesAllowed({"ROLE_USER"})
   public TermDepositDetail getTermDepositDetailById(@PathVariable(name = "termDepositId") String termDepositId) {
     Long fdId = Long.parseLong(termDepositId);
     return termDepositDetailService.getTermDepositDetailById(fdId);
