@@ -171,7 +171,7 @@ public class TermDepositDetailServiceImplTest {
   }
 
   @Test
-  void makeTermDepositRequestNotEnoughBalanceAfterDeductionTest() throws Exception{
+  void makeTermDepositRequestNotEnoughBalanceAfterDeductionTest() throws Exception {
     Long userId = 1L;
     String email = "arpan@gmail.com";
     String firstName = "arpan";
@@ -200,7 +200,7 @@ public class TermDepositDetailServiceImplTest {
   }
 
   @Test
-  void makeTermDepositRequestExceptionTest() throws Exception{
+  void makeTermDepositRequestExceptionTest() throws Exception {
     Long userId = 1L;
     String email = "arpan@gmail.com";
     String firstName = "arpan";
@@ -215,7 +215,7 @@ public class TermDepositDetailServiceImplTest {
     user.setEmail(email);
 
     Account account = new Account();
-
+    account.setBalance(balance);
 
     when(accountService.getAccountByUserId(userId)).thenReturn(account);
 
@@ -301,4 +301,5 @@ public class TermDepositDetailServiceImplTest {
         termDepositDetailService.getTermDepositDetail(userId).size(), "Empty " +
             "Term Deposit list was not returned");
   }
+
 }
