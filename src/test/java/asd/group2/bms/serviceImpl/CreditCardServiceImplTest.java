@@ -78,6 +78,26 @@ public class CreditCardServiceImplTest {
     assertEquals(creditCardNumber, creditCards.getContent().get(0).getCreditCardNumber());
   }
 
+  @Test
+  void getCreditCardListByStatusTestEmpty() {
+    int page = 0;
+    int size = 3;
+    Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+    CreditCardStatus creditCardStatus = CreditCardStatus.PENDING;
+
+    List<CreditCard> cards = new ArrayList<>();
+    Page<CreditCard> pagedCards = new PageImpl<>(cards);
+
+    when(creditCardRepository.findByCreditCardStatusEquals(creditCardStatus,
+        pageable)).thenReturn(pagedCards);
+
+    PagedResponse<CreditCardListResponse> creditCards =
+        creditCardService.getCreditCardListByStatus(creditCardStatus, page,
+            size);
+
+    assertEquals(0, creditCards.getSize());
+  }
+
 
 
 }
