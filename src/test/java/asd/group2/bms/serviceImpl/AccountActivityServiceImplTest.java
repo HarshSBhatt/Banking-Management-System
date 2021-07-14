@@ -4,6 +4,7 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.IAccountActivityRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +22,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -318,6 +325,97 @@ class AccountActivityServiceImplTest {
         responseEntity.getStatusCode().toString(),
         "Fund transfer save data error test was not executed " +
             "properly");
+  }
+
+  @Test
+  void getAccountActivitySuccessTest() {
+    Long userId = 1L;
+    Long accountNumber = 1L;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    UserPrincipal currentUser = new UserPrincipal();
+    currentUser.setId(userId);
+
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+
+    List<AccountActivity> accountActivities = new ArrayList<>();
+
+    when(accountService.getAccountByUserId(userId)).thenReturn(account);
+    when(accountActivityRepository.findAccountActivityByAccountNumber(accountNumber, fromDate, toDate)).thenReturn(accountActivities);
+
+    ResponseEntity<?> responseEntity =
+        accountActivityService.getAccountActivity(currentUser, fromDate, toDate);
+
+    assertEquals(HttpStatus.OK.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Error while fetching account activity");
+  }
+
+  @Test
+  void getAccountActivityInvalidDateTest() {
+    Long userId = 1L;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2023, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    UserPrincipal currentUser = new UserPrincipal();
+    currentUser.setId(userId);
+
+    ResponseEntity<?> responseEntity =
+        accountActivityService.getAccountActivity(currentUser, fromDate, toDate);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Error occurred while testing invalid date test");
+  }
+
+  @Test
+  void getAccountActivityMoreThanThreeMonthsTest() {
+    Long userId = 1L;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 12, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    UserPrincipal currentUser = new UserPrincipal();
+    currentUser.setId(userId);
+
+    ResponseEntity<?> responseEntity =
+        accountActivityService.getAccountActivity(currentUser, fromDate, toDate);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Error occurred while testing more than 3 months activity fetch test");
+  }
+
+  @Test
+  void getAccountActivityServerErrorTest() {
+    Long userId = 1L;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 8, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    UserPrincipal currentUser = new UserPrincipal();
+    currentUser.setId(userId);
+
+    when(accountService.getAccountByUserId(userId)).thenThrow(new RuntimeException());
+
+    ResponseEntity<?> responseEntity =
+        accountActivityService.getAccountActivity(currentUser, fromDate, toDate);
+
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Error occurred while testing activity fetch test");
   }
 
 }
