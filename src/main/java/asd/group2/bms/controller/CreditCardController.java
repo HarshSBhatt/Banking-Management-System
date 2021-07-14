@@ -90,10 +90,11 @@ public class CreditCardController {
   @PutMapping("/services/creditcards/pin")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> creditCardSetPin(
-      @Valid @RequestBody CreditCardSetPinRequest creditCardSetPinRequest) {
+      @CurrentLoggedInUser UserPrincipal currentUser,
+      @Valid @RequestBody CreditCardSetPinRequest creditCardSetPinRequest) throws Exception {
     Boolean isUpdated =
         creditCardService.setCreditCardPin(creditCardSetPinRequest.getCreditCardNumber(),
-            creditCardSetPinRequest.getPin());
+            creditCardSetPinRequest.getPin(), currentUser.getId());
     if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Pin updated successfully!"));
     } else {

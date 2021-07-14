@@ -20,5 +20,5 @@ public interface ICreditCardService {
 
   CreditCard createCreditCard(Account account, Integer requestedTransactionLimit);
 
-  Boolean setCreditCardPin(Long creditCardNumber, String pin);
+  Boolean setCreditCardPin(Long creditCardNumber, String pin, Long id) throws Exception;
 }
