@@ -164,4 +164,20 @@ public class CreditCardServiceImplTest {
 
     assertEquals(123456L, creditCard.getCreditCardNumber());
   }
+
+  @Test
+  void setCreditCardPinTestSuccess() throws Exception {
+    Long card = 123L;
+    String pin = "1234";
+    Long id = 1L;
+    User user = new User();
+    user.setId(1L);
+    Account account = new Account();
+    account.setUser(user);
+    CreditCard creditCard = new CreditCard();
+    creditCard.setAccount(account);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    creditCardService.setCreditCardPin(card, pin, id);
+  }
 }
