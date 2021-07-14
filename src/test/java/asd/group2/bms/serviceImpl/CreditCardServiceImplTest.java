@@ -3,6 +3,7 @@ package asd.group2.bms.serviceImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
+import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.response.CreditCardListResponse;
 import asd.group2.bms.payload.response.PagedResponse;
@@ -23,9 +24,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreditCardServiceImplTest {
@@ -98,6 +100,13 @@ public class CreditCardServiceImplTest {
     assertEquals(0, creditCards.getSize());
   }
 
+  @Test
+  void getCreditCardByCreditCardNumber() {
+    Long creditCardNumber = 123L;
+    when(creditCardRepository.findById(creditCardNumber)).thenReturn(Optional.of(new CreditCard()));
 
+    creditCardService.getCreditCardByCreditCardNumber(creditCardNumber);
+    verify(creditCardRepository, times(1)).findById(any());
+  }
 
 }
