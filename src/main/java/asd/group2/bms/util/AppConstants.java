@@ -17,4 +17,6 @@ public interface AppConstants {
 
   int MINIMUM_BALANCE = 100;
 
+  Long MAX_STATEMENT_RETRIEVE_MONTHS = 3L;
+
 }
