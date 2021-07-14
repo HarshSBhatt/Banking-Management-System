@@ -4,15 +4,26 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.payload.response.ApiResponseWithData;
 import asd.group2.bms.repository.IAccountActivityRepository;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountActivityService;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.util.AppConstants;
+import asd.group2.bms.util.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class AccountActivityServiceImpl implements IAccountActivityService {
@@ -26,12 +37,15 @@ public class AccountActivityServiceImpl implements IAccountActivityService {
   @Autowired
   ICustomEmail customEmail;
 
+  @Autowired
+  Helper helper;
+
   /**
    * @param senderAccountNumber:   sender's account number
    * @param receiverAccountNumber: receiver's account number
    * @param comment:               comment for this transaction
    * @param transactionAmount:     amount to be transferred to and from
-   * @return
+   * @return Success or failure based on execution
    * @throws Exception Any exception that might happen during transaction
    */
   @Override
@@ -112,6 +126,55 @@ public class AccountActivityServiceImpl implements IAccountActivityService {
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went " +
           "wrong while transferring funds! please check details properly"),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * @param currentUser: Current logged in user
+   * @param fromDate:    From date
+   * @param toDate:      To date
+   * @return Account statement data to the user
+   */
+  @Override
+  public ResponseEntity<?> getAccountActivity(UserPrincipal currentUser,
+                                              Date fromDate,
+                                              Date toDate) {
+    try {
+      if (toDate.before(fromDate)) {
+        return new ResponseEntity<>(new ApiResponseWithData(false, "TO DATE " +
+            "can not be set before the FROM DATE", Collections.emptyList()),
+            HttpStatus.BAD_REQUEST);
+      }
+
+      String modifiedFromDate =
+          new SimpleDateFormat("yyyy-MM-dd").format(fromDate);
+      String modifiedToDate =
+          new SimpleDateFormat("yyyy-MM-dd").format(toDate);
+
+      long monthsBetween = ChronoUnit.MONTHS.between(
+          YearMonth.from(LocalDate.parse(modifiedFromDate)),
+          YearMonth.from(LocalDate.parse(modifiedToDate))
+      );
+
+      if (monthsBetween >= AppConstants.MAX_STATEMENT_RETRIEVE_MONTHS) {
+        return new ResponseEntity<>(new ApiResponseWithData(false, "Statement" +
+            " with period more than " + AppConstants.MAX_STATEMENT_RETRIEVE_MONTHS + " months can not " +
+            "retrieved", Collections.emptyList()), HttpStatus.BAD_REQUEST);
+      }
+
+      Long userId = currentUser.getId();
+      Account account = accountService.getAccountByUserId(userId);
+      Long accountNumber = account.getAccountNumber();
+
+      List<AccountActivity> accountActivities =
+          accountActivityRepository.findAccountActivityByAccountNumber(accountNumber, fromDate, toDate);
+
+      return ResponseEntity.ok(new ApiResponseWithData(false, "Account " +
+          "Statement fetched successfully", accountActivities));
+    } catch (Exception e) {
+      return new ResponseEntity<>(new ApiResponseWithData(false, "Something went " +
+          "wrong while generating account statement", Collections.emptyList()),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

@@ -2,6 +2,8 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.repository.IAccountActivityRepository;
+import asd.group2.bms.repositoryMapper.AccountActivityRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,7 +14,9 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class AccountActivityRepositoryImpl extends JdbcDaoSupport implements IAccountActivityRepository {
@@ -30,6 +34,25 @@ public class AccountActivityRepositoryImpl extends JdbcDaoSupport implements IAc
   @PostConstruct
   private void initialize() {
     setDataSource(dataSource);
+  }
+
+  @Override
+  public List<AccountActivity> findAccountActivityByAccountNumber(Long accountNumber,
+                                                                  Date fromDate, Date toDate) {
+    String sql = "SELECT * FROM account_activities aa " +
+        "INNER JOIN accounts a ON aa.account_number = a.account_number " +
+        "INNER JOIN users u ON a.user_id = u.id " +
+        "INNER JOIN user_roles ur ON u.id = ur.user_id " +
+        "INNER JOIN roles ro ON ro.id = ur.role_id " +
+        "WHERE aa.account_number = ? " +
+        "AND NOT (aa.created_at > ? OR aa.created_at < ?)";
+
+    try {
+      return jdbcTemplate.query(sql, new Object[]{accountNumber, toDate, fromDate},
+          new AccountActivityRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
