@@ -54,17 +54,24 @@ public class AccountActivityServiceImpl implements IAccountActivityService {
                                         String comment,
                                         Double transactionAmount) throws Exception {
     try {
+      if (transactionAmount > AppConstants.MAXIMUM_TRANSACTION_LIMIT) {
+        return new ResponseEntity<>(new ApiResponse(false, "Transaction amount " +
+            "exceed maximum transaction amount"),
+            HttpStatus.BAD_REQUEST);
+      }
+
+      if (senderAccountNumber == receiverAccountNumber) {
+        return new ResponseEntity<>(new ApiResponse(false, "Sender and " +
+            "receiver account must be different"),
+            HttpStatus.BAD_REQUEST);
+      }
+
       Account senderAccount =
           accountService.getAccountByAccountNumber(senderAccountNumber);
 
       Account receiverAccount =
           accountService.getAccountByAccountNumber(receiverAccountNumber);
 
-      if (transactionAmount > AppConstants.MAXIMUM_TRANSACTION_LIMIT) {
-        return new ResponseEntity<>(new ApiResponse(false, "Transaction amount " +
-            "exceed maximum transaction amount"),
-            HttpStatus.BAD_REQUEST);
-      }
 
       Double receiverNewBalance =
           receiverAccount.getBalance() + transactionAmount;
