@@ -4,12 +4,10 @@ import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -36,6 +35,12 @@ public class ResignRepositoryImplTest {
 
   @InjectMocks
   private ResignRepositoryImpl resignRepository;
+
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.initMocks(this);
+    ReflectionTestUtils.setField(resignRepository, "jdbcTemplate", jdbcTemplate);
+  }
 
   @Test
   public void findByRequestStatusEqualsTest() {
@@ -67,7 +72,6 @@ public class ResignRepositoryImplTest {
             pageable);
 
     assertEquals(totalPage, requestPage.getTotalPages());
-
   }
 
   @Test
@@ -205,6 +209,7 @@ public class ResignRepositoryImplTest {
 
     assertEquals(0, resign.size());
   }
+
 
   @Test
   public void updateTest() {
