@@ -2,7 +2,10 @@
 
 import { Card } from "antd";
 import { useState } from "react";
+
+//! User Imports
 import RequestCreditCard from "./components/RequestCreditCard";
+import SetPin from "./components/SetPin";
 
 const tabList = [
   {
@@ -22,7 +25,7 @@ const tabList = [
 const contentList = {
   tab1: <RequestCreditCard />,
   tab2: <p>content2</p>,
-  tab3: <p>content3</p>,
+  tab3: <SetPin />,
 };
 
 function CreditCardServices() {
