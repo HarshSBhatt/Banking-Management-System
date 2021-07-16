@@ -1,8 +1,12 @@
 package asd.group2.bms.repositoryImpl;
 
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
+import asd.group2.bms.model.resign.ResignRequest;
+import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.CreditCardRowMapper;
+import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +23,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -71,6 +76,28 @@ public class CreditCardRepositoryImplTest {
             pageable);
 
     assertEquals(totalPage, cardPage.getTotalPages());
+  }
+
+  @Test
+  public void findByIdTestSuccess() {
+    User user = new User();
+    user.setUsername("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setAccountNumber(1L);
+
+    CreditCard creditCard = new CreditCard();
+    creditCard.setAccount(account);
+
+    when(jdbcTemplate.queryForObject(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(CreditCardRowMapper.class)))
+        .thenReturn(creditCard);
+
+    Optional<CreditCard> card = creditCardRepository.findById(1L);
+
+    assertEquals("aditya", card.get().getAccount().getUser().getUsername());
   }
 
 }
