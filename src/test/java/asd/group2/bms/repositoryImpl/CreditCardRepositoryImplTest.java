@@ -3,10 +3,8 @@ package asd.group2.bms.repositoryImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
-import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.CreditCardRowMapper;
-import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -124,4 +122,29 @@ public class CreditCardRepositoryImplTest {
         card.isPresent());
   }
 
+  @Test
+  public void updateTest() {
+    User user = new User();
+    user.setUsername("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setAccountNumber(1L);
+
+    CreditCard creditCard = new CreditCard();
+    creditCard.setAccount(account);
+    creditCard.setCreditCardStatus(CreditCardStatus.PENDING);
+    creditCard.setActive(true);
+    creditCard.setPin("1234");
+    creditCard.setTransactionLimit(1000);
+    creditCard.setCreditCardNumber(12L);
+
+    when(jdbcTemplate.update(ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any()
+    )).thenReturn(1);
+
+    Boolean response = creditCardRepository.update(creditCard);
+    assertEquals(true, response);
+  };
 }
