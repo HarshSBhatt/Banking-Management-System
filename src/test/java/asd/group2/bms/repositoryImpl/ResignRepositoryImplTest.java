@@ -120,4 +120,28 @@ public class ResignRepositoryImplTest {
         resign.isPresent());
   }
 
+  @Test
+  public void findByUserOrderByCreatedAtDescTestSuccess() {
+    User user = new User();
+    user.setUsername("aditya");
+    user.setId(1L);
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setReason("reason 1");
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(jdbcTemplate.query(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(ResignRowMapper.class)))
+        .thenReturn(resigns);
+
+    List<ResignRequest> resign =
+        resignRepository.findByUserOrderByCreatedAtDesc(user);
+    assertEquals("reason 1", resign.get(0).getReason());
+  }
+
 }
