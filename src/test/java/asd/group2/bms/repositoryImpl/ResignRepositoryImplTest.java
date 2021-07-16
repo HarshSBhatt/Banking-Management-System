@@ -9,10 +9,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +36,39 @@ public class ResignRepositoryImplTest {
 
   @InjectMocks
   private ResignRepositoryImpl resignRepository;
+
+  @Test
+  public void findByRequestStatusEqualsTest() {
+    Long resignId = 1L;
+    Integer totalPage = 1;
+
+    when(jdbcTemplate.queryForObject(ArgumentMatchers.anyString(),
+        (Class<Object>) ArgumentMatchers.any())).thenAnswer((invocation) -> {
+      ResultSet rs = Mockito.mock(ResultSet.class);
+      return totalPage;
+    });
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setResignId(resignId);
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(jdbcTemplate.query(
+        ArgumentMatchers.anyString(),
+        ArgumentMatchers.any(ResignRowMapper.class)))
+        .thenReturn(resigns);
+
+    Pageable pageable = PageRequest.of(0, 1, Sort.Direction.ASC,
+        "createdAt");
+
+    Page<ResignRequest> requestPage =
+        resignRepository.findByRequestStatusEquals(RequestStatus.PENDING,
+            pageable);
+
+    assertEquals(totalPage, requestPage.getTotalPages());
+
+  }
 
   @Test
   public void findByUser_IdTestSuccess() {
@@ -166,25 +205,6 @@ public class ResignRepositoryImplTest {
 
     assertEquals(0, resign.size());
   }
-
-//  @Test
-//  public void saveTest() {
-//    ResignRequest resignRequest = new ResignRequest();
-//    PreparedStatementCreator psc = new PreparedStatementCreator() {
-//      @Override
-//      public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-//        return null;
-//      }
-//    };
-//    KeyHolder keyHolder = new GeneratedKeyHolder();
-//
-//    when(jdbcTemplate.update(psc, keyHolder)).thenReturn(1);
-////    when(jdbcTemplate.update((String) Mockito.anyString(),
-////        (Object[])Mockito.anyVararg())).thenReturn(1);
-//    ResignRequest response = resignRepository.save(resignRequest);
-//
-//    assertEquals(1, response);
-//  }
 
   @Test
   public void updateTest() {
