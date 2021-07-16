@@ -41,7 +41,7 @@ public class TermDepositDetailController {
    *
    * @param currentUser
    * @param termDepositRequest
-   * @return
+   * @return ResponseEntity with the status message
    * @throws Exception
    */
   @PostMapping("/services/term-deposit")
@@ -53,6 +53,11 @@ public class TermDepositDetailController {
     return termDepositDetailService.makeTermDepositRequest(currentUserId, email, firstName, termDepositRequest.getInitialAmount(), new Date(), termDepositRequest.getYears());
   }
 
+  /**
+   *
+   * @param termDepositId
+   * @return TermDeposit or ResourceNotFoundException
+   */
   @GetMapping("/services/term-deposit/{termDepositId}")
   @RolesAllowed({"ROLE_USER"})
   public TermDepositDetail getTermDepositDetailById(@PathVariable(name = "termDepositId") String termDepositId) {
