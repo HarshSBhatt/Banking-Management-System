@@ -107,27 +107,6 @@ class AccountActivityServiceImplTest {
     Long receiverAccountNumber = 3L;
     Double transactionAmount = 400000D;
 
-    User senderUser = new User();
-    senderUser.setEmail("userOne@dal.ca");
-    senderUser.setFirstName("userOne");
-
-    User receiverUser = new User();
-    receiverUser.setEmail("userTwo@dal.ca");
-    receiverUser.setFirstName("userTwo");
-
-    Account senderAccount = new Account();
-    senderAccount.setAccountNumber(senderAccountNumber);
-    senderAccount.setBalance(5000D);
-    senderAccount.setUser(senderUser);
-
-    Account receiverAccount = new Account();
-    receiverAccount.setAccountNumber(receiverAccountNumber);
-    receiverAccount.setBalance(10000D);
-    receiverAccount.setUser(receiverUser);
-
-    when(accountService.getAccountByAccountNumber(senderAccountNumber)).thenReturn(senderAccount);
-    when(accountService.getAccountByAccountNumber(receiverAccountNumber)).thenReturn(receiverAccount);
-
     ResponseEntity<?> responseEntity =
         accountActivityService.fundTransfer(senderAccountNumber,
             receiverAccountNumber, "Testing fund transfer", transactionAmount);
@@ -173,6 +152,22 @@ class AccountActivityServiceImplTest {
         responseEntity.getStatusCode().toString(),
         "Fund transfer minimum balance amount test was not executed " +
             "properly");
+  }
+
+  @Test
+  void fundTransferSameSenderAndReceiverTest() throws Exception {
+    Long senderAccountNumber = 3L;
+    Long receiverAccountNumber = 3L;
+    Double transactionAmount = 400D;
+
+    ResponseEntity<?> responseEntity =
+        accountActivityService.fundTransfer(senderAccountNumber,
+            receiverAccountNumber, "Testing fund transfer", transactionAmount);
+
+    assertEquals(HttpStatus.BAD_REQUEST.toString(),
+        responseEntity.getStatusCode().toString(),
+        "Fund transfer same sender and receiver test was not " +
+            "executed properly");
   }
 
   @Test
