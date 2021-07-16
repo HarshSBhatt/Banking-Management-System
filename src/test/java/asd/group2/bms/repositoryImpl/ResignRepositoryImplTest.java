@@ -88,9 +88,6 @@ public class ResignRepositoryImplTest {
     resignRequest.setUser(user);
     resignRequest.setReason("reason 1");
 
-    List<ResignRequest> resigns = new ArrayList<>();
-    resigns.add(resignRequest);
-
     when(jdbcTemplate.queryForObject(
         ArgumentMatchers.anyString(),
         (Object[]) ArgumentMatchers.any(),
@@ -100,6 +97,27 @@ public class ResignRepositoryImplTest {
     Optional<ResignRequest> resign = resignRepository.findById(1L);
 
     assertEquals("reason 1", resign.get().getReason());
+  }
+
+  @Test
+  public void findByIdTestFail() {
+    User user = new User();
+    user.setUsername("aditya");
+    user.setId(1L);
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+
+    when(jdbcTemplate.queryForObject(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(ResignRowMapper.class)))
+        .thenThrow(new EmptyResultDataAccessException(1));
+
+    Optional<ResignRequest> resign = resignRepository.findById(1L);
+
+    assertEquals(false,
+        resign.isPresent());
   }
 
 }
