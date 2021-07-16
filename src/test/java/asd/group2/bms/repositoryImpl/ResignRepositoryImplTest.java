@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ResignRepositoryImplTest {
@@ -196,8 +197,6 @@ public class ResignRepositoryImplTest {
     resignRequest.setReason("reason");
     resignRequest.setUser(user);
 
-//    when(jdbcTemplate.update(ArgumentMatchers.anyString(),
-//        (Object[]) ArgumentMatchers.any())).thenReturn(1);
     when(jdbcTemplate.update(ArgumentMatchers.any(),
         (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(),
         (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any()
@@ -206,6 +205,18 @@ public class ResignRepositoryImplTest {
     Boolean response = resignRepository.update(resignRequest);
     assertEquals(true, response);
 
+  }
+
+  @Test
+  public void deleteTest() {
+    Long resignId = 1L;
+
+    when(jdbcTemplate.update(ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any())).thenReturn(1);
+
+    resignRepository.delete(resignId);
+
+    verify(jdbcTemplate, times(1)).update(anyString(), (Object) any());
   }
 
 }
