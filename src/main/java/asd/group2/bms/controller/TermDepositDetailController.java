@@ -23,7 +23,7 @@ public class TermDepositDetailController {
   ITermDepositDetailService termDepositDetailService;
 
   /**
-   * @description: Return all the term deposits of current user
+   * @return Return all the term deposits of current user
    */
   @GetMapping("/services/term-deposit")
   @RolesAllowed({"ROLE_USER"})
@@ -39,10 +39,10 @@ public class TermDepositDetailController {
 
   /**
    *
-   * @param currentUser
-   * @param termDepositRequest
+   * @param currentUser: current logged in user
+   * @param termDepositRequest: request body of term deposit
    * @return ResponseEntity with the status message
-   * @throws Exception
+   * @throws Exception if something goes wrong exception will be thrown
    */
   @PostMapping("/services/term-deposit")
   @RolesAllowed({"ROLE_USER"})
@@ -55,7 +55,7 @@ public class TermDepositDetailController {
 
   /**
    *
-   * @param termDepositId
+   * @param termDepositId: id of the term deposit
    * @return TermDeposit or ResourceNotFoundException
    */
   @GetMapping("/services/term-deposit/{termDepositId}")
