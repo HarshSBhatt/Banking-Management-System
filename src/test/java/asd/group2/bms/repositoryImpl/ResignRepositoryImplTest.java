@@ -1,5 +1,6 @@
 package asd.group2.bms.repositoryImpl;
 
+import asd.group2.bms.model.resign.RequestStatus;
 import asd.group2.bms.model.resign.ResignRequest;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.ResignRowMapper;
@@ -8,15 +9,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -162,6 +172,48 @@ public class ResignRepositoryImplTest {
         resignRepository.findByUserOrderByCreatedAtDesc(user);
 
     assertEquals(0, resign.size());
+  }
+
+//  @Test
+//  public void saveTest() {
+//    ResignRequest resignRequest = new ResignRequest();
+//    PreparedStatementCreator psc = new PreparedStatementCreator() {
+//      @Override
+//      public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+//        return null;
+//      }
+//    };
+//    KeyHolder keyHolder = new GeneratedKeyHolder();
+//
+//    when(jdbcTemplate.update(psc, keyHolder)).thenReturn(1);
+////    when(jdbcTemplate.update((String) Mockito.anyString(),
+////        (Object[])Mockito.anyVararg())).thenReturn(1);
+//    ResignRequest response = resignRepository.save(resignRequest);
+//
+//    assertEquals(1, response);
+//  }
+
+  @Test
+  public void updateTest() {
+    User user = new User();
+    user.setUsername("aditya");
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setResignId(1L);
+    resignRequest.setRequestStatus(RequestStatus.PENDING);
+    resignRequest.setDate(new Date());
+    resignRequest.setReason("reason");
+    resignRequest.setUser(user);
+
+//    when(jdbcTemplate.update(ArgumentMatchers.anyString(),
+//        (Object[]) ArgumentMatchers.any())).thenReturn(1);
+    when(jdbcTemplate.update(ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(),
+        (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any()
+        )).thenReturn(1);
+
+    Boolean response = resignRepository.update(resignRequest);
+    assertEquals(true, response);
+
   }
 
 }
