@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +52,30 @@ public class ResignRepositoryImplTest {
 
     List<ResignRequest> resign = resignRepository.findByUser_Id(1L);
     assertEquals("reason 1", resign.get(0).getReason());
+  }
+
+  @Test
+  public void findByUser_IdTestFail() {
+    User user = new User();
+    user.setUsername("aditya");
+    user.setId(1L);
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setReason("reason 1");
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(jdbcTemplate.query(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(ResignRowMapper.class)))
+        .thenThrow(new EmptyResultDataAccessException(1));
+
+    List<ResignRequest> resign = resignRepository.findByUser_Id(1L);
+
+    assertEquals(0, resign.size());
   }
 
 }
