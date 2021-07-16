@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,7 +63,6 @@ public class ResignRepositoryImplTest {
 
     ResignRequest resignRequest = new ResignRequest();
     resignRequest.setUser(user);
-    resignRequest.setReason("reason 1");
 
     List<ResignRequest> resigns = new ArrayList<>();
     resigns.add(resignRequest);
@@ -76,6 +76,30 @@ public class ResignRepositoryImplTest {
     List<ResignRequest> resign = resignRepository.findByUser_Id(1L);
 
     assertEquals(0, resign.size());
+  }
+
+  @Test
+  public void findByIdTestSuccess() {
+    User user = new User();
+    user.setUsername("aditya");
+    user.setId(1L);
+
+    ResignRequest resignRequest = new ResignRequest();
+    resignRequest.setUser(user);
+    resignRequest.setReason("reason 1");
+
+    List<ResignRequest> resigns = new ArrayList<>();
+    resigns.add(resignRequest);
+
+    when(jdbcTemplate.queryForObject(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(ResignRowMapper.class)))
+        .thenReturn(resignRequest);
+
+    Optional<ResignRequest> resign = resignRepository.findById(1L);
+
+    assertEquals("reason 1", resign.get().getReason());
   }
 
 }
