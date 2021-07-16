@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -98,6 +99,29 @@ public class CreditCardRepositoryImplTest {
     Optional<CreditCard> card = creditCardRepository.findById(1L);
 
     assertEquals("aditya", card.get().getAccount().getUser().getUsername());
+  }
+
+  @Test
+  public void findByIdTestFail() {
+    User user = new User();
+    user.setUsername("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setAccountNumber(1L);
+
+    CreditCard creditCard = new CreditCard();
+    creditCard.setAccount(account);
+
+    when(jdbcTemplate.queryForObject(
+        ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any(),
+        ArgumentMatchers.any(CreditCardRowMapper.class)))
+        .thenThrow(new EmptyResultDataAccessException(1));
+
+    Optional<CreditCard> card = creditCardRepository.findById(1L);
+
+    assertEquals(false,
+        card.isPresent());
   }
 
 }
