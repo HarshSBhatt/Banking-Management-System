@@ -96,6 +96,28 @@ class AccountServiceImplTest {
   }
 
   @Test
+  void getUserAccountListByStatusWithEmptyListTest() {
+    AccountStatus accountStatus = AccountStatus.PENDING;
+    int page = 0;
+    int size = 3;
+
+    Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+
+    List<User> users = new ArrayList<>();
+
+    Page<User> pagedUsers = new PageImpl<>(users);
+
+    when(userRepository.findByAccountStatusEquals(accountStatus, pageable)).thenReturn(pagedUsers);
+
+    PagedResponse<User> accounts =
+        accountService.getUserAccountListByStatus(accountStatus,
+            page, size);
+
+    assertEquals(0, accounts.getContent().size(), "Wrong " +
+        "list was returned");
+  }
+
+  @Test
   void createAccountTest() throws MessagingException,
       UnsupportedEncodingException {
     User user = new User();
