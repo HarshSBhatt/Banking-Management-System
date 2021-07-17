@@ -109,13 +109,18 @@ public class CreditCardController {
 
   @PutMapping("/services/creditCards/PayCreditCard")
   @RolesAllowed({"ROLE_USER"})
-  public Boolean payCreditCard(
+  public ResponseEntity<?> payCreditCard(
           @CurrentLoggedInUser UserPrincipal currentUser)
   {
     Long userid = currentUser.getId();
     Account account = accountService.getAccountByUserId(userid);
     Long accountNumber = account.getAccountNumber();
-    return creditCardBillService.payCreditCardBill(creditCardBillService.getCreditCardByAccountNumber(accountNumber));
-
+    Boolean ispaid =  creditCardBillService.payCreditCardBill(creditCardBillService.getCreditCardByAccountNumber(accountNumber));
+    if (ispaid) {
+      return ResponseEntity.ok(new ApiResponse(true, "Bill paid successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while paying bill balance might be insufficient"),
+              HttpStatus.BAD_REQUEST);
+    }
   }
 }
