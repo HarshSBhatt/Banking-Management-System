@@ -21,7 +21,7 @@ const InnerTitle = ({ title }) => {
 
 function Profile() {
   const {
-    state: { currentUser, role },
+    state: { currentUser, role, authToken },
   } = useContext(AppContext);
 
   const { push } = useHistory();
@@ -54,7 +54,11 @@ function Profile() {
   const fetchUserProfile = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/users/${bankUsername}`);
+      const response = await api.get(`/users/${bankUsername}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const { data } = response;
       setUserData(data);
     } catch (err) {
