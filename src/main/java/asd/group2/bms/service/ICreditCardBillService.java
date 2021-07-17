@@ -11,11 +11,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface ICreditCardBillService {
 
-     static Boolean payCreditCardBill(Long accountNumber) {
-        return null;
-    }
+      Boolean payCreditCardBill(Long accountNumber);
 
-     static Long getCreditCardByAccountNumber(Long accountNumber) {
-        return null;
-    }
+      Long getCreditCardByAccountNumber(Long accountNumber);
 }

@@ -26,13 +26,15 @@ public class CreditCardBillRepositoryImpl extends JdbcDaoSupport implements Cred
     private void initialize() {
         setDataSource(dataSource);
     }
+
+    @Override
     public Long getCreditCardNumber(Long accountNumber) {
         String sql = "select credit_card_number from credit_cards where account_number = ?";
         Long credit_card_number = jdbcTemplate.queryForObject(sql, new Object[]{accountNumber}, Long.class);
         return credit_card_number;
     }
 
-
+    @Override
     public Boolean payCreditCardBill(Long CreditCardNumber,Long accountNumber) {
         String getBalance = "select balance from accounts where account_number = ?";
         Double balance = jdbcTemplate.queryForObject(getBalance,new Object[]{accountNumber},Double.class);

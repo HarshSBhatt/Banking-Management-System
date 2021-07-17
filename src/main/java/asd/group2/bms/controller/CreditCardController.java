@@ -83,7 +83,7 @@ public class CreditCardController {
     return creditCardService.createCreditCard(account, requestedTransactionLimit);
   }
 
-  @PutMapping("/services/creditcards/PayCreditCard")
+  @PutMapping("/services/creditCards/PayCreditCard")
   @RolesAllowed({"ROLE_USER"})
   public Boolean payCreditCard(
           @CurrentLoggedInUser UserPrincipal currentUser)
