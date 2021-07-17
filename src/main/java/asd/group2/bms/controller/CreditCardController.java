@@ -2,6 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
+import asd.group2.bms.model.cards.credit.CreditCardBill;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.request.CreditCardRequest;
 import asd.group2.bms.payload.request.CreditCardSetPinRequest;
@@ -107,16 +108,26 @@ public class CreditCardController {
     }
   }
 
-  @PutMapping("/services/creditCards/PayCreditCard")
+  @GetMapping("/services/creditCards/ShowBills")
+  @RolesAllowed({"ROLE_USER"})
+  public CreditCardBill showBills(@RequestParam(value = "creditCardNo") Long creditCardNo)
+  {
+    return creditCardBillService.getBills(creditCardNo);
+  }
+
+
+  @PutMapping("/services/creditCards/ShowBills/PayCreditCard")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> payCreditCard(
-          @CurrentLoggedInUser UserPrincipal currentUser)
+          @RequestParam(value = "billId") Long billId,
+          @CurrentLoggedInUser UserPrincipal currentUser
+         )
   {
     Long userid = currentUser.getId();
     Account account = accountService.getAccountByUserId(userid);
     Long accountNumber = account.getAccountNumber();
-    Boolean ispaid =  creditCardBillService.payCreditCardBill(creditCardBillService.getCreditCardByAccountNumber(accountNumber));
-    if (ispaid) {
+    Boolean isPaid =  creditCardBillService.payCreditCardBill(accountNumber,billId);
+    if (isPaid) {
       return ResponseEntity.ok(new ApiResponse(true, "Bill paid successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while paying bill balance might be insufficient"),
