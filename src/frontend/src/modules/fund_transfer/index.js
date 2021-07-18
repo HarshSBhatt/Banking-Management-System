@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //! Ant Imports
 
@@ -12,10 +12,14 @@ import api from "common/api";
 import Loading from "components/Loading";
 import TextArea from "antd/lib/input/TextArea";
 import ServerError from "components/ServerError";
+import { AppContext } from "AppContext";
 
 const { Title } = Typography;
 
 function FundTransfer() {
+  const {
+    state: { authToken },
+  } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
   const [err, setErr] = useState(false);
@@ -27,40 +31,51 @@ function FundTransfer() {
 
   const onFinish = async (values) => {
     setLoading(true);
-    try {
-      const response = await api.post("/account/activity", values);
-      const { data } = response;
-      if (data?.success) {
-        toast({
-          message: data.message,
-          type: "success",
-        });
-        form.resetFields();
+    if (values.senderAccountNumber === Number(values.receiverAccountNumber)) {
+      toast({
+        message: "Sender and Receiver must be different",
+        type: "info",
+      });
+    } else {
+      try {
+        const response = await api.post("/account/activity", values);
+        const { data } = response;
+        if (data?.success) {
+          toast({
+            message: data.message,
+            type: "success",
+          });
+          form.resetFields();
+        }
+      } catch (err) {
+        if (err.response?.data) {
+          toast({
+            message:
+              err.response.data.message === "Bad credentials"
+                ? "Please check your credentials"
+                : err.response.data.message,
+            type: "error",
+          });
+        } else {
+          toast({
+            message: "Something went wrong!",
+            type: "error",
+          });
+        }
       }
-    } catch (err) {
-      if (err.response?.data) {
-        toast({
-          message:
-            err.response.data.message === "Bad credentials"
-              ? "Please check your credentials"
-              : err.response.data.message,
-          type: "error",
-        });
-      } else {
-        toast({
-          message: "Something went wrong!",
-          type: "error",
-        });
-      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchUserAccount = async () => {
     setLoading(true);
     setFormLoading(true);
     try {
-      const response = await api.get(`/account/me`);
+      const response = await api.get(`/account/me`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const { data } = response;
       setAccountData(data);
     } catch (err) {
@@ -82,6 +97,7 @@ function FundTransfer() {
 
   useEffect(() => {
     fetchUserAccount();
+    // eslint-disable-next-line
   }, []);
 
   if (formLoading) return <Loading />;

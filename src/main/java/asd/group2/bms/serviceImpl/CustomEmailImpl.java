@@ -153,4 +153,5 @@ public class CustomEmailImpl implements ICustomEmail {
     helper.setText(content, true);
     javaMailSender.send(message);
   }
+
 }

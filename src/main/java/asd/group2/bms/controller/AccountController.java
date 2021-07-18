@@ -105,5 +105,4 @@ public class AccountController {
       return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
     }
   }
-
 }

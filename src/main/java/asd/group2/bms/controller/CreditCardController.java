@@ -4,6 +4,7 @@ import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.request.CreditCardRequest;
+import asd.group2.bms.payload.request.CreditCardSetPinRequest;
 import asd.group2.bms.payload.request.UpdateCreditCardStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.CreditCardListResponse;
@@ -80,5 +81,25 @@ public class CreditCardController {
     Account account = accountService.getAccountByUserId(userId);
 
     return creditCardService.createCreditCard(account, requestedTransactionLimit);
+  }
+
+  /**
+   * @param creditCardSetPinRequest: Request to set pin for credit card
+   * @return True or false for updation
+   */
+  @PutMapping("/services/creditcards/pin")
+  @RolesAllowed({"ROLE_USER"})
+  public ResponseEntity<?> creditCardSetPin(
+      @CurrentLoggedInUser UserPrincipal currentUser,
+      @Valid @RequestBody CreditCardSetPinRequest creditCardSetPinRequest) throws Exception {
+    Boolean isUpdated =
+        creditCardService.setCreditCardPin(creditCardSetPinRequest.getCreditCardNumber(),
+            creditCardSetPinRequest.getPin(), currentUser.getId());
+    if (isUpdated) {
+      return ResponseEntity.ok(new ApiResponse(true, "Pin updated successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing pin"),
+          HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -103,7 +103,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepositor
     int total =
         jdbcTemplate.queryForObject(
             rowCountSql,
-            new Object[]{accountStatus.name()},
+            new Object[]{accountStatus.ordinal()},
             (rs, rowNum) -> rs.getInt(1)
         );
 
@@ -114,7 +114,7 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepositor
 
     List<User> users = jdbcTemplate.query(
         querySql,
-        new Object[]{accountStatus.name()}, new UserRowMapper()
+        new Object[]{accountStatus.ordinal()}, new UserRowMapper()
     );
 
     return new PageImpl<>(users, pageable, total);
@@ -193,8 +193,8 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepositor
         roleRepository.findByName(user.getRoles().iterator().next().getName()).orElseThrow(() -> new ResourceNotFoundException("Role", "role", "Role not found"));
 
     String roleSql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
-    jdbcTemplate.update(roleSql, new Object[]{keyHolder.getKey().longValue(),
-        role.getId()});
+    jdbcTemplate.update(roleSql, keyHolder.getKey().longValue(),
+        role.getId());
 
     return user;
   }

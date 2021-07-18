@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -111,4 +115,37 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
     return new ArrayList<>();
   }
 
+  /**
+   *
+   * @param termDepositDetail
+   * @return updated termDepositDetail
+   */
+  @Override
+  public Boolean closeTermDepositeDetail(TermDepositDetail termDepositDetail){
+
+
+    float interestRate = AppConstants.SAVING_INTEREST_VALUE;
+    Account account = termDepositDetail.getAccount();
+    Date startDate1 = termDepositDetail.getStartDate();
+    LocalDate endDate = LocalDate.now();
+
+    // logic of calculating amount
+    Long duration = ChronoUnit.MONTHS.between(LocalDate.parse(startDate1.toString()), endDate);
+
+    Double maturityAmount =
+        termDepositDetail.getInitialAmount() +
+            Math.pow((1 + (interestRate / 12)), duration);
+
+    // Crediting term deposit money to account
+    Double accountBalance = account.getBalance() + maturityAmount;
+    account.setBalance(accountBalance);
+
+    accountService.updateAccountBalance(account);
+
+    // changing status of term deposit
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.PREMATURE);
+    termDepositDetail.setMaturityDate(new Date());
+
+    return termDepositDetailRepository.update(termDepositDetail);
+  }
 }

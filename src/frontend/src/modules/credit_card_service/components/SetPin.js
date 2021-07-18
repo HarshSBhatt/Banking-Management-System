@@ -9,22 +9,21 @@ import { Form, Input, Button } from "antd";
 import { toast } from "common/utils";
 import api from "common/api";
 
-function SetPin({ debitCardNumber }) {
+function SetPin() {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
     setLoading(true);
-    const { pin } = values;
-    values.debitCardNumber = debitCardNumber;
-    if (isNaN(pin)) {
+    const { creditCardNumber, pin } = values;
+    if (isNaN(pin) || isNaN(creditCardNumber)) {
       toast({
-        message: "Pin must be a digit",
+        message: "Pin and Card Number must be a digit",
         type: "error",
       });
     } else {
       try {
-        const response = await api.put("/services/debitcard/pin", values);
+        const response = await api.put("/services/creditcards/pin", values);
         const { data } = response;
         if (data?.success) {
           toast({
@@ -58,6 +57,15 @@ function SetPin({ debitCardNumber }) {
         className="login-form form"
         onFinish={onFinish}
       >
+        <Form.Item
+          name="creditCardNumber"
+          rules={[
+            { required: true, message: "This field is required" },
+            { len: 16, message: "Card number must be of 16 numbers" },
+          ]}
+        >
+          <Input placeholder="Enter Card Number" />
+        </Form.Item>
         <Form.Item
           name="pin"
           rules={[

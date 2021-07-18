@@ -19,9 +19,9 @@ const tabList = [
 ];
 
 const contentList = {
-  tab1: <p>content1</p>,
-  tab2: <p>content2</p>,
-  tab3: <p>content3</p>,
+  tab1: <p>Coming Soon</p>,
+  tab2: <p>Coming Soon</p>,
+  tab3: <p>Coming Soon</p>,
 };
 
 function ChequeServices() {

@@ -16,4 +16,6 @@ public interface ITermDepositDetailService {
 
   List<TermDepositDetail> getTermDepositDetail(Long userId);
 
+  Boolean closeTermDepositeDetail(TermDepositDetail termDepositDetail);
+
 }
