@@ -126,11 +126,11 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
     float interestRate = AppConstants.SAVING_INTEREST_VALUE;
     Account account = termDepositDetail.getAccount();
-    Date startDate1 = termDepositDetail.getStartDate();
+    Date startDate = termDepositDetail.getStartDate();
     LocalDate endDate = LocalDate.now();
 
     // logic of calculating amount
-    Long duration = ChronoUnit.MONTHS.between(LocalDate.parse(startDate1.toString()), endDate);
+    Long duration = ChronoUnit.MONTHS.between(LocalDate.parse(startDate.toString()), endDate);
 
     Double maturityAmount =
         termDepositDetail.getInitialAmount() +
