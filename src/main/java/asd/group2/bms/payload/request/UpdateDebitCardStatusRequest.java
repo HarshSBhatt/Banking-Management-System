@@ -6,6 +6,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Description: Structure of debit card status body request
+ */
 public class UpdateDebitCardStatusRequest {
   @NotNull(message = "Debit Card Number is required")
   private Long debitCardNumber;

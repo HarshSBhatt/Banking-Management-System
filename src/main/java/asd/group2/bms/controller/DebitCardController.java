@@ -71,6 +71,11 @@ public class DebitCardController {
     }
   }
 
+  /**
+   *
+   * @param updateDebitCardStatusRequest: Status of the debit card to update
+   * @return Success or Failure of update
+   */
   @PutMapping("/services/debitCard/status")
   @RolesAllowed({"\"ROLE_MANAGER\", \"ROLE_EMPLOYEE\""})
   public ResponseEntity<?> updateDebitCardRequestStatus(
