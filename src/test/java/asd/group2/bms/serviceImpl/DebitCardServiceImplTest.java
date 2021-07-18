@@ -7,6 +7,8 @@ import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.IDebitCardRepository;
+import asd.group2.bms.util.CardDetails;
+import asd.group2.bms.util.Helper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,11 +28,30 @@ class DebitCardServiceImplTest {
   @Mock
   IDebitCardRepository debitCardRepository;
 
+  @Mock
+  Helper helper;
+
   @InjectMocks
   DebitCardServiceImpl debitCardService;
 
   @Test
   void createDebitCardTest() {
+    Account account = new Account();
+    account.setAccountNumber(1L);
+    DebitCard debitcard = new DebitCard();
+    debitcard.setDebitCardNumber(6L);
+    CardDetails cardDetails = new CardDetails();
+    cardDetails.setCardNumber("123456789");
+    cardDetails.setExpiryMonth("12");
+    cardDetails.setExpiryYear("2022");
+    cardDetails.setPin("1234");
+    cardDetails.setCvv("123");
+
+    when(helper.generateCardDetails()).thenReturn(cardDetails);
+    when(debitCardRepository.save(any())).thenReturn(debitcard);
+
+    DebitCard debitCard = debitCardService.createDebitCard(account);
+    assertEquals(6L, debitCard.getDebitCardNumber());
 
   }
 
