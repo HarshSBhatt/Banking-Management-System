@@ -2,6 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
+import asd.group2.bms.payload.request.UpdateDebitCardStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.IDebitCardService;
@@ -12,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api")
@@ -64,6 +67,20 @@ public class DebitCardController {
       return ResponseEntity.ok(new ApiResponse(true, "Pin is updated successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing pin"),
+          HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PutMapping("/services/debitCard/status")
+  @RolesAllowed({"\"ROLE_MANAGER\", \"ROLE_EMPLOYEE\""})
+  public ResponseEntity<?> updateDebitCardRequestStatus(
+      @Valid @RequestBody UpdateDebitCardStatusRequest updateDebitCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
+    Boolean isUpdated =
+        debitCardService.setDebitCardRequestStatus(updateDebitCardStatusRequest.getDebitCardNumber(), updateDebitCardStatusRequest.getDebitCardStatus());
+    if (isUpdated) {
+      return ResponseEntity.ok(new ApiResponse(true, "Debit Card request status changed successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Debit Card request status!"),
           HttpStatus.BAD_REQUEST);
     }
   }
