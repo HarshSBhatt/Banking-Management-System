@@ -1,8 +1,6 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
-import asd.group2.bms.model.cards.credit.CreditCard;
-import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.model.user.User;
@@ -128,7 +126,6 @@ class DebitCardServiceImplTest {
     when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
 
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
-
     assertTrue(updatePin, "Pin not updated");
   }
 
@@ -196,5 +193,23 @@ class DebitCardServiceImplTest {
             debitCardStatus);
     assertFalse(updateStatus,"Status updated");
   }
+
+  @Test
+  void getDebitCardByAccountNumberTest(){
+    Long debitCardNumber = 6L;
+    DebitCard debitCard = new DebitCard();
+    Long accountNumber = 123L;
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    debitCard.setAccount(account);
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    when(debitCardRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(debitCard));
+
+    DebitCard fetchDebitCard = debitCardService.getDebitCardByAccountNumber(accountNumber);
+
+    assertEquals(debitCardNumber, fetchDebitCard.getDebitCardNumber(), "Wrong debitCard is returned");
+  }
+
 
 }
