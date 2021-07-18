@@ -1,6 +1,11 @@
 package asd.group2.bms.serviceImpl;
 
+import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.cards.credit.CreditCard;
+import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.model.cards.debit.DebitCard;
+import asd.group2.bms.model.cards.debit.DebitCardStatus;
+import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.IDebitCardRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class DebitCardServiceImplTest {
@@ -123,6 +130,50 @@ class DebitCardServiceImplTest {
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
 
     assertFalse(updatePin, "Pin updated");
+  }
+
+  @Test
+  void setDebitCardRequestStatusSuccessTest(){
+    DebitCard debitCard = new DebitCard();
+    Long debitCardNumber = 6L;
+    User user = new User();
+    user.setEmail("abc123");
+    user.setFirstName("Geetanjali");
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    DebitCardStatus debitCardStatus = DebitCardStatus.ACTIVE;
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    when(debitCardRepository.findById(any())).thenReturn(Optional.of(debitCard));
+    when(debitCardRepository.update(any())).thenReturn(true);
+
+    Boolean updateStatus =
+        debitCardService.setDebitCardRequestStatus(debitCardNumber,
+        debitCardStatus);
+    assertTrue(updateStatus,"Status not updated");
+  }
+
+  @Test
+  void setDebitCardRequestStatusFailureTest(){
+    DebitCard debitCard = new DebitCard();
+    Long debitCardNumber = 6L;
+    User user = new User();
+    user.setEmail("abc123");
+    user.setFirstName("Geetanjali");
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    DebitCardStatus debitCardStatus = DebitCardStatus.ACTIVE;
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    when(debitCardRepository.findById(any())).thenReturn(Optional.of(debitCard));
+    when(debitCardRepository.update(any())).thenReturn(false);
+
+    Boolean updateStatus =
+        debitCardService.setDebitCardRequestStatus(debitCardNumber,
+            debitCardStatus);
+    assertFalse(updateStatus,"Status updated");
   }
 
 }
