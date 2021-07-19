@@ -12,6 +12,7 @@ import asd.group2.bms.repository.IUserRepository;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.service.IDebitCardService;
+import asd.group2.bms.util.Helper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,9 @@ class AccountServiceImplTest {
 
   @Mock
   ICustomEmail customEmail;
+
+  @Mock
+  Helper helper;
 
   @Mock
   IDebitCardService debitCardService;
@@ -131,6 +135,7 @@ class AccountServiceImplTest {
     DebitCard debitCard = new DebitCard();
     debitCard.setDebitCardNumber(1L);
 
+    when(helper.generateRandomDigits(10)).thenReturn("1234");
     when(accountRepository.save(any(Account.class))).thenReturn(accountToBeCreated);
     when(debitCardService.createDebitCard(accountToBeCreated)).thenReturn(debitCard);
 
