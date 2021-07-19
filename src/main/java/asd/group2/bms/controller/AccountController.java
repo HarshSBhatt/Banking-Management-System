@@ -56,10 +56,8 @@ public class AccountController {
    */
   @GetMapping("/account/user")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
-  public PagedResponse<User> getUserAccountListByStatus(
-      @RequestParam(value = "accountStatus") AccountStatus accountStatus,
-      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+  public PagedResponse<User> getUserAccountListByStatus(@RequestParam(value = "accountStatus") AccountStatus accountStatus, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+
     return accountService.getUserAccountListByStatus(accountStatus, page, size);
   }
 
@@ -72,6 +70,7 @@ public class AccountController {
   @GetMapping("/account/me")
   @RolesAllowed({"ROLE_USER"})
   public AccountDetailResponse getAccountDetails(@CurrentLoggedInUser UserPrincipal currentUser) {
+
     return accountService.getAccountDetails(currentUser);
   }
 
@@ -86,6 +85,7 @@ public class AccountController {
   @PostMapping("/account/user")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> createUserAccount(@Valid @RequestBody AccountRequest accountRequest) throws MessagingException, UnsupportedEncodingException {
+
     String email = accountRequest.getEmail();
     Double balance = accountRequest.getBalance();
     int creditScore = accountRequest.getCreditScore();
@@ -95,8 +95,7 @@ public class AccountController {
     Boolean isUpdated = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
     User user = userService.getUserByEmail(email);
     if (!isUpdated) {
-      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"),
-          HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"), HttpStatus.BAD_REQUEST);
     }
     AccountType accountType = user.getRequestedAccountType();
     accountService.createAccount(user, accountType, balance, creditScore);
@@ -109,12 +108,12 @@ public class AccountController {
   }
 
   /**
-   *  This will deposit the given money to the account
+   * This will deposit the given money to the account
    *
-   * @param depositWithdrawalRequest    Request body containing all necessary data
-   * @return  success or failure response with appropriate message
-   * @throws MessagingException             This will throw MessagingException
-   * @throws UnsupportedEncodingException   This will throw UnsupportedEncodingException
+   * @param depositWithdrawalRequest Request body containing all necessary data
+   * @return success or failure response with appropriate message
+   * @throws MessagingException           This will throw MessagingException
+   * @throws UnsupportedEncodingException This will throw UnsupportedEncodingException
    */
   @PostMapping("/account/user/deposit")
   @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
@@ -130,11 +129,43 @@ public class AccountController {
     Boolean isUpdated = accountService.updateAccountBalance(account);
 
     if (isUpdated) {
-      return new ResponseEntity<>(new ApiResponse(true,
-          "Money deposited successfully."), HttpStatus.OK);
+      return new ResponseEntity<>(new ApiResponse(true, "Money deposited successfully."), HttpStatus.OK);
     } else {
-      return new ResponseEntity<>(new ApiResponse(false,
-          "Money deposit not successful."), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(new ApiResponse(false, "Money deposit not successful."), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * This will withdraw the given amount from account
+   *
+   * @param depositWithdrawalRequest Request body containing all necessary data
+   * @return success or failure response with appropriate message
+   * @throws MessagingException           This will throw MessagingException
+   * @throws UnsupportedEncodingException This will throw UnsupportedEncodingException
+   */
+  @PostMapping("/account/user/withdrawal")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> withdrawalMoney(@Valid @RequestBody DepositWithdrawalRequest depositWithdrawalRequest) throws MessagingException, UnsupportedEncodingException {
+
+    Long accountNumber = depositWithdrawalRequest.getAccountNumber();
+    Double withdrawal = depositWithdrawalRequest.getBalance();
+    Account account = accountService.getAccountByAccountNumber(accountNumber);
+    Double balance = account.getBalance();
+
+    if (withdrawal > balance) {
+
+      return new ResponseEntity<>(new ApiResponse(false, "Insufficient balance."), HttpStatus.BAD_REQUEST);
+    } else {
+
+      Double updatedBalance = balance - withdrawal;
+      account.setBalance(updatedBalance);
+      Boolean isUpdated = accountService.updateAccountBalance(account);
+
+      if (isUpdated) {
+        return new ResponseEntity<>(new ApiResponse(true, "Money withdrawn" + " successfully."), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(new ApiResponse(false, "Money withdrawal " + "not successful."), HttpStatus.BAD_REQUEST);
+      }
     }
   }
 }
