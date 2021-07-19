@@ -16,4 +16,5 @@ public interface ITermDepositDetailService {
 
   List<TermDepositDetail> getTermDepositDetail(Long userId);
 
+  Boolean checkActiveTermDeposit(List<TermDepositDetail> termDepositDetailList);
 }

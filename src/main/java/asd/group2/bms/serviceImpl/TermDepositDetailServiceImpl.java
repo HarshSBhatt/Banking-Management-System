@@ -111,4 +111,14 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
     return new ArrayList<>();
   }
 
+  @Override
+  public Boolean checkActiveTermDeposit(List<TermDepositDetail> termDepositDetailList){
+    for (int i = 0; i < termDepositDetailList.size(); i++) {
+      if(termDepositDetailList.get(i).getTermDepositStatus()==TermDepositStatus.ACTIVE){
+        return true;
+      }
+    }
+    return false;
+  }
+
 }
