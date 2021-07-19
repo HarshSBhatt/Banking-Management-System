@@ -1,10 +1,5 @@
 image: node:latest
 
-cache:
-  key: "alpine"
-  paths:
-    - node_modules/
-
 stages:
   - build
   - test
