@@ -1,9 +1,11 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.AccountRequest;
+import asd.group2.bms.payload.request.DepositWithdrawalRequest;
 import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
@@ -103,6 +105,36 @@ public class AccountController {
       return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
     } catch (MessagingException | UnsupportedEncodingException e) {
       return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
+    }
+  }
+
+  /**
+   *  This will deposit the given money to the account
+   *
+   * @param depositWithdrawalRequest    Request body containing all necessary data
+   * @return  success or failure response with appropriate message
+   * @throws MessagingException             This will throw MessagingException
+   * @throws UnsupportedEncodingException   This will throw UnsupportedEncodingException
+   */
+  @PostMapping("/account/user/deposit")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> depositMoney(@Valid @RequestBody DepositWithdrawalRequest depositWithdrawalRequest) throws MessagingException, UnsupportedEncodingException {
+
+    Long accountNumber = depositWithdrawalRequest.getAccountNumber();
+    Double deposit = depositWithdrawalRequest.getBalance();
+    Account account = accountService.getAccountByAccountNumber(accountNumber);
+    Double balance = account.getBalance();
+
+    Double updatedBalance = balance + deposit;
+    account.setBalance(updatedBalance);
+    Boolean isUpdated = accountService.updateAccountBalance(account);
+
+    if (isUpdated) {
+      return new ResponseEntity<>(new ApiResponse(true,
+          "Money deposited successfully."), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false,
+          "Money deposit not successful."), HttpStatus.BAD_REQUEST);
     }
   }
 }
