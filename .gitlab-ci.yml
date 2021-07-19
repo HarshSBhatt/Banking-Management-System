@@ -28,8 +28,8 @@ build_fe:
       - public/
   script:
     - cd ./src/frontend/
-    - npm install
-    - npm run build
+    - yarn
+    - yarn build
   tags:
     - dalfcs_docker_kvm
   only:
