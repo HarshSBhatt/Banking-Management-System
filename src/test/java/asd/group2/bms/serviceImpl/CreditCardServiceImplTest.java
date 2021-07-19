@@ -146,6 +146,7 @@ public class CreditCardServiceImplTest {
   void createCreditCardTest() throws Exception {
     Account account = new Account();
     account.setAccountNumber(123L);
+    account.setCreditScore(750);
     Integer requestedTransactionLimit = 1000;
 
     CreditCard card = new CreditCard();
