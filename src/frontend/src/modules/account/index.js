@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //! Ant Imports
 
@@ -11,12 +11,16 @@ import api from "common/api";
 import { toast } from "common/utils";
 import ServerError from "components/ServerError";
 import Loading from "components/Loading";
+import { AppContext } from "AppContext";
 
 const InnerTitle = ({ title }) => {
   return <span className="cb-text-strong">{title}</span>;
 };
 
 function Account() {
+  const {
+    state: { authToken },
+  } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
   const [accountData, setAccountData] = useState({});
@@ -41,7 +45,11 @@ function Account() {
   const fetchUserAccount = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/account/me`);
+      const response = await api.get(`/account/me`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const { data } = response;
       setAccountData(data);
     } catch (err) {
