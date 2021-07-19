@@ -1,9 +1,13 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
 import asd.group2.bms.payload.request.UpdateDebitCardStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.security.CurrentLoggedInUser;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.AppConstants;
@@ -32,7 +36,7 @@ public class DebitCardController {
    * @return Returns whether transaction limit is updated
    */
   @PutMapping("/services/debitCard")
-  @RolesAllowed({"ROLE_USER"})
+  @RolesAllowed({"ROLE_USER","ROLE_EMPLOYEE"})
   public ResponseEntity<?> debitCardSetLimit(
       @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
     if (debitCardSetLimitRequest.getTransactionLimit() <= AppConstants.MINIMUM_TRANSACTION_LIMIT) {
@@ -88,6 +92,19 @@ public class DebitCardController {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Debit Card request status!"),
           HttpStatus.BAD_REQUEST);
     }
+  }
+
+  /**
+   * @param currentUser: current logged in user
+   * @return it will create and return debit card information
+   */
+  @PostMapping("/services/debitCardCreate")
+  @RolesAllowed({"ROLE_USER"})
+  public DebitCard createDebitCard(
+      @CurrentLoggedInUser UserPrincipal currentUser) {
+    Long userId = currentUser.getId();
+    Account account = accountService.getAccountByUserId(userId);
+    return debitCardService.createDebitCard(account);
   }
 
 }
