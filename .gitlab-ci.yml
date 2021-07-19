@@ -92,5 +92,7 @@ deploy_fe:
     - gem install dpl
     - cd build
     - dpl --provider=heroku --app=$HEROKU_APP_FE_STAGING --api-key=$HEROKU_API_KEY --skip_cleanup
+  tags:
+    - dalfcs_docker_kvm
   only:
     - test
