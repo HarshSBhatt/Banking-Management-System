@@ -2,6 +2,7 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
+import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.service.IAccountService;
@@ -217,12 +218,12 @@ public class TermDepositDetailServiceImplTest {
     Account account = new Account();
     account.setBalance(balance);
 
-    when(accountService.getAccountByUserId(userId)).thenReturn(account);
+    when(accountService.getAccountByUserId(userId)).thenThrow(new RuntimeException());
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-        responseEntity.getStatusCode().toString(),
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,
+        responseEntity.getStatusCode(),
         "Make Term Deposit failure test was not executed properly because " +
             "exception was raised");
   }
@@ -300,6 +301,30 @@ public class TermDepositDetailServiceImplTest {
     assertEquals(0,
         termDepositDetailService.getTermDepositDetail(userId).size(), "Empty " +
             "Term Deposit list was not returned");
+  }
+
+  @Test
+  void checkActiveTermDepositTrueTest(){
+    List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+    termDepositDetailList.add(termDepositDetail);
+
+    assertEquals(true,
+        termDepositDetailService.checkActiveTermDeposit(termDepositDetailList),"Term deposit status was not ACTIVE");
+  }
+
+  @Test
+  void checkActiveTermDepositFalseTest(){
+    List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.CLOSED);
+    termDepositDetailList.add(termDepositDetail);
+
+    assertEquals(false,
+        termDepositDetailService.checkActiveTermDeposit(termDepositDetailList),"Term deposit status was not CLOSED");
   }
 
 }
