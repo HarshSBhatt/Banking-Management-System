@@ -143,7 +143,7 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void createCreditCardTest() {
+  void createCreditCardTest() throws Exception {
     Account account = new Account();
     account.setAccountNumber(123L);
     Integer requestedTransactionLimit = 1000;

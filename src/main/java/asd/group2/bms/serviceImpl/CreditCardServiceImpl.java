@@ -99,20 +99,25 @@ public class CreditCardServiceImpl implements ICreditCardService {
    */
   @Override
   public CreditCard createCreditCard(Account account,
-                                     Integer requestedTransactionLimit) {
+                                     Integer requestedTransactionLimit) throws Exception {
     CardDetails cardDetails = helper.generateCardDetails();
 
-    String creditCardNumber = cardDetails.getCardNumber();
-    String expiryMonth = cardDetails.getExpiryMonth();
-    String expiryYear = cardDetails.getExpiryYear();
-    String pin = cardDetails.getPin();
-    String cvv = cardDetails.getCvv();
+    int creditScore = account.getCreditScore();
+    if (creditScore > 650) {
+      String creditCardNumber = cardDetails.getCardNumber();
+      String expiryMonth = cardDetails.getExpiryMonth();
+      String expiryYear = cardDetails.getExpiryYear();
+      String pin = cardDetails.getPin();
+      String cvv = cardDetails.getCvv();
 
-    CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
-        account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
-        cvv, false);
+      CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
+          account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
+          cvv, false);
 
-    return creditCardRepository.save(creditCard);
+      return creditCardRepository.save(creditCard);
+    } else {
+      throw new Exception("You are not eligible to apply for our Credit Card");
+    }
   }
 
   /**
@@ -132,4 +137,5 @@ public class CreditCardServiceImpl implements ICreditCardService {
       throw new Exception("You are not authorized to perform this operation");
     }
   }
+
 }
