@@ -22,9 +22,12 @@ build:
     paths:
       - Group2/target
   script: mvn clean install
+  except:
+    - test
 
 build_fe:
   stage: build_fe
+  image: node:16
   artifacts:
     paths:
       - public/
@@ -49,6 +52,8 @@ test:
       junit:
         - Group2/target/surefire-reports/TEST-*.xml
   script: mvn verify
+  except:
+    - test
 
 staging:
   type: deploy
@@ -63,6 +68,8 @@ staging:
     - test
   tags:
     - dalfcs_docker_kvm
+  except:
+    - test
 
 production:
   type: deploy
@@ -77,6 +84,8 @@ production:
     - master
   tags:
     - dalfcs_docker_kvm
+  except:
+    - test
 
 deploy_fe:
   type: deploy
