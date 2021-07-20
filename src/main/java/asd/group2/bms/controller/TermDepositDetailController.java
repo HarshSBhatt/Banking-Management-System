@@ -70,7 +70,7 @@ public class TermDepositDetailController {
    * @param termDepositId: id of the term deposit
    * @return ResponseEntity with the status message
    */
-  @GetMapping("/services/term-deposit/close/{termDepositId}")
+  @PostMapping("/services/term-deposit/close/{termDepositId}")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<ApiResponse> closeTermDeposit(@PathVariable(name = "termDepositId") String termDepositId) {
 
