@@ -43,6 +43,9 @@ public class AccountServiceImpl implements IAccountService {
   @Autowired
   ICustomEmail customEmail;
 
+  @Autowired
+  Helper helper;
+
   /**
    * @param accountStatus: Account Status (PENDING, APPROVED, REJECTED)
    * @param page:          Page Number
@@ -79,7 +82,7 @@ public class AccountServiceImpl implements IAccountService {
    */
   @Override
   public Account createAccount(User user, AccountType accountType, Double balance, int creditScore) throws MessagingException, UnsupportedEncodingException {
-    String accountNumber = new Helper().generateRandomDigits(10);
+    String accountNumber = helper.generateRandomDigits(10);
     Account account = new Account(Long.parseLong(accountNumber), accountType, balance,
         creditScore);
     account.setUser(user);
