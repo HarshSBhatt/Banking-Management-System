@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,18 +37,23 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   ICustomEmail customEmail;
 
   @Override
-  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email, String firstName, Double fdAmount, Date currentDate, int duration) throws Exception {
+  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email, String firstName, Double fdAmount,
+      Date currentDate, int duration) throws Exception {
 
     try {
       Account account = accountService.getAccountByUserId(userId);
       if (fdAmount < AppConstants.MINIMUM_BALANCE) {
-        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to" + " create Fixed Deposit is $" + AppConstants.MINIMUM_BALANCE), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            new ApiResponse(false, "Minimum amount to" + " create Fixed Deposit is $" + AppConstants.MINIMUM_BALANCE),
+            HttpStatus.BAD_REQUEST);
       }
       if (account.getBalance() < fdAmount) {
-        return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
+            HttpStatus.BAD_REQUEST);
       }
       if (account.getBalance() - AppConstants.MINIMUM_BALANCE < fdAmount) {
-        return new ResponseEntity<>(new ApiResponse(false, "Minimum $" + AppConstants.MINIMUM_BALANCE + " is " + "required after creating Fixed Deposit in your account!"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum $" + AppConstants.MINIMUM_BALANCE + " is "
+            + "required after creating Fixed Deposit in your account!"), HttpStatus.BAD_REQUEST);
       }
 
       // Balance Updated
@@ -58,10 +62,11 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
       Boolean isUpdated = accountService.updateAccountBalance(account);
 
       if (!isUpdated) {
-        return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong while updating balance!"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong while updating balance!"),
+            HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
-      //Sending email
+      // Sending email
       customEmail.sendBalanceDeductionMail(email, firstName, fdAmount, newBalance);
 
       // Maturity Date calculation
@@ -75,7 +80,8 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
       Double maturityAmount = fdAmount * Math.pow((1 + (interestRate / 12)), 12 * duration);
 
       // New TermDepositDetail
-      TermDepositDetail termDepositDetail = new TermDepositDetail(account, currentDate, fdAmount, duration, interestRate, maturityDate, maturityAmount, TermDepositStatus.ACTIVE);
+      TermDepositDetail termDepositDetail = new TermDepositDetail(account, currentDate, fdAmount, duration,
+          interestRate, maturityDate, maturityAmount, TermDepositStatus.ACTIVE);
 
       // Saving TermDepositDetail & TermDeposit
       termDepositDetailRepository.save(termDepositDetail);
@@ -83,7 +89,8 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
       return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
     } catch (Exception e) {
       e.printStackTrace();
-      return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong!"), HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong!"),
+          HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
@@ -91,14 +98,16 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   @Override
   public TermDepositDetail getTermDepositDetailById(Long id) {
 
-    return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
+    return termDepositDetailRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
   }
 
   @Override
   public List<TermDepositDetail> getTermDepositDetail(Long userId) {
 
     Account account = accountService.getAccountByUserId(userId);
-    List<TermDepositDetail> termDepositDetailList = termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(account.getAccountNumber());
+    List<TermDepositDetail> termDepositDetailList = termDepositDetailRepository
+        .findTermDepositDetailByAccount_AccountNumber(account.getAccountNumber());
     if (termDepositDetailList.size() > 0) {
       return termDepositDetailList;
     }
@@ -114,7 +123,6 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   @Override
   public Boolean closeTermDepositDetail(TermDepositDetail termDepositDetail) {
 
-
     float interestRate = AppConstants.SAVING_INTEREST_VALUE;
     Account account = termDepositDetail.getAccount();
     Date fromDate = termDepositDetail.getStartDate();
@@ -125,8 +133,8 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
     String modifiedFromDate = new SimpleDateFormat("yyyy-MM-dd").format(fromDate);
     String modifiedToDate = new SimpleDateFormat("yyyy-MM-dd").format(toDate);
 
-    long duration = ChronoUnit.MONTHS.between(YearMonth.from(LocalDate.parse(modifiedFromDate)), YearMonth.from(LocalDate.parse(modifiedToDate)));
-
+    long duration = ChronoUnit.MONTHS.between(YearMonth.from(LocalDate.parse(modifiedFromDate)),
+        YearMonth.from(LocalDate.parse(modifiedToDate)));
 
     Double maturityAmount = termDepositDetail.getInitialAmount() + Math.pow((1 + (interestRate / 12)), duration);
 
@@ -142,4 +150,15 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
     return termDepositDetailRepository.update(termDepositDetail);
   }
+
+  @Override
+  public Boolean checkActiveTermDeposit(List<TermDepositDetail> termDepositDetailList) {
+    for (int i = 0; i < termDepositDetailList.size(); i++) {
+      if (termDepositDetailList.get(i).getTermDepositStatus() == TermDepositStatus.ACTIVE) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }
