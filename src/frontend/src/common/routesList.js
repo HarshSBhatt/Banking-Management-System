@@ -10,6 +10,8 @@ import ResignationRequests from "modules/admin/resign/ResignationRequests";
 import AccountOpeningRequests from "modules/admin/user_management/AccountOpeningRequests";
 import AddUser from "modules/admin/user_management/AddUser";
 import CreditCardRequests from "modules/admin/user_management/CreditCardRequests";
+import Deposit from "modules/admin/user_management/Deposit";
+import Withdraw from "modules/admin/user_management/Withdraw";
 import ChangePassword from "modules/auth/components/ChangePassword";
 import ChequeServices from "modules/cheque_service";
 import CreditCardServices from "modules/credit_card_service";
@@ -141,6 +143,18 @@ export const routesList = [
     label: "My Resign",
     view: MyResign,
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.WITHDRAW,
+    label: "Withdraw",
+    view: Withdraw,
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
+  {
+    link: ROUTES.DEPOSIT,
+    label: "Deposit",
+    view: Deposit,
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
   },
   {
     link: "*",
