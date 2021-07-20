@@ -146,5 +146,25 @@ public class CreditCardRepositoryImplTest {
 
     Boolean response = creditCardRepository.update(creditCard);
     assertEquals(true, response);
-  };
+  }
+
+  @Test
+  void saveTest() {
+    Long creditCardNumber = 6L;
+    Long accountNumber = 123L;
+    CreditCardStatus creditCardStatus = CreditCardStatus.PENDING;
+    CreditCard creditCard = new CreditCard();
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    creditCard.setAccount(account);
+    creditCard.setCreditCardNumber(creditCardNumber);
+    creditCard.setCreditCardStatus(creditCardStatus);
+
+    when(jdbcTemplate.update(ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any())).thenReturn(5);
+
+    creditCardRepository.save(creditCard);
+    assertEquals(6L, creditCard.getCreditCardNumber());
+
+  }
 }
