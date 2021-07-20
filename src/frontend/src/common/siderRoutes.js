@@ -49,11 +49,11 @@ export const siderMenu = {
       },
     ],
   },
-  "Cheque Services": {
-    link: ROUTES.CHEQUE_SERVICES,
-    label: "Cheque Services",
-    allowedRoles: ["ROLE_USER"],
-  },
+  // "Cheque Services": {
+  //   link: ROUTES.CHEQUE_SERVICES,
+  //   label: "Cheque Services",
+  //   allowedRoles: ["ROLE_USER"],
+  // },
   "Debit Card Services": {
     link: ROUTES.DEBIT_CARD_SERVICES,
     label: "Debit Card Services",

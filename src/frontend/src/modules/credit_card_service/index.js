@@ -12,10 +12,10 @@ const tabList = [
     key: "tab1",
     tab: "Request a Credit Card",
   },
-  {
-    key: "tab2",
-    tab: "Pay Credit Card Bills",
-  },
+  // {
+  //   key: "tab2",
+  //   tab: "Pay Credit Card Bills",
+  // },
   {
     key: "tab3",
     tab: "Set PIN",
@@ -24,7 +24,7 @@ const tabList = [
 
 const contentList = {
   tab1: <RequestCreditCard />,
-  tab2: <p>content2</p>,
+  // tab2: <p>content2</p>,
   tab3: <SetPin />,
 };
 

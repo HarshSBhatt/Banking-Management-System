@@ -33,11 +33,11 @@ export const dashboardRoutes = [
     label: "Account Statement",
     allowedRoles: ["ROLE_USER"],
   },
-  {
-    link: ROUTES.CHEQUE_SERVICES,
-    label: "Cheque Services",
-    allowedRoles: ["ROLE_USER"],
-  },
+  // {
+  //   link: ROUTES.CHEQUE_SERVICES,
+  //   label: "Cheque Services",
+  //   allowedRoles: ["ROLE_USER"],
+  // },
   {
     link: ROUTES.DEBIT_CARD_SERVICES,
     label: "Debit Card Services",

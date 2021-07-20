@@ -14,6 +14,7 @@ import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { TOKEN } from "common/constants";
 import GetFDReceipt from "./GetFDReceipt";
+import CloseFDAccount from "./CloseFDAccount";
 
 function MyFdAccounts() {
   const [loading, setLoading] = useState(false);
@@ -90,6 +91,13 @@ function MyFdAccounts() {
       key: "receipt",
       render: (record) => {
         return <GetFDReceipt record={record} />;
+      },
+    },
+    {
+      title: "Close FD",
+      key: "closeFd",
+      render: (record) => {
+        return <CloseFDAccount record={record} />;
       },
     },
   ];

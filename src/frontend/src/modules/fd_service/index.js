@@ -14,16 +14,11 @@ const tabList = [
     key: "tab2",
     tab: "My FD Accounts",
   },
-  {
-    key: "tab3",
-    tab: "Close FD Account",
-  },
 ];
 
 const contentList = {
   tab1: <OpenFDAccount />,
   tab2: <MyFdAccounts />,
-  tab3: <p>content3</p>,
 };
 
 function FDServices() {
