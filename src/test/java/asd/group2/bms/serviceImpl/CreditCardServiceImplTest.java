@@ -172,6 +172,33 @@ public class CreditCardServiceImplTest {
     verify(creditCardRepository, times(1)).update(any());
   }
 
+  @Test
+  void setCreditCardRequestStatusTestPassCondition3() throws MessagingException,
+      UnsupportedEncodingException {
+    int transactionLimit = 4000;
+    CreditCard creditCard = new CreditCard();
+    Long card = 123L;
+    User user = new User();
+    user.setEmail("abc");
+    user.setFirstName("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setCreditScore(760);
+    creditCard.setAccount(account);
+    CreditCardStatus creditCardStatus = CreditCardStatus.APPROVED;
+    creditCard.setCreditCardNumber(card);
+    creditCard.setTransactionLimit(4000);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    when(creditCardRepository.update(any())).thenReturn(true);
+    doNothing().when(customEmail).sendCreditCardApprovalMail(any(), any(),
+        any());
+
+    creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
+    verify(creditCardRepository, times(1)).update(any());
+  }
+
+
 
   @Test
   void createCreditCardTestSuccess() throws Exception {
