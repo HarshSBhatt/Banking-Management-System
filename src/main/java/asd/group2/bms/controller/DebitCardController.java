@@ -1,8 +1,13 @@
 package asd.group2.bms.controller;
 
+import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
+import asd.group2.bms.payload.request.UpdateDebitCardStatusRequest;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.security.CurrentLoggedInUser;
+import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.IDebitCardService;
 import asd.group2.bms.util.AppConstants;
@@ -12,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +36,7 @@ public class DebitCardController {
    * @return Returns whether transaction limit is updated
    */
   @PutMapping("/services/debitCard")
-  @RolesAllowed({"ROLE_USER"})
+  @RolesAllowed({"ROLE_USER","ROLE_EMPLOYEE"})
   public ResponseEntity<?> debitCardSetLimit(
       @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
     if (debitCardSetLimitRequest.getTransactionLimit() <= AppConstants.MINIMUM_TRANSACTION_LIMIT) {
@@ -58,12 +65,33 @@ public class DebitCardController {
   @PutMapping("/services/debitCard/pin")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> debitCardSetPin(
+      @CurrentLoggedInUser UserPrincipal currentUser,
       @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
-    Boolean isUpdated = debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin());
+    Boolean isUpdated =
+        debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin(),currentUser.getId());
     if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Pin is updated successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing pin"),
+          HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   *
+   * @param updateDebitCardStatusRequest: Status of the debit card to update
+   * @return Success or Failure of update
+   */
+  @PutMapping("/services/debitCard/status")
+  @RolesAllowed({"\"ROLE_MANAGER\", \"ROLE_EMPLOYEE\""})
+  public ResponseEntity<?> updateDebitCardRequestStatus(
+      @Valid @RequestBody UpdateDebitCardStatusRequest updateDebitCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
+    Boolean isUpdated =
+        debitCardService.setDebitCardRequestStatus(updateDebitCardStatusRequest.getDebitCardNumber(), updateDebitCardStatusRequest.getDebitCardStatus());
+    if (isUpdated) {
+      return ResponseEntity.ok(new ApiResponse(true, "Debit Card request status changed successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Debit Card request status!"),
           HttpStatus.BAD_REQUEST);
     }
   }
