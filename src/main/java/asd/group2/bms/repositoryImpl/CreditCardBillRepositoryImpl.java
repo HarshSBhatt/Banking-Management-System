@@ -3,6 +3,8 @@ package asd.group2.bms.repositoryImpl;
 import asd.group2.bms.model.cards.credit.BillStatus;
 import asd.group2.bms.model.cards.credit.CreditCardBill;
 import asd.group2.bms.repository.CreditCardBillRepository;
+import asd.group2.bms.repositoryMapper.CreditCardBillMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public class CreditCardBillRepositoryImpl extends JdbcDaoSupport implements CreditCardBillRepository {
@@ -53,7 +56,15 @@ public class CreditCardBillRepositoryImpl extends JdbcDaoSupport implements Cred
     }
 
     @Override
-    public CreditCardBill showBills(Long creditCardNo) {
-        return null;
+    public Optional<CreditCardBill> showBills(Long creditCardNo) {
+        String billData = "select * from credit_card_bills where " +
+            "credit_card_no = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(billData,
+                new Object[]{creditCardNo},
+                new CreditCardBillMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

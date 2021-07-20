@@ -25,6 +25,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -110,7 +111,7 @@ public class CreditCardController {
 
   @GetMapping("/services/creditCards/ShowBills")
   @RolesAllowed({"ROLE_USER"})
-  public CreditCardBill showBills(@RequestParam(value = "creditCardNo") Long creditCardNo)
+  public Optional<CreditCardBill> showBills(@RequestParam(value = "creditCardNo") Long creditCardNo)
   {
     return creditCardBillService.getBills(creditCardNo);
   }

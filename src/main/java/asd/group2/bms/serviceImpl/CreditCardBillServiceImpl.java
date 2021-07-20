@@ -8,6 +8,8 @@ import asd.group2.bms.service.ICreditCardBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CreditCardBillServiceImpl implements ICreditCardBillService {
 
@@ -30,7 +32,7 @@ public class CreditCardBillServiceImpl implements ICreditCardBillService {
         return false;
     }
 
-    public CreditCardBill getBills(Long creditCardNo)
+    public Optional<CreditCardBill> getBills(Long creditCardNo)
     {
         return CreditCard.showBills(creditCardNo);
     }
