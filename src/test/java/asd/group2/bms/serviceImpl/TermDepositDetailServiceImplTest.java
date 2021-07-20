@@ -217,8 +217,10 @@ public class TermDepositDetailServiceImplTest {
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode(),
-        "Make Term Deposit failure test was not executed properly because " + "exception was raised");
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,
+        responseEntity.getStatusCode(),
+        "Make Term Deposit failure test was not executed properly because " +
+            "exception was raised");
   }
 
   @Test

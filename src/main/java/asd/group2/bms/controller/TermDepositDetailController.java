@@ -87,4 +87,5 @@ public class TermDepositDetailController {
           "Term deposit not found!"), HttpStatus.BAD_REQUEST);
     }
   }
+
 }

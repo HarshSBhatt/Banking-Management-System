@@ -36,7 +36,7 @@ public class DebitCardController {
    * @return Returns whether transaction limit is updated
    */
   @PutMapping("/services/debitCard")
-  @RolesAllowed({"ROLE_USER","ROLE_EMPLOYEE"})
+  @RolesAllowed({"ROLE_USER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> debitCardSetLimit(
       @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
     if (debitCardSetLimitRequest.getTransactionLimit() <= AppConstants.MINIMUM_TRANSACTION_LIMIT) {
@@ -68,7 +68,7 @@ public class DebitCardController {
       @CurrentLoggedInUser UserPrincipal currentUser,
       @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
     Boolean isUpdated =
-        debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin(),currentUser.getId());
+        debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin(), currentUser.getId());
     if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Pin is updated successfully!"));
     } else {
@@ -78,7 +78,6 @@ public class DebitCardController {
   }
 
   /**
-   *
    * @param updateDebitCardStatusRequest: Status of the debit card to update
    * @return Success or Failure of update
    */

@@ -32,4 +32,5 @@ public class DepositWithdrawalRequest {
 
     this.balance = balance;
   }
+
 }

@@ -38,7 +38,7 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
   @Override
   public ResponseEntity<?> makeTermDepositRequest(Long userId, String email, String firstName, Double fdAmount,
-      Date currentDate, int duration) throws Exception {
+                                                  Date currentDate, int duration) throws Exception {
 
     try {
       Account account = accountService.getAccountByUserId(userId);
@@ -117,7 +117,7 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   /**
    * This method is to close term deposit
    *
-   * @param termDepositDetail
+   * @param termDepositDetail: Request body of term deposit
    * @return updated termDepositDetail
    */
   @Override
@@ -153,8 +153,8 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
   @Override
   public Boolean checkActiveTermDeposit(List<TermDepositDetail> termDepositDetailList) {
-    for (int i = 0; i < termDepositDetailList.size(); i++) {
-      if (termDepositDetailList.get(i).getTermDepositStatus() == TermDepositStatus.ACTIVE) {
+    for (TermDepositDetail termDepositDetail : termDepositDetailList) {
+      if (termDepositDetail.getTermDepositStatus() == TermDepositStatus.ACTIVE) {
         return true;
       }
     }
