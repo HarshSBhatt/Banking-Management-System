@@ -121,7 +121,9 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void setCreditCardRequestStatusTest() throws MessagingException, UnsupportedEncodingException {
+  void setCreditCardRequestStatusTestPassCondition1() throws MessagingException,
+      UnsupportedEncodingException {
+    int transactionLimit = 1000;
     CreditCard creditCard = new CreditCard();
     Long card = 123L;
     User user = new User();
@@ -129,9 +131,11 @@ public class CreditCardServiceImplTest {
     user.setFirstName("aditya");
     Account account = new Account();
     account.setUser(user);
+    account.setCreditScore(660);
     creditCard.setAccount(account);
-    CreditCardStatus creditCardStatus = CreditCardStatus.PENDING;
+    CreditCardStatus creditCardStatus = CreditCardStatus.APPROVED;
     creditCard.setCreditCardNumber(card);
+    creditCard.setTransactionLimit(1500);
 
     when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
     when(creditCardRepository.update(any())).thenReturn(true);
@@ -143,9 +147,88 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void createCreditCardTest() {
+  void setCreditCardRequestStatusTestPassCondition2() throws MessagingException,
+      UnsupportedEncodingException {
+    int transactionLimit = 4000;
+    CreditCard creditCard = new CreditCard();
+    Long card = 123L;
+    User user = new User();
+    user.setEmail("abc");
+    user.setFirstName("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setCreditScore(720);
+    creditCard.setAccount(account);
+    CreditCardStatus creditCardStatus = CreditCardStatus.APPROVED;
+    creditCard.setCreditCardNumber(card);
+    creditCard.setTransactionLimit(4000);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    when(creditCardRepository.update(any())).thenReturn(true);
+    doNothing().when(customEmail).sendCreditCardApprovalMail(any(), any(),
+        any());
+
+    creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
+    verify(creditCardRepository, times(1)).update(any());
+  }
+
+  @Test
+  void setCreditCardRequestStatusTestPassCondition3() throws MessagingException,
+      UnsupportedEncodingException {
+    int transactionLimit = 4000;
+    CreditCard creditCard = new CreditCard();
+    Long card = 123L;
+    User user = new User();
+    user.setEmail("abc");
+    user.setFirstName("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setCreditScore(760);
+    creditCard.setAccount(account);
+    CreditCardStatus creditCardStatus = CreditCardStatus.APPROVED;
+    creditCard.setCreditCardNumber(card);
+    creditCard.setTransactionLimit(4000);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    when(creditCardRepository.update(any())).thenReturn(true);
+    doNothing().when(customEmail).sendCreditCardApprovalMail(any(), any(),
+        any());
+
+    creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
+    verify(creditCardRepository, times(1)).update(any());
+  }
+
+  @Test
+  void setCreditCardRequestStatusTestPassCondition4() throws MessagingException,
+      UnsupportedEncodingException {
+    int transactionLimit = 4000;
+    CreditCard creditCard = new CreditCard();
+    Long card = 123L;
+    User user = new User();
+    user.setEmail("abc");
+    user.setFirstName("aditya");
+    Account account = new Account();
+    account.setUser(user);
+    account.setCreditScore(810);
+    creditCard.setAccount(account);
+    CreditCardStatus creditCardStatus = CreditCardStatus.APPROVED;
+    creditCard.setCreditCardNumber(card);
+    creditCard.setTransactionLimit(5100);
+
+    when(creditCardRepository.findById(any())).thenReturn(Optional.of(creditCard));
+    when(creditCardRepository.update(any())).thenReturn(true);
+    doNothing().when(customEmail).sendCreditCardApprovalMail(any(), any(),
+        any());
+
+    creditCardService.setCreditCardRequestStatus(card, creditCardStatus);
+    verify(creditCardRepository, times(1)).update(any());
+  }
+
+  @Test
+  void createCreditCardTestSuccess() throws Exception {
     Account account = new Account();
     account.setAccountNumber(123L);
+    account.setCreditScore(750);
     Integer requestedTransactionLimit = 1000;
 
     CreditCard card = new CreditCard();
@@ -164,6 +247,35 @@ public class CreditCardServiceImplTest {
         requestedTransactionLimit);
 
     assertEquals(123456L, creditCard.getCreditCardNumber());
+  }
+
+  @Test
+  void createCreditCardTestFail() throws Exception {
+    Account account = new Account();
+    account.setAccountNumber(123L);
+    account.setCreditScore(600);
+    Integer requestedTransactionLimit = 1000;
+
+    CreditCard card = new CreditCard();
+    card.setCreditCardNumber(123456L);
+    CardDetails cardDetails = new CardDetails();
+    cardDetails.setCardNumber("123456");
+    cardDetails.setExpiryMonth("12");
+    cardDetails.setExpiryYear("2022");
+    cardDetails.setPin("1234");
+    cardDetails.setCvv("123");
+
+    when(helper.generateCardDetails()).thenReturn(cardDetails);
+
+    Exception exception = assertThrows(Exception.class,
+        () -> {
+          creditCardService.createCreditCard(account,
+              requestedTransactionLimit);
+        });
+
+    String expectedMessage = "You are not eligible to apply for our Credit Card";
+
+    assertEquals(expectedMessage, exception.getMessage());
   }
 
   @Test

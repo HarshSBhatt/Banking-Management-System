@@ -13,6 +13,7 @@ import Loading from "components/Loading";
 import SetLimit from "./components/SetLimit";
 import SetPin from "./components/SetPin";
 import { AppContext } from "AppContext";
+import SetDebitCardStatus from "./components/SetDebitCardStatus";
 
 const tabList = [
   {
@@ -44,7 +45,7 @@ function DebitCardServices() {
 
   const contentList = {
     tab1: <SetLimit debitCardNumber={debitCardNumber} />,
-    tab2: <p>Coming Soon</p>,
+    tab2: <SetDebitCardStatus debitCardNumber={debitCardNumber} />,
     tab3: <SetPin debitCardNumber={debitCardNumber} />,
   };
 

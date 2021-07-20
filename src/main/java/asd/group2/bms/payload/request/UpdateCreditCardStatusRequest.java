@@ -7,28 +7,30 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 /**
- *@description: Structure of credit card body request
+ * @description: Structure of credit card body request
  */
 public class UpdateCreditCardStatusRequest {
-    @NotNull(message = "Credit Card Number is required")
-    private Long creditCardNumber;
 
-    @Enumerated(EnumType.STRING)
-    private CreditCardStatus creditCardStatus;
+  @NotNull(message = "Credit Card Number is required")
+  private Long creditCardNumber;
 
-    public Long getCreditCardNumber() {
-        return creditCardNumber;
-    }
+  @Enumerated(EnumType.STRING)
+  private CreditCardStatus creditCardStatus;
 
-    public void setCreditCardNumber(Long creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
-    }
+  public Long getCreditCardNumber() {
+    return creditCardNumber;
+  }
 
-    public CreditCardStatus getCreditCardStatus() {
-        return creditCardStatus;
-    }
+  public void setCreditCardNumber(Long creditCardNumber) {
+    this.creditCardNumber = creditCardNumber;
+  }
 
-    public void setCreditCardStatus(CreditCardStatus creditCardStatus) {
-        this.creditCardStatus = creditCardStatus;
-    }
+  public CreditCardStatus getCreditCardStatus() {
+    return creditCardStatus;
+  }
+
+  public void setCreditCardStatus(CreditCardStatus creditCardStatus) {
+    this.creditCardStatus = creditCardStatus;
+  }
+
 }
