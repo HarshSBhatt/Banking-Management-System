@@ -77,14 +77,14 @@ public class TermDepositDetailController {
     Long fdId = Long.parseLong(termDepositId);
     TermDepositDetail termDepositDetail = termDepositDetailService.getTermDepositDetailById(fdId);
 
-    Boolean isUpdated = termDepositDetailService.closeTermDepositeDetail(termDepositDetail);
+    Boolean isUpdated = termDepositDetailService.closeTermDepositDetail(termDepositDetail);
 
     if (isUpdated) {
       return new ResponseEntity<>(new ApiResponse(true,
-          "Term deposit closed " + "successfully."), HttpStatus.OK);
+          "Term deposit closed successfully."), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(new ApiResponse(false,
-          "Term deposit not " + "found!"), HttpStatus.BAD_REQUEST);
+          "Term deposit not found!"), HttpStatus.BAD_REQUEST);
     }
   }
 }

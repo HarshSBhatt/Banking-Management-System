@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -37,27 +38,18 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   ICustomEmail customEmail;
 
   @Override
-  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email,
-                                                  String firstName,
-                                                  Double fdAmount,
-                                                  Date currentDate,
-                                                  int duration) throws Exception {
+  public ResponseEntity<?> makeTermDepositRequest(Long userId, String email, String firstName, Double fdAmount, Date currentDate, int duration) throws Exception {
+
     try {
       Account account = accountService.getAccountByUserId(userId);
       if (fdAmount < AppConstants.MINIMUM_BALANCE) {
-        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to" +
-            " create Fixed Deposit is $" + AppConstants.MINIMUM_BALANCE),
-            HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum amount to" + " create Fixed Deposit is $" + AppConstants.MINIMUM_BALANCE), HttpStatus.BAD_REQUEST);
       }
       if (account.getBalance() < fdAmount) {
-        return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"),
-            HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, "Not enough balance in your account!"), HttpStatus.BAD_REQUEST);
       }
       if (account.getBalance() - AppConstants.MINIMUM_BALANCE < fdAmount) {
-        return new ResponseEntity<>(new ApiResponse(false,
-            "Minimum $" + AppConstants.MINIMUM_BALANCE + " is " +
-                "required after creating Fixed Deposit in your account!"),
-            HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, "Minimum $" + AppConstants.MINIMUM_BALANCE + " is " + "required after creating Fixed Deposit in your account!"), HttpStatus.BAD_REQUEST);
       }
 
       // Balance Updated
@@ -66,9 +58,7 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
       Boolean isUpdated = accountService.updateAccountBalance(account);
 
       if (!isUpdated) {
-        return new ResponseEntity<>(new ApiResponse(false, "Something went " +
-            "wrong while updating balance!"),
-            HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong while updating balance!"), HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
       //Sending email
@@ -93,14 +83,14 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
       return ResponseEntity.ok(new ApiResponse(true, "Term Deposit made successfully!"));
     } catch (Exception e) {
       e.printStackTrace();
-      return new ResponseEntity<>(new ApiResponse(false, "Something went " +
-          "wrong!"), HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(new ApiResponse(false, "Something went " + "wrong!"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
 
   @Override
   public TermDepositDetail getTermDepositDetailById(Long id) {
+
     return termDepositDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Termdeposit", "termdeposit", "temp"));
   }
 
@@ -116,25 +106,29 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
   }
 
   /**
+   * This method is to close term deposit
    *
    * @param termDepositDetail
    * @return updated termDepositDetail
    */
   @Override
-  public Boolean closeTermDepositeDetail(TermDepositDetail termDepositDetail){
+  public Boolean closeTermDepositDetail(TermDepositDetail termDepositDetail) {
 
 
     float interestRate = AppConstants.SAVING_INTEREST_VALUE;
     Account account = termDepositDetail.getAccount();
-    Date startDate = termDepositDetail.getStartDate();
-    LocalDate endDate = LocalDate.now();
+    Date fromDate = termDepositDetail.getStartDate();
+    Date toDate = new Date();
 
     // logic of calculating amount
-    Long duration = ChronoUnit.MONTHS.between(LocalDate.parse(startDate.toString()), endDate);
 
-    Double maturityAmount =
-        termDepositDetail.getInitialAmount() +
-            Math.pow((1 + (interestRate / 12)), duration);
+    String modifiedFromDate = new SimpleDateFormat("yyyy-MM-dd").format(fromDate);
+    String modifiedToDate = new SimpleDateFormat("yyyy-MM-dd").format(toDate);
+
+    long duration = ChronoUnit.MONTHS.between(YearMonth.from(LocalDate.parse(modifiedFromDate)), YearMonth.from(LocalDate.parse(modifiedToDate)));
+
+
+    Double maturityAmount = termDepositDetail.getInitialAmount() + Math.pow((1 + (interestRate / 12)), duration);
 
     // Crediting term deposit money to account
     Double accountBalance = account.getBalance() + maturityAmount;
