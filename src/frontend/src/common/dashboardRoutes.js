@@ -103,4 +103,14 @@ export const dashboardRoutes = [
     label: "My Resign",
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
   },
+  {
+    link: ROUTES.WITHDRAW,
+    label: "Withdraw",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
+  {
+    link: ROUTES.DEPOSIT,
+    label: "Deposit",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
 ];

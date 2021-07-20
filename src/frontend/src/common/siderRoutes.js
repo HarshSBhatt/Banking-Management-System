@@ -74,6 +74,16 @@ export const siderMenu = {
     label: "Fund Transfer",
     allowedRoles: ["ROLE_USER"],
   },
+  Withdraw: {
+    link: ROUTES.WITHDRAW,
+    label: "Withdraw",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
+  Deposit: {
+    link: ROUTES.DEPOSIT,
+    label: "Deposit",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
   "User Management": {
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
     views: [
