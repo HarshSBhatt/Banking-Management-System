@@ -30,13 +30,13 @@ function FundTransfer() {
   const senderAccountNumber = accountData?.accountNumber;
 
   const onFinish = async (values) => {
-    setLoading(true);
     if (values.senderAccountNumber === Number(values.receiverAccountNumber)) {
       toast({
         message: "Sender and Receiver must be different",
         type: "info",
       });
     } else {
+      setLoading(true);
       try {
         const response = await api.post("/account/activity", values);
         const { data } = response;
