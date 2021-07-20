@@ -143,7 +143,7 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void createCreditCardTest() throws Exception {
+  void createCreditCardTestSuccess() throws Exception {
     Account account = new Account();
     account.setAccountNumber(123L);
     account.setCreditScore(750);
@@ -165,6 +165,35 @@ public class CreditCardServiceImplTest {
         requestedTransactionLimit);
 
     assertEquals(123456L, creditCard.getCreditCardNumber());
+  }
+
+  @Test
+  void createCreditCardTestFail() throws Exception {
+    Account account = new Account();
+    account.setAccountNumber(123L);
+    account.setCreditScore(600);
+    Integer requestedTransactionLimit = 1000;
+
+    CreditCard card = new CreditCard();
+    card.setCreditCardNumber(123456L);
+    CardDetails cardDetails = new CardDetails();
+    cardDetails.setCardNumber("123456");
+    cardDetails.setExpiryMonth("12");
+    cardDetails.setExpiryYear("2022");
+    cardDetails.setPin("1234");
+    cardDetails.setCvv("123");
+
+    when(helper.generateCardDetails()).thenReturn(cardDetails);
+
+    Exception exception = assertThrows(Exception.class,
+        () -> {
+          creditCardService.createCreditCard(account,
+              requestedTransactionLimit);
+        });
+
+    String expectedMessage = "You are not eligible to apply for our Credit Card";
+
+    assertEquals(expectedMessage, exception.getMessage());
   }
 
   @Test
