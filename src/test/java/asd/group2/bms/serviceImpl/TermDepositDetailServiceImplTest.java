@@ -2,6 +2,7 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
+import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.service.IAccountService;
@@ -21,6 +22,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -302,4 +306,64 @@ public class TermDepositDetailServiceImplTest {
             "Term Deposit list was not returned");
   }
 
+  @Test
+  void closeTermDepositeDetailTrueTest() {
+    Long accountNumber = 1L;
+    Double balance = 100000.0;
+    Double initialAmount = 5000.0;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    account.setBalance(balance);
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setAccount(account);
+    termDepositDetail.setStartDate(fromDate);
+    termDepositDetail.setMaturityDate(toDate);
+    termDepositDetail.setInitialAmount(initialAmount);
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+
+    when(accountService.updateAccountBalance(account)).thenReturn(true);
+    when(termDepositDetailRepository.update(termDepositDetail)).thenReturn(true);
+
+    assertEquals(true,
+        termDepositDetailService.closeTermDepositDetail(termDepositDetail),
+        "Term deposit not closed!");
+  }
+
+  @Test
+  void closeTermDepositeDetailFalseTest(){
+
+    Long accountNumber = 1L;
+    Double balance = 100000.0;
+    Double initialAmount = 5000.0;
+
+    Date fromDate =
+        Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate =
+        Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    account.setBalance(balance);
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setAccount(account);
+    termDepositDetail.setStartDate(fromDate);
+    termDepositDetail.setMaturityDate(toDate);
+    termDepositDetail.setInitialAmount(initialAmount);
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.MATURED);
+
+    when(accountService.updateAccountBalance(account)).thenReturn(true);
+    when(termDepositDetailRepository.update(termDepositDetail)).thenReturn(true);
+
+    assertEquals(true,
+        termDepositDetailService.closeTermDepositDetail(termDepositDetail),
+        "Term deposit cannot be closed!");
+  }
 }
