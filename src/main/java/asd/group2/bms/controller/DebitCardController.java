@@ -65,8 +65,10 @@ public class DebitCardController {
   @PutMapping("/services/debitCard/pin")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> debitCardSetPin(
+      @CurrentLoggedInUser UserPrincipal currentUser,
       @Valid @RequestBody DebitCardSetPinRequest debitCardSetPinRequest) {
-    Boolean isUpdated = debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin());
+    Boolean isUpdated =
+        debitCardService.setDebitCardPin(debitCardSetPinRequest.getDebitCardNumber(), debitCardSetPinRequest.getPin(),currentUser.getId());
     if (isUpdated) {
       return ResponseEntity.ok(new ApiResponse(true, "Pin is updated successfully!"));
     } else {
@@ -92,19 +94,6 @@ public class DebitCardController {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing Debit Card request status!"),
           HttpStatus.BAD_REQUEST);
     }
-  }
-
-  /**
-   * @param currentUser: current logged in user
-   * @return it will create and return debit card information
-   */
-  @PostMapping("/services/debitCardCreate")
-  @RolesAllowed({"ROLE_USER"})
-  public DebitCard createDebitCard(
-      @CurrentLoggedInUser UserPrincipal currentUser) {
-    Long userId = currentUser.getId();
-    Account account = accountService.getAccountByUserId(userId);
-    return debitCardService.createDebitCard(account);
   }
 
 }
