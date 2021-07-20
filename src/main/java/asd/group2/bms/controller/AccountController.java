@@ -1,7 +1,9 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.user.AccountStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.payload.request.AccountRequest;
@@ -10,6 +12,7 @@ import asd.group2.bms.payload.response.AccountDetailResponse;
 import asd.group2.bms.payload.response.ApiResponse;
 import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.repository.IUserRepository;
+import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
@@ -45,6 +48,9 @@ public class AccountController {
 
   @Autowired
   IDebitCardService debitCardService;
+
+  @Autowired
+  AccountActivityRepositoryImpl accountActivityRepository;
 
   /**
    * Users list based on the account status of the users
@@ -129,6 +135,9 @@ public class AccountController {
     Boolean isUpdated = accountService.updateAccountBalance(account);
 
     if (isUpdated) {
+      AccountActivity accountActivity = new AccountActivity(account,
+          ActivityType.DEPOSIT,deposit, "Money Deposited Successfully.");
+      accountActivityRepository.save(accountActivity);
       return new ResponseEntity<>(new ApiResponse(true, "Money deposited successfully."), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Money deposit not successful."), HttpStatus.BAD_REQUEST);
@@ -162,6 +171,11 @@ public class AccountController {
       Boolean isUpdated = accountService.updateAccountBalance(account);
 
       if (isUpdated) {
+
+        AccountActivity accountActivity = new AccountActivity(account,
+            ActivityType.WITHDRAWAL,withdrawal, "Money Withdrawn " +
+            "Successfully");
+        accountActivityRepository.save(accountActivity);
         return new ResponseEntity<>(new ApiResponse(true, "Money withdrawn" + " successfully."), HttpStatus.OK);
       } else {
         return new ResponseEntity<>(new ApiResponse(false, "Money withdrawal " + "not successful."), HttpStatus.BAD_REQUEST);
