@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 //! Ant Imports
 
-import { Card } from "antd";
+import { Button, Card, Popconfirm } from "antd";
 
 //! User Files
 
@@ -12,6 +13,7 @@ import { toast } from "common/utils";
 import ServerError from "components/ServerError";
 import Loading from "components/Loading";
 import { AppContext } from "AppContext";
+import { ROUTES } from "common/constants";
 
 const InnerTitle = ({ title }) => {
   return <span className="cb-text-strong">{title}</span>;
@@ -21,9 +23,47 @@ function Account() {
   const {
     state: { authToken },
   } = useContext(AppContext);
+  const { push } = useHistory();
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
   const [accountData, setAccountData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showPopconfirm = () => {
+    setVisible(true);
+  };
+
+  const handleCloseSavingAccount = async () => {
+    setConfirmLoading(true);
+    try {
+      const response = await api.put("/users/account/status/close");
+      const { data } = response;
+      toast({
+        message: data.message,
+        type: "success",
+      });
+      push(ROUTES.LOGOUT);
+    } catch (err) {
+      if (err.response?.data) {
+        toast({
+          message: err.response.data.message,
+          type: "error",
+        });
+      } else {
+        toast({
+          message: "Something went wrong!",
+          type: "error",
+        });
+      }
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
 
   const accountNumber = accountData?.accountNumber;
   const accountCreatedAt = accountData?.accountCreatedAt;
@@ -72,7 +112,25 @@ function Account() {
   if (err) return <ServerError />;
   return (
     <div className="profile">
-      <Card title={title} className="profile-card">
+      <Card
+        title={title}
+        className="profile-card"
+        extra={
+          <Popconfirm
+            title="You sure, you want to close account?"
+            visible={visible}
+            okText="Close"
+            onConfirm={handleCloseSavingAccount}
+            okButtonProps={{ loading: confirmLoading }}
+            onCancel={handleCancel}
+            overlayClassName="my-pop"
+          >
+            <Button type="ghost" onClick={showPopconfirm}>
+              Close Saving Account
+            </Button>
+          </Popconfirm>
+        }
+      >
         <Card
           type="inner"
           bordered={false}

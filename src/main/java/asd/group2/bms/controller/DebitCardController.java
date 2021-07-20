@@ -80,7 +80,7 @@ public class DebitCardController {
    * @return Success or Failure of update
    */
   @PutMapping("/services/debitcard/status")
-  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
+  @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> updateDebitCardRequestStatus(
       @Valid @RequestBody UpdateDebitCardStatusRequest updateDebitCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
     Boolean isUpdated =

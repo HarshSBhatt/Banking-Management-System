@@ -33,11 +33,11 @@ export const dashboardRoutes = [
     label: "Account Statement",
     allowedRoles: ["ROLE_USER"],
   },
-  {
-    link: ROUTES.CHEQUE_SERVICES,
-    label: "Cheque Services",
-    allowedRoles: ["ROLE_USER"],
-  },
+  // {
+  //   link: ROUTES.CHEQUE_SERVICES,
+  //   label: "Cheque Services",
+  //   allowedRoles: ["ROLE_USER"],
+  // },
   {
     link: ROUTES.DEBIT_CARD_SERVICES,
     label: "Debit Card Services",
@@ -102,5 +102,15 @@ export const dashboardRoutes = [
     link: ROUTES.MY_RESIGN,
     label: "My Resign",
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
+  },
+  {
+    link: ROUTES.WITHDRAW,
+    label: "Withdraw",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
+  {
+    link: ROUTES.DEPOSIT,
+    label: "Deposit",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
   },
 ];

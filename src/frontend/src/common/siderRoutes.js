@@ -49,11 +49,11 @@ export const siderMenu = {
       },
     ],
   },
-  "Cheque Services": {
-    link: ROUTES.CHEQUE_SERVICES,
-    label: "Cheque Services",
-    allowedRoles: ["ROLE_USER"],
-  },
+  // "Cheque Services": {
+  //   link: ROUTES.CHEQUE_SERVICES,
+  //   label: "Cheque Services",
+  //   allowedRoles: ["ROLE_USER"],
+  // },
   "Debit Card Services": {
     link: ROUTES.DEBIT_CARD_SERVICES,
     label: "Debit Card Services",
@@ -73,6 +73,16 @@ export const siderMenu = {
     link: ROUTES.FUND_TRANSFER,
     label: "Fund Transfer",
     allowedRoles: ["ROLE_USER"],
+  },
+  Withdraw: {
+    link: ROUTES.WITHDRAW,
+    label: "Withdraw",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  },
+  Deposit: {
+    link: ROUTES.DEPOSIT,
+    label: "Deposit",
+    allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE"],
   },
   "User Management": {
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],

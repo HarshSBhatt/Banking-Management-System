@@ -75,9 +75,11 @@ public class LeaveRepositoryImplTest {
   @Test
   public void findByUser_IdTestSuccess() {
 
+    Long leaveId = 1L;
+
     User user = new User();
     user.setUsername("shivam");
-    user.setId(1L);
+    user.setId(leaveId);
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
@@ -95,9 +97,11 @@ public class LeaveRepositoryImplTest {
   @Test
   public void findByUser_IdTestFail() {
 
+    Long leaveId = 1L;
+
     User user = new User();
     user.setUsername("shivam");
-    user.setId(1L);
+    user.setId(leaveId);
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
@@ -115,9 +119,11 @@ public class LeaveRepositoryImplTest {
   @Test
   public void findByIdTestSuccess() {
 
+    Long leaveId = 1L;
+
     User user = new User();
     user.setUsername("shivam");
-    user.setId(1L);
+    user.setId(leaveId);
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
@@ -133,9 +139,11 @@ public class LeaveRepositoryImplTest {
   @Test
   public void findByIdTestFail() {
 
+    Long leaveId = 1L;
+
     User user = new User();
     user.setUsername("shivam");
-    user.setId(1L);
+    user.setId(leaveId);
 
     LeaveRequest leaveRequest = new LeaveRequest();
     leaveRequest.setUser(user);
