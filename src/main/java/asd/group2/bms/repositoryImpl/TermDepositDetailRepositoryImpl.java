@@ -110,8 +110,8 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements I
         "initial_amount = ?, maturity_amount = ?, maturity_date = ?, " +
         "rate_of_interest = ?, term_deposit_status = ? WHERE term_deposit_id = ?";
     int status = jdbcTemplate.update(sql,
-        new Date(),
-        termDepositDetail.getDuration(), termDepositDetail.getInitialAmount(),
+        termDepositDetail.getDuration(),
+        termDepositDetail.getInitialAmount(),
         termDepositDetail.getMaturityAmount(),
         termDepositDetail.getMaturityDate(),
         termDepositDetail.getRateOfInterest(),

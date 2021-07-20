@@ -73,7 +73,7 @@ public class CreditCardController {
   @RolesAllowed({"ROLE_USER"})
   public CreditCard createCreditCard(
       @CurrentLoggedInUser UserPrincipal currentUser,
-      @Valid @RequestBody CreditCardRequest creditCardRequest) {
+      @Valid @RequestBody CreditCardRequest creditCardRequest) throws Exception {
     Integer requestedTransactionLimit =
         creditCardRequest.getExpectedTransactionLimit();
     Long userId = currentUser.getId();
@@ -102,4 +102,5 @@ public class CreditCardController {
           HttpStatus.BAD_REQUEST);
     }
   }
+
 }

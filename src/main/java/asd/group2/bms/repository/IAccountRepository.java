@@ -6,13 +6,6 @@ import java.util.Optional;
 
 public interface IAccountRepository {
 
-  /*
-    @param accountNumber: account number of the user
-   * @return This will return the account detail of the user
-   */
-  //  TODO: Create only if needed
-  //  Optional<Account> findByAccountNumber(Long accountNumber);
-
   /**
    * @param userId: user id of the user
    * @return This will return the account detail of the user

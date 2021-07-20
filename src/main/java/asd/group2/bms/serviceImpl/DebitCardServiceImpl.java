@@ -92,10 +92,14 @@ public class DebitCardServiceImpl implements IDebitCardService {
    * @return Returns debit card of the changed pin
    */
   @Override
-  public Boolean setDebitCardPin(Long debitCardNumber, String pin) {
+  public Boolean setDebitCardPin(Long debitCardNumber, String pin, Long id) {
     DebitCard debitCard = getDebitCardByNumber(debitCardNumber);
-    debitCard.setPin(pin);
-    return debitCardRepository.update(debitCard);
+    Long userId = debitCard.getAccount().getUser().getId();
+    if (!debitCard.getPin().equals(pin) && userId == id) {
+      debitCard.setPin(pin);
+      return debitCardRepository.update(debitCard);
+    }
+    return false;
   }
 
 }
