@@ -1,7 +1,5 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.model.account.Account;
-import asd.group2.bms.model.cards.debit.DebitCard;
 import asd.group2.bms.payload.request.DebitCardSetLimitRequest;
 import asd.group2.bms.payload.request.DebitCardSetPinRequest;
 import asd.group2.bms.payload.request.UpdateDebitCardStatusRequest;
@@ -35,7 +33,7 @@ public class DebitCardController {
    * @param debitCardSetLimitRequest: Set transaction limit for the debit card
    * @return Returns whether transaction limit is updated
    */
-  @PutMapping("/services/debitCard")
+  @PutMapping("/services/debitcard")
   @RolesAllowed({"ROLE_USER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> debitCardSetLimit(
       @Valid @RequestBody DebitCardSetLimitRequest debitCardSetLimitRequest) {
@@ -62,7 +60,7 @@ public class DebitCardController {
    * @param debitCardSetPinRequest: Request to set pin for the given debit card
    * @return Returns whether pin is updated
    */
-  @PutMapping("/services/debitCard/pin")
+  @PutMapping("/services/debitcard/pin")
   @RolesAllowed({"ROLE_USER"})
   public ResponseEntity<?> debitCardSetPin(
       @CurrentLoggedInUser UserPrincipal currentUser,
@@ -81,8 +79,8 @@ public class DebitCardController {
    * @param updateDebitCardStatusRequest: Status of the debit card to update
    * @return Success or Failure of update
    */
-  @PutMapping("/services/debitCard/status")
-  @RolesAllowed({"\"ROLE_MANAGER\", \"ROLE_EMPLOYEE\""})
+  @PutMapping("/services/debitcard/status")
+  @RolesAllowed({"ROLE_MANAGER", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> updateDebitCardRequestStatus(
       @Valid @RequestBody UpdateDebitCardStatusRequest updateDebitCardStatusRequest) throws MessagingException, UnsupportedEncodingException {
     Boolean isUpdated =
