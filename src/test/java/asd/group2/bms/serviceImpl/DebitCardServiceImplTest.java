@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DebitCardServiceImplTest {
@@ -111,11 +111,16 @@ class DebitCardServiceImplTest {
   @Test
   void setDebitCardPinSuccessTest() {
     Long debitCardNumber = 6L;
-    String pin = "9999";
-
+    String oldPin = "9999";
+    String newPin = "1234";
+    Long id = 123L;
     DebitCard debitCard = new DebitCard();
-
-    debitCard.setPin(pin);
+    User user = new User();
+    user.setId(id);
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    debitCard.setPin(oldPin);
     debitCard.setDebitCardNumber(debitCardNumber);
 
     when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
@@ -124,19 +129,79 @@ class DebitCardServiceImplTest {
 
     when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
 
-    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
+        newPin,id);
     assertTrue(updatePin, "Pin not updated");
+  }
+
+  @Test
+  void setDebitCardPinFailureSamePasswordTest() {
+    Long debitCardNumber = 6L;
+    String oldPin = "9999";
+    String newPin = "9999";
+    Long id = 123L;
+    DebitCard debitCard = new DebitCard();
+    User user = new User();
+    user.setId(id);
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    debitCard.setPin(oldPin);
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    debitCard.setPin(oldPin);
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
+        newPin,id);
+
+    assertFalse(updatePin, "Pin updated");
+  }
+
+  @Test
+  void setDebitCardPinFailureDifferentUserTest() {
+    Long debitCardNumber = 6L;
+    String oldPin = "9999";
+    String newPin = "9999";
+    Long id = 123L;
+    Long newId = 3L;
+    DebitCard debitCard = new DebitCard();
+    User user = new User();
+    user.setId(id);
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    debitCard.setPin(oldPin);
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    debitCard.setPin(oldPin);
+    debitCard.setDebitCardNumber(debitCardNumber);
+
+    when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
+
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
+        newPin,newId);
+
+    assertFalse(updatePin, "Pin updated");
   }
 
   @Test
   void setDebitCardPinFailureTest() {
     Long debitCardNumber = 6L;
-    String pin = "9999";
-
+    String oldPin = "9999";
+    String newPin = "1234";
+    Long id = 123L;
     DebitCard debitCard = new DebitCard();
-
-    debitCard.setPin(pin);
+    User user = new User();
+    user.setId(id);
+    Account account = new Account();
+    account.setUser(user);
+    debitCard.setAccount(account);
+    debitCard.setPin(oldPin);
     debitCard.setDebitCardNumber(debitCardNumber);
+
 
     when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
@@ -144,9 +209,9 @@ class DebitCardServiceImplTest {
 
     when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
 
-    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber, pin);
-
-    assertFalse(updatePin, "Pin updated");
+    Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
+        newPin,id);
+    assertFalse(updatePin, "Pin not updated");
   }
 
   @Test
