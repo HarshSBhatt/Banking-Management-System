@@ -1,9 +1,12 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountActivity;
+import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.repository.IAccountActivityRepository;
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
@@ -40,6 +43,9 @@ public class TermDepositDetailServiceImplTest {
 
   @Mock
   ITermDepositDetailRepository termDepositDetailRepository;
+
+  @Mock
+  IAccountActivityRepository accountActivityRepository;
 
   @Mock
   IAccountService accountService;
@@ -85,6 +91,8 @@ public class TermDepositDetailServiceImplTest {
     when(accountService.getAccountByUserId(userId)).thenReturn(account);
     when(accountService.updateAccountBalance(account)).thenReturn(true);
     when(termDepositDetailRepository.save(any(TermDepositDetail.class))).then(returnsFirstArg());
+    when(accountActivityRepository.save(any(AccountActivity.class))).then(returnsFirstArg());
+
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
