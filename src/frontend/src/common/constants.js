@@ -29,11 +29,13 @@ export const ROUTES = {
   RESIGNATION_REQUEST: "/bank/resign/requests",
   MY_LEAVES: "/my-leaves",
   MY_RESIGN: "/my-resign",
+  WITHDRAW: "/bank/withdraw",
+  DEPOSIT: "/bank/deposit",
 };
 
 export const APP_NAME = "DAL BMS";
 
-export const MINIMUM_CREDIT_SCORE = 750;
+export const MINIMUM_CREDIT_SCORE = 650;
 
 export const ACCOUNT_STATUS = {
   PENDING: "PENDING",
@@ -81,6 +83,8 @@ export const MODULES = {
   DEBIT_CARD_SERVICES: "Debit Card Services",
   CREDIT_CARD_SERVICES: "Credit Card Services",
   FD_SERVICES: "FD Services",
+  WITHDRAW: "Withdraw",
+  DEPOSIT: "Deposit",
 };
 
 /* Authentication */

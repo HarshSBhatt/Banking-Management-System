@@ -7,6 +7,8 @@ public interface AppConstants {
 
   float DEFAULT_INTEREST_VALUE = 0.06f;
 
+  float SAVING_INTEREST_VALUE = 0.04F;
+
   int FOUR_DIGIT = 10000;
   int SIX_DIGIT = 1000000;
   int MAX_PAGE_SIZE = 50;

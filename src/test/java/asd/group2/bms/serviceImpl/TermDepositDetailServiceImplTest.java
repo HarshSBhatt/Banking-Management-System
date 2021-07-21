@@ -1,8 +1,12 @@
 package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountActivity;
+import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
+import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
+import asd.group2.bms.repository.IAccountActivityRepository;
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
@@ -21,6 +25,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +43,9 @@ public class TermDepositDetailServiceImplTest {
 
   @Mock
   ITermDepositDetailRepository termDepositDetailRepository;
+
+  @Mock
+  IAccountActivityRepository accountActivityRepository;
 
   @Mock
   IAccountService accountService;
@@ -81,12 +91,13 @@ public class TermDepositDetailServiceImplTest {
     when(accountService.getAccountByUserId(userId)).thenReturn(account);
     when(accountService.updateAccountBalance(account)).thenReturn(true);
     when(termDepositDetailRepository.save(any(TermDepositDetail.class))).then(returnsFirstArg());
+    when(accountActivityRepository.save(any(AccountActivity.class))).then(returnsFirstArg());
+
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
 
-    assertEquals(HttpStatus.OK.toString(),
-        responseEntity.getStatusCode().toString(),
+    assertEquals(HttpStatus.OK.toString(), responseEntity.getStatusCode().toString(),
         "Make Term Deposit success test was not executed properly");
   }
 
@@ -115,10 +126,8 @@ public class TermDepositDetailServiceImplTest {
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
 
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-        responseEntity.getStatusCode().toString(),
-        "Make Term Deposit failure test was not executed properly because " +
-            "balance was not updated!");
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), responseEntity.getStatusCode().toString(),
+        "Make Term Deposit failure test was not executed properly because " + "balance was not updated!");
   }
 
   @Test
@@ -134,10 +143,8 @@ public class TermDepositDetailServiceImplTest {
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
 
-    assertEquals(HttpStatus.BAD_REQUEST.toString(),
-        responseEntity.getStatusCode().toString(),
-        "Make Term Deposit failure test was not executed properly because FD " +
-            "amount was low");
+    assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getStatusCode().toString(),
+        "Make Term Deposit failure test was not executed properly because FD " + "amount was low");
   }
 
   @Test
@@ -164,10 +171,9 @@ public class TermDepositDetailServiceImplTest {
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
 
-    assertEquals(HttpStatus.BAD_REQUEST.toString(),
-        responseEntity.getStatusCode().toString(),
-        "Make Term Deposit failure test was not executed properly because FD " +
-            "amount was higher than available balance");
+    assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getStatusCode().toString(),
+        "Make Term Deposit failure test was not executed properly because FD "
+            + "amount was higher than available balance");
   }
 
   @Test
@@ -193,10 +199,8 @@ public class TermDepositDetailServiceImplTest {
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
-    assertEquals(HttpStatus.BAD_REQUEST.toString(),
-        responseEntity.getStatusCode().toString(),
-        "Make Term Deposit failure test was not executed properly because " +
-            "balance after deduction is lower");
+    assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getStatusCode().toString(),
+        "Make Term Deposit failure test was not executed properly because " + "balance after deduction is lower");
   }
 
   @Test
@@ -217,12 +221,12 @@ public class TermDepositDetailServiceImplTest {
     Account account = new Account();
     account.setBalance(balance);
 
-    when(accountService.getAccountByUserId(userId)).thenReturn(account);
+    when(accountService.getAccountByUserId(userId)).thenThrow(new RuntimeException());
 
     ResponseEntity<?> responseEntity = termDepositDetailService.makeTermDepositRequest(userId, email, firstName,
         fdAmount, date, duration);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-        responseEntity.getStatusCode().toString(),
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,
+        responseEntity.getStatusCode(),
         "Make Term Deposit failure test was not executed properly because " +
             "exception was raised");
   }
@@ -236,12 +240,9 @@ public class TermDepositDetailServiceImplTest {
 
     when(termDepositDetailRepository.findById(id)).thenReturn(Optional.of(termDepositDetail));
 
-    TermDepositDetail fetchedTermDeposit =
-        termDepositDetailService.getTermDepositDetailById(id);
-    assertEquals(initialAmount, fetchedTermDeposit.getInitialAmount(), "Wrong " +
-        "Initial Amount was returned");
+    TermDepositDetail fetchedTermDeposit = termDepositDetailService.getTermDepositDetailById(id);
+    assertEquals(initialAmount, fetchedTermDeposit.getInitialAmount(), "Wrong " + "Initial Amount was returned");
   }
-
 
   @Test
   void getTermDepositDetailTest() {
@@ -267,11 +268,13 @@ public class TermDepositDetailServiceImplTest {
     termDepositDetail.setAccount(account);
     termDepositDetails.add(termDepositDetail);
 
-    when(termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(accountNumber)).thenReturn(termDepositDetails);
+    when(termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(accountNumber))
+        .thenReturn(termDepositDetails);
     when(accountService.getAccountByUserId(userId)).thenReturn(account);
 
     assertEquals(accountNumber,
-        termDepositDetailService.getTermDepositDetail(userId).get(0).getAccount().getAccountNumber(), "Wrong accountNumber was returned");
+        termDepositDetailService.getTermDepositDetail(userId).get(0).getAccount().getAccountNumber(),
+        "Wrong accountNumber was returned");
   }
 
   @Test
@@ -295,11 +298,88 @@ public class TermDepositDetailServiceImplTest {
     account.setBalance(balance);
 
     when(accountService.getAccountByUserId(userId)).thenReturn(account);
-    when(termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(accountNumber)).thenReturn(termDepositDetails);
+    when(termDepositDetailRepository.findTermDepositDetailByAccount_AccountNumber(accountNumber))
+        .thenReturn(termDepositDetails);
 
-    assertEquals(0,
-        termDepositDetailService.getTermDepositDetail(userId).size(), "Empty " +
-            "Term Deposit list was not returned");
+    assertEquals(0, termDepositDetailService.getTermDepositDetail(userId).size(),
+        "Empty " + "Term Deposit list was not returned");
+  }
+
+  @Test
+  void closeTermDepositeDetailTrueTest() {
+    Long accountNumber = 1L;
+    Double balance = 100000.0;
+    Double initialAmount = 5000.0;
+
+    Date fromDate = Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate = Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    account.setBalance(balance);
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setAccount(account);
+    termDepositDetail.setStartDate(fromDate);
+    termDepositDetail.setMaturityDate(toDate);
+    termDepositDetail.setInitialAmount(initialAmount);
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+
+    when(accountService.updateAccountBalance(account)).thenReturn(true);
+    when(termDepositDetailRepository.update(termDepositDetail)).thenReturn(true);
+
+    assertEquals(true, termDepositDetailService.closeTermDepositDetail(termDepositDetail), "Term deposit not closed!");
+  }
+
+  @Test
+  void closeTermDepositeDetailFalseTest() {
+
+    Long accountNumber = 1L;
+    Double balance = 100000.0;
+    Double initialAmount = 5000.0;
+
+    Date fromDate = Date.from(LocalDate.of(2021, 7, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date toDate = Date.from(LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    Account account = new Account();
+    account.setAccountNumber(accountNumber);
+    account.setBalance(balance);
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setAccount(account);
+    termDepositDetail.setStartDate(fromDate);
+    termDepositDetail.setMaturityDate(toDate);
+    termDepositDetail.setInitialAmount(initialAmount);
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.MATURED);
+
+    when(accountService.updateAccountBalance(account)).thenReturn(true);
+    when(termDepositDetailRepository.update(termDepositDetail)).thenReturn(true);
+
+    assertEquals(true, termDepositDetailService.closeTermDepositDetail(termDepositDetail),
+        "Term deposit cannot be closed!");
+  }
+
+  void checkActiveTermDepositTrueTest() {
+    List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
+    termDepositDetailList.add(termDepositDetail);
+
+    assertEquals(true, termDepositDetailService.checkActiveTermDeposit(termDepositDetailList),
+        "Term deposit status was not ACTIVE");
+  }
+
+  @Test
+  void checkActiveTermDepositFalseTest() {
+    List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
+
+    TermDepositDetail termDepositDetail = new TermDepositDetail();
+    termDepositDetail.setTermDepositStatus(TermDepositStatus.CLOSED);
+    termDepositDetailList.add(termDepositDetail);
+
+    assertEquals(false, termDepositDetailService.checkActiveTermDeposit(termDepositDetailList),
+        "Term deposit status was not CLOSED");
   }
 
 }

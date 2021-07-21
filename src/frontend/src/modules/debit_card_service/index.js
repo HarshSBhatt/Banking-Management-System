@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //! Ant Imports
 
@@ -12,6 +12,8 @@ import ServerError from "components/ServerError";
 import Loading from "components/Loading";
 import SetLimit from "./components/SetLimit";
 import SetPin from "./components/SetPin";
+import { AppContext } from "AppContext";
+import SetDebitCardStatus from "./components/SetDebitCardStatus";
 
 const tabList = [
   {
@@ -29,6 +31,9 @@ const tabList = [
 ];
 
 function DebitCardServices() {
+  const {
+    state: { authToken },
+  } = useContext(AppContext);
   const [state, setState] = useState({
     key: "tab1",
   });
@@ -40,7 +45,7 @@ function DebitCardServices() {
 
   const contentList = {
     tab1: <SetLimit debitCardNumber={debitCardNumber} />,
-    tab2: <p>content2</p>,
+    tab2: <SetDebitCardStatus debitCardNumber={debitCardNumber} />,
     tab3: <SetPin debitCardNumber={debitCardNumber} />,
   };
 
@@ -54,7 +59,11 @@ function DebitCardServices() {
   const fetchUserAccount = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/account/me`);
+      const response = await api.get(`/account/me`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const { data } = response;
       setAccountData(data);
     } catch (err) {
@@ -70,6 +79,7 @@ function DebitCardServices() {
 
   useEffect(() => {
     fetchUserAccount();
+    // eslint-disable-next-line
   }, []);
 
   const title = <span className="cb-text-strong">Debit Card Services</span>;
