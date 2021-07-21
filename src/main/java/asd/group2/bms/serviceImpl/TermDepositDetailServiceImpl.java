@@ -2,9 +2,12 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.exception.ResourceNotFoundException;
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountActivity;
+import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.repository.IAccountActivityRepository;
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.service.IAccountService;
 import asd.group2.bms.service.ICustomEmail;
@@ -25,6 +28,9 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
   @Autowired
   ITermDepositDetailRepository termDepositDetailRepository;
+
+  @Autowired
+  IAccountActivityRepository accountActivityRepository;
 
   @Autowired
   IAccountService accountService;
@@ -82,6 +88,11 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
       // New TermDepositDetail
       TermDepositDetail termDepositDetail = new TermDepositDetail(account, currentDate, fdAmount, duration, interestRate, maturityDate, maturityAmount, TermDepositStatus.ACTIVE);
+
+      //Setting account activity
+      AccountActivity accountActivity = new AccountActivity(account,
+          ActivityType.WITHDRAWAL,fdAmount, "Term Deposit withdrawal!");
+      accountActivityRepository.save(accountActivity);
 
       // Saving TermDepositDetail & TermDeposit
       termDepositDetailRepository.save(termDepositDetail);
