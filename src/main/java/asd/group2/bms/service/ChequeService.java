@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface ChequeService {
 
-    ResponseEntity<?> startCheque(Long senderAccountNumber,
+    Boolean startCheque(Long senderAccountNumber,
                                   Long receiverAccountNumber,
                                   Long chequeNumber, Double chequeAmount);
 }
