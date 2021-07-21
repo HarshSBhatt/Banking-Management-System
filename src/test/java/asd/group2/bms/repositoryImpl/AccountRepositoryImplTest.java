@@ -1,6 +1,9 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountType;
+import asd.group2.bms.model.cards.debit.DebitCard;
+import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.AccountRowMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,6 +109,24 @@ class AccountRepositoryImplTest {
         accountRepository.findAccountByAccountNumber(accountNumber);
 
     assertEquals(Optional.empty(), accountOptional);
+  }
+
+  @Test
+  void saveTest() {
+    Long userId = 1L;
+
+    User user = new User();
+    user.setId(userId);
+
+    Account account = new Account();
+    account.setAccountType(AccountType.SAVINGS);
+    account.setUser(user);
+
+    when(jdbcTemplate.update(ArgumentMatchers.anyString(),
+        (Object[]) ArgumentMatchers.any())).thenReturn(5);
+
+    accountRepository.save(account);
+    assertEquals(1L, account.getUser().getId());
   }
 
   @Test
