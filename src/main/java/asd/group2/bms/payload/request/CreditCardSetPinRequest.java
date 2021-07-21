@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class CreditCardSetPinRequest {
+
   @NotNull(message = "Credit card number is required to set the pin")
   private Long creditCardNumber;
 

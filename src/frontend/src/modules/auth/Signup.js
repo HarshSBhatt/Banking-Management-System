@@ -280,7 +280,7 @@ function Signup({ isOpenedByManager }) {
           )
         ) : (
           <Form.Item
-            name="accountType"
+            name="requestedAccountType"
             rules={[{ required: true, message: "Account Type is required" }]}
           >
             <Select allowClear placeholder="Account Type">

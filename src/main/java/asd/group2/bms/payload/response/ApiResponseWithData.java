@@ -3,6 +3,7 @@ package asd.group2.bms.payload.response;
 import java.util.List;
 
 public class ApiResponseWithData<T> {
+
   private Boolean success;
 
   private String message;

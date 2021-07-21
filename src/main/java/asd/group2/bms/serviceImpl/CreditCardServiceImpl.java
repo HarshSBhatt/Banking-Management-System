@@ -82,6 +82,27 @@ public class CreditCardServiceImpl implements ICreditCardService {
     String email = creditCard.getAccount().getUser().getEmail();
     String firstName = creditCard.getAccount().getUser().getFirstName();
     Integer transactionLimit = creditCard.getTransactionLimit();
+    if (creditCardStatus == CreditCardStatus.APPROVED) {
+      int creditScore = creditCard.getAccount().getCreditScore();
+      if (creditScore > 650 && creditScore < 700) {
+        if (transactionLimit > 1000) {
+          transactionLimit = 1000;
+        }
+      } else if (creditScore >= 700 && creditScore < 750) {
+        if (transactionLimit > 1500) {
+          transactionLimit = 1500;
+        }
+      } else if (creditScore >= 750 && creditScore < 800) {
+        if (transactionLimit > 2500) {
+          transactionLimit = 2500;
+        }
+      } else {
+        if (transactionLimit > 5000) {
+          transactionLimit = 5000;
+        }
+      }
+      creditCard.setTransactionLimit(transactionLimit);
+    }
     creditCard.setCreditCardStatus(creditCardStatus);
     boolean response = creditCardRepository.update(creditCard);
     if (response) {
@@ -99,20 +120,25 @@ public class CreditCardServiceImpl implements ICreditCardService {
    */
   @Override
   public CreditCard createCreditCard(Account account,
-                                     Integer requestedTransactionLimit) {
+                                     Integer requestedTransactionLimit) throws Exception {
     CardDetails cardDetails = helper.generateCardDetails();
 
-    String creditCardNumber = cardDetails.getCardNumber();
-    String expiryMonth = cardDetails.getExpiryMonth();
-    String expiryYear = cardDetails.getExpiryYear();
-    String pin = cardDetails.getPin();
-    String cvv = cardDetails.getCvv();
+    int creditScore = account.getCreditScore();
+    if (creditScore > 650) {
+      String creditCardNumber = cardDetails.getCardNumber();
+      String expiryMonth = cardDetails.getExpiryMonth();
+      String expiryYear = cardDetails.getExpiryYear();
+      String pin = cardDetails.getPin();
+      String cvv = cardDetails.getCvv();
 
-    CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
-        account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
-        cvv, false);
+      CreditCard creditCard = new CreditCard(Long.parseLong(creditCardNumber),
+          account, pin, requestedTransactionLimit, CreditCardStatus.PENDING, expiryYear, expiryMonth,
+          cvv, false);
 
-    return creditCardRepository.save(creditCard);
+      return creditCardRepository.save(creditCard);
+    } else {
+      throw new Exception("You are not eligible to apply for our Credit Card");
+    }
   }
 
   /**
@@ -122,7 +148,8 @@ public class CreditCardServiceImpl implements ICreditCardService {
    * @return: boolean result
    */
   @Override
-  public Boolean setCreditCardPin(Long creditCardNumber, String pin, Long id) throws Exception {
+  public Boolean setCreditCardPin(Long creditCardNumber, String pin, Long id) throws
+      Exception {
     CreditCard creditCard = getCreditCardByCreditCardNumber(creditCardNumber);
     Long userId = creditCard.getAccount().getUser().getId();
     if (userId == id) {
@@ -132,4 +159,5 @@ public class CreditCardServiceImpl implements ICreditCardService {
       throw new Exception("You are not authorized to perform this operation");
     }
   }
+
 }

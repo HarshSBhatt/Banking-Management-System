@@ -18,7 +18,8 @@ public interface ICreditCardService {
   Boolean setCreditCardRequestStatus(Long creditCardNumber,
                                      CreditCardStatus creditCardStatus) throws MessagingException, UnsupportedEncodingException;
 
-  CreditCard createCreditCard(Account account, Integer requestedTransactionLimit);
+  CreditCard createCreditCard(Account account, Integer requestedTransactionLimit) throws Exception;
 
   Boolean setCreditCardPin(Long creditCardNumber, String pin, Long id) throws Exception;
+
 }

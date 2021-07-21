@@ -5,9 +5,6 @@ stages:
   - test
   - deploy_stag
   - deploy_prod
-  - build_fe
-  - deploy_fe_stag
-  - deploy_fe_prod
 
 build:
   image: maven:3.8.1-openjdk-16
@@ -18,24 +15,6 @@ build:
     paths:
       - Group2/target
   script: mvn clean install
-  except:
-    - test
-
-build_fe:
-  stage: build_fe
-  image: node:16
-  artifacts:
-    paths:
-      - ./src/frontend/build/
-  script:
-    - cd ./src/frontend/
-    - yarn
-    - yarn build
-  tags:
-    - dalfcs_docker_kvm
-  only:
-    - test
-    - master
 
 test:
   image: maven:3.8.1-openjdk-16
@@ -48,8 +27,6 @@ test:
       junit:
         - Group2/target/surefire-reports/TEST-*.xml
   script: mvn verify
-  except:
-    - test
 
 staging:
   type: deploy
@@ -64,8 +41,6 @@ staging:
     - test
   tags:
     - dalfcs_docker_kvm
-  except:
-    - test
 
 production:
   type: deploy
@@ -80,35 +55,3 @@ production:
     - master
   tags:
     - dalfcs_docker_kvm
-  except:
-    - test
-
-deploy_fe_stag:
-  type: deploy
-  stage: deploy_fe_stag
-  image: ruby:latest
-  script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - cd ./src/frontend/build
-    - dpl --provider=heroku --app=$HEROKU_APP_FE_STAGING --api-key=$HEROKU_API_KEY --skip_cleanup
-  tags:
-    - dalfcs_docker_kvm
-  only:
-    - test
-
-deploy_fe_prod:
-  type: deploy
-  stage: deploy_fe_prod
-  image: ruby:latest
-  script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - cd ./src/frontend/build
-    - dpl --provider=heroku --app=$HEROKU_APP_FE_PROD --api-key=$HEROKU_API_KEY --skip_cleanup
-  tags:
-    - dalfcs_docker_kvm
-  only:
-    - master

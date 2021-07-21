@@ -14,6 +14,7 @@ import useTableSearch from "common/hooks/useTableSearch";
 import api from "common/api";
 import { TOKEN } from "common/constants";
 import GetFDReceipt from "./GetFDReceipt";
+import CloseFDAccount from "./CloseFDAccount";
 
 function MyFdAccounts() {
   const [loading, setLoading] = useState(false);
@@ -78,6 +79,11 @@ function MyFdAccounts() {
       },
     },
     {
+      title: "Status",
+      dataIndex: "termDepositStatus",
+      key: "termDepositStatus",
+    },
+    {
       title: "Maturity Amount",
       dataIndex: "maturityAmount",
       key: "maturityAmount",
@@ -90,6 +96,19 @@ function MyFdAccounts() {
       key: "receipt",
       render: (record) => {
         return <GetFDReceipt record={record} />;
+      },
+    },
+    {
+      title: "Close FD",
+      key: "closeFd",
+      render: (record) => {
+        return record.termDepositStatus === "ACTIVE" ? (
+          <CloseFDAccount record={record} />
+        ) : (
+          <Button loading={loading} type="text">
+            -
+          </Button>
+        );
       },
     },
   ];
