@@ -1,18 +1,26 @@
 package asd.group2.bms.controller;
 
 import asd.group2.bms.model.account.Account;
+import asd.group2.bms.model.account.AccountActivity;
+import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.payload.request.TermDepositRequest;
 import asd.group2.bms.payload.response.ApiResponse;
+import asd.group2.bms.repositoryImpl.AccountActivityRepositoryImpl;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.ITermDepositDetailService;
+import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +30,9 @@ public class TermDepositDetailController {
 
   @Autowired
   ITermDepositDetailService termDepositDetailService;
+
+  @Autowired
+  AccountActivityRepositoryImpl accountActivityRepository;
 
   /**
    * @return Return all the term deposits of current user
@@ -77,9 +88,29 @@ public class TermDepositDetailController {
     Long fdId = Long.parseLong(termDepositId);
     TermDepositDetail termDepositDetail = termDepositDetailService.getTermDepositDetailById(fdId);
 
-    Boolean isUpdated = termDepositDetailService.closeTermDepositDetail(termDepositDetail);
+    float interestRate = AppConstants.SAVING_INTEREST_VALUE;
+    Account account = termDepositDetail.getAccount();
+    Date fromDate = termDepositDetail.getStartDate();
+    Date toDate = new Date();
+
+    // logic of calculating amount
+
+    String modifiedFromDate = new SimpleDateFormat("yyyy-MM-dd").format(fromDate);
+    String modifiedToDate = new SimpleDateFormat("yyyy-MM-dd").format(toDate);
+
+    long duration = ChronoUnit.MONTHS.between(YearMonth.from(LocalDate.parse(modifiedFromDate)),
+        YearMonth.from(LocalDate.parse(modifiedToDate)));
+
+    Double maturityAmount = termDepositDetail.getInitialAmount() + Math.pow((1 + (interestRate / 12)), duration);
+
+
+    Boolean isUpdated =
+        termDepositDetailService.closeTermDepositDetail(termDepositDetail);
 
     if (isUpdated) {
+      AccountActivity accountActivity = new AccountActivity(termDepositDetail.getAccount(),
+          ActivityType.DEPOSIT, maturityAmount, "Term Deposit Credited");
+      accountActivityRepository.save(accountActivity);
       return new ResponseEntity<>(new ApiResponse(true,
           "Term deposit closed successfully."), HttpStatus.OK);
     } else {
