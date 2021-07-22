@@ -67,6 +67,7 @@ function Signup({ isOpenedByManager }) {
         if (role === ROLES.ROLE_USER) {
           userDetails.requestedAccountType = requestedAccountType;
         }
+        userDetails.requestedAccountType = "CURRENT";
       } else {
         userDetails.requestedAccountType = requestedAccountType;
       }
@@ -80,7 +81,7 @@ function Signup({ isOpenedByManager }) {
           message: data.message,
           type: "success",
         });
-        !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
+        // !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
       }
     } catch (err) {
       if (err.response?.data) {

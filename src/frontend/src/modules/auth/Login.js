@@ -63,7 +63,7 @@ function Login() {
       if (err.response?.data) {
         toast({
           message:
-            err.response.data.message === "Bad credentials"
+            err.response.data.status === 401
               ? "Please check your credentials"
               : err.response.data.message,
           type: "error",
