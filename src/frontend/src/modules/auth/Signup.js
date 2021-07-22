@@ -81,7 +81,7 @@ function Signup({ isOpenedByManager }) {
           message: data.message,
           type: "success",
         });
-        // !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
+        !isOpenedByManager ? push(ROUTES.LOGIN) : form.resetFields();
       }
     } catch (err) {
       if (err.response?.data) {
