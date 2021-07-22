@@ -67,6 +67,7 @@ function Signup({ isOpenedByManager }) {
         if (role === ROLES.ROLE_USER) {
           userDetails.requestedAccountType = requestedAccountType;
         }
+        userDetails.requestedAccountType = "CURRENT";
       } else {
         userDetails.requestedAccountType = requestedAccountType;
       }

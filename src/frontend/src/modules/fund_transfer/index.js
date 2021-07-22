@@ -50,10 +50,7 @@ function FundTransfer() {
       } catch (err) {
         if (err.response?.data) {
           toast({
-            message:
-              err.response.data.message === "Bad credentials"
-                ? "Please check your credentials"
-                : err.response.data.message,
+            message: err.response.data.message,
             type: "error",
           });
         } else {
@@ -176,7 +173,7 @@ function FundTransfer() {
         >
           <Input placeholder="Amount" />
         </Form.Item>
-        <Form.Item name="reason">
+        <Form.Item name="comment">
           <TextArea rows={4} placeholder="Comment (Optional)" />
         </Form.Item>
         <Form.Item>

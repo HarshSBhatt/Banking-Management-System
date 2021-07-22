@@ -93,8 +93,8 @@ function AccountStatement() {
           <span
             className={
               record.activityType === "WITHDRAWAL"
-                ? "credit cb-text-strong"
-                : "debit cb-text-strong"
+                ? "debit cb-text-strong"
+                : "credit cb-text-strong"
             }
           >
             {amount}
@@ -109,7 +109,7 @@ function AccountStatement() {
       ...getColumnSearchProps("activityType"),
       render: (activityType) => {
         return (
-          <span>{activityType === "WITHDRAWAL" ? "Credit" : "Debit"}</span>
+          <span>{activityType === "WITHDRAWAL" ? "Debit" : "Credit"}</span>
         );
       },
     },

@@ -95,7 +95,7 @@ export const dashboardRoutes = [
   },
   {
     link: ROUTES.MY_LEAVES,
-    label: "My Resign",
+    label: "My Leaves",
     allowedRoles: ["ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_HR"],
   },
   {
