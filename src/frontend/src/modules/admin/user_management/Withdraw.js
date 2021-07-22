@@ -29,7 +29,7 @@ function Withdraw() {
     } catch (err) {
       if (err.response?.data) {
         toast({
-          message: err.response.data.message,
+          message: err.response.data.error,
           type: "error",
         });
       } else {
