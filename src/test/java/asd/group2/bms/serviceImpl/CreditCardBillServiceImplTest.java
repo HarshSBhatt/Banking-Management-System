@@ -1,7 +1,7 @@
 package asd.group2.bms.serviceImpl;
 
-import asd.group2.bms.repository.CreditCardBillRepository;
-import asd.group2.bms.repository.ICreditCardRepository;
+import asd.group2.bms.model.cards.credit.CreditCardBill;
+import asd.group2.bms.repository.ICreditCardBillRepository;
 import asd.group2.bms.service.ICustomEmail;
 import asd.group2.bms.util.Helper;
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +18,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class CreditCardBillServiceImplTest {
 
   @Mock
-  CreditCardBillRepository creditCardBillRepository;
+  ICreditCardBillRepository ICreditCardBillRepository;
 
   @Mock
   ICustomEmail customEmail;
@@ -32,7 +36,7 @@ class CreditCardBillServiceImplTest {
   Helper helper;
 
   @InjectMocks
-  CreditCardServiceImpl creditCardService;
+  CreditCardBillServiceImpl creditCardBillService;
 
   @BeforeEach
   public void setup() {
@@ -49,13 +53,21 @@ class CreditCardBillServiceImplTest {
 
 
   @Test
-  void payCreditCardBill() {
+  void payCreditCardBillBalanceSufficient() {
+
+  }
+  @Test
+  void payCreditCardBillBalanceInSufficient() {
 
   }
 
-  @Test
-  void getBills() {
 
+  @Test
+  void getBillsByCreditCardNumber() {
+    Long creditCardNumber = 123L;
+    when(ICreditCardBillRepository.showBills(creditCardNumber)).thenReturn(Optional.of(new CreditCardBill()));
+    creditCardBillService.getBills(creditCardNumber);
+    verify(ICreditCardBillRepository, times(1)).showBills(any());
   }
 
 }

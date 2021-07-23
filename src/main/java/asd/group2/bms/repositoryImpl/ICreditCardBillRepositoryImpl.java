@@ -2,7 +2,7 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.cards.credit.BillStatus;
 import asd.group2.bms.model.cards.credit.CreditCardBill;
-import asd.group2.bms.repository.CreditCardBillRepository;
+import asd.group2.bms.repository.ICreditCardBillRepository;
 import asd.group2.bms.repositoryMapper.CreditCardBillMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,14 +15,14 @@ import java.util.Date;
 import java.util.Optional;
 
 @Repository
-public class CreditCardBillRepositoryImpl extends JdbcDaoSupport implements CreditCardBillRepository {
+public class ICreditCardBillRepositoryImpl extends JdbcDaoSupport implements ICreditCardBillRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     final
     DataSource dataSource;
 
-    public CreditCardBillRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ICreditCardBillRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.dataSource = dataSource;
     }
