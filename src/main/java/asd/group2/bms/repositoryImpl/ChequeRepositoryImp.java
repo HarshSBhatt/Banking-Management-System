@@ -4,11 +4,13 @@ import asd.group2.bms.model.cheque.ChequeStatus;
 import asd.group2.bms.repository.IChequeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.Date;
 
+@Repository
 public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeRepository {
   private final JdbcTemplate jdbcTemplate;
 
