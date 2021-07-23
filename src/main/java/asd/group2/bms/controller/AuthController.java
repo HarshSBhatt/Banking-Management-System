@@ -94,7 +94,7 @@ public class AuthController {
     String token = RandomString.make(45);
 
     userService.updateResetForgotPasswordToken(token, email);
-    String forgotPasswordLink = "http://localhost:3000/reset-password?token=" + token;
+    String forgotPasswordLink = "https://prod.d2rhm40oiw35d1.amplifyapp.com/reset-password?token=" + token;
     try {
       customEmail.sendResetPasswordEmail(email, forgotPasswordLink);
       return ResponseEntity.ok(new ApiResponse(true, "Email sent successfully"));
