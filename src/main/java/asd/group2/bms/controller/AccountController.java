@@ -136,7 +136,7 @@ public class AccountController {
 
     if (isUpdated) {
       AccountActivity accountActivity = new AccountActivity(account,
-          ActivityType.DEPOSIT,deposit, "Money Deposited Successfully.");
+          ActivityType.DEPOSIT, deposit, "Money Deposited Successfully.");
       accountActivityRepository.save(accountActivity);
       return new ResponseEntity<>(new ApiResponse(true, "Money deposited successfully."), HttpStatus.OK);
     } else {
@@ -173,7 +173,7 @@ public class AccountController {
       if (isUpdated) {
 
         AccountActivity accountActivity = new AccountActivity(account,
-            ActivityType.WITHDRAWAL,withdrawal, "Money Withdrawn " +
+            ActivityType.WITHDRAWAL, withdrawal, "Money Withdrawn " +
             "Successfully");
         accountActivityRepository.save(accountActivity);
         return new ResponseEntity<>(new ApiResponse(true, "Money withdrawn" + " successfully."), HttpStatus.OK);

@@ -1,6 +1,5 @@
 package asd.group2.bms.controller;
 
-import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
 import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
@@ -89,7 +88,6 @@ public class TermDepositDetailController {
     TermDepositDetail termDepositDetail = termDepositDetailService.getTermDepositDetailById(fdId);
 
     float interestRate = AppConstants.SAVING_INTEREST_VALUE;
-    Account account = termDepositDetail.getAccount();
     Date fromDate = termDepositDetail.getStartDate();
     Date toDate = new Date();
 

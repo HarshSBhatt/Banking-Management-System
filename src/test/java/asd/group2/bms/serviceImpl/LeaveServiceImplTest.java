@@ -25,7 +25,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -77,10 +80,10 @@ class LeaveServiceImplTest {
     when(leaveRepository.findByRequestStatusEquals(requestStatus, pageable)).thenReturn(pagedLeaves);
 
     PagedResponse<LeaveListResponse> leavesList =
-            leaveService.getLeavesByStatus(requestStatus, page, size);
+        leaveService.getLeavesByStatus(requestStatus, page, size);
 
     assertEquals(username,
-            leavesList.getContent().get(0).getUserMetaResponse().getUsername());
+        leavesList.getContent().get(0).getUserMetaResponse().getUsername());
   }
 
   @Test
@@ -99,10 +102,10 @@ class LeaveServiceImplTest {
     when(leaveRepository.findByRequestStatusEquals(requestStatus, pageable)).thenReturn(pagedLeaves);
 
     PagedResponse<LeaveListResponse> resignations =
-            leaveService.getLeavesByStatus(requestStatus, page, size);
+        leaveService.getLeavesByStatus(requestStatus, page, size);
 
     assertEquals(0,
-            resignations.getSize());
+        resignations.getSize());
   }
 
   @Test
@@ -217,14 +220,12 @@ class LeaveServiceImplTest {
     UserPrincipal userPrincipal = new UserPrincipal();
     userPrincipal.setId(userId);
 
-    Optional<LeaveRequest> request = Optional.of(leaveRequest);
-
     when(leaveRepository.findById(leaveId)).thenThrow(new RuntimeException());
     ResponseEntity<?> responseEntity =
-            leaveService.deleteLeaveRequestById(userPrincipal, leaveId);
+        leaveService.deleteLeaveRequestById(userPrincipal, leaveId);
 
     assertEquals(HttpStatus.BAD_REQUEST.toString(),
-            responseEntity.getStatusCode().toString());
+        responseEntity.getStatusCode().toString());
   }
 
   @Test
@@ -331,4 +332,5 @@ class LeaveServiceImplTest {
 
     assertEquals(HttpStatus.NOT_ACCEPTABLE, leave.getStatusCode());
   }
+
 }

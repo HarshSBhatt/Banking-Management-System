@@ -1,11 +1,6 @@
 package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.*;
-
 import asd.group2.bms.repository.ITermDepositDetailRepository;
 import asd.group2.bms.repositoryMapper.TermDepositDetailRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Repository
