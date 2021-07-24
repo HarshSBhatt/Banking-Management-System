@@ -28,7 +28,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;

@@ -191,4 +191,5 @@ public class LeaveRepositoryImplTest {
 
     verify(jdbcTemplate, times(1)).update(anyString(), (Object) any());
   }
+
 }

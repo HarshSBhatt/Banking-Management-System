@@ -100,17 +100,18 @@ public class AccountController {
     }
     Boolean isUpdated = userService.setUserAccountStatus(email, AccountStatus.ACTIVE);
     User user = userService.getUserByEmail(email);
-    if (!isUpdated) {
-      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"), HttpStatus.BAD_REQUEST);
+    if (isUpdated) {
+      AccountType accountType = user.getRequestedAccountType();
+      accountService.createAccount(user, accountType, balance, creditScore);
+      try {
+        customEmail.sendAccountCreationMail(email, user.getFirstName());
+        return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
+      } catch (MessagingException | UnsupportedEncodingException e) {
+        return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
+      }
     }
-    AccountType accountType = user.getRequestedAccountType();
-    accountService.createAccount(user, accountType, balance, creditScore);
-    try {
-      customEmail.sendAccountCreationMail(email, user.getFirstName());
-      return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
-    } catch (MessagingException | UnsupportedEncodingException e) {
-      return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
-    }
+    return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing account status!"), HttpStatus.BAD_REQUEST);
+
   }
 
   /**
@@ -136,7 +137,7 @@ public class AccountController {
 
     if (isUpdated) {
       AccountActivity accountActivity = new AccountActivity(account,
-          ActivityType.DEPOSIT,deposit, "Money Deposited Successfully.");
+          ActivityType.DEPOSIT, deposit, "Money Deposited Successfully.");
       accountActivityRepository.save(accountActivity);
       return new ResponseEntity<>(new ApiResponse(true, "Money deposited successfully."), HttpStatus.OK);
     } else {
@@ -173,7 +174,7 @@ public class AccountController {
       if (isUpdated) {
 
         AccountActivity accountActivity = new AccountActivity(account,
-            ActivityType.WITHDRAWAL,withdrawal, "Money Withdrawn " +
+            ActivityType.WITHDRAWAL, withdrawal, "Money Withdrawn " +
             "Successfully");
         accountActivityRepository.save(accountActivity);
         return new ResponseEntity<>(new ApiResponse(true, "Money withdrawn" + " successfully."), HttpStatus.OK);

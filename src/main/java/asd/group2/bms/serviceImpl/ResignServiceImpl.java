@@ -99,12 +99,12 @@ public class ResignServiceImpl implements IResignService {
   public ResponseEntity<?> deleteResignationRequestById(UserPrincipal currentUser, Long resignId) {
     try {
       ResignRequest resignRequest = getResignById(resignId);
-      if (resignRequest.getUser().getId() != currentUser.getId()) {
-        return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
-            HttpStatus.FORBIDDEN);
+      if (resignRequest.getUser().getId().equals(currentUser.getId())) {
+        resignRepository.delete(resignId);
+        return ResponseEntity.ok(new ApiResponse(true, "Resignation request deleted successfully"));
       }
-      resignRepository.delete(resignId);
-      return ResponseEntity.ok(new ApiResponse(true, "Resignation request deleted successfully"));
+      return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+          HttpStatus.FORBIDDEN);
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
           HttpStatus.BAD_REQUEST);

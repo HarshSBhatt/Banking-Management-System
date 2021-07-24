@@ -202,8 +202,6 @@ public class ResignServiceImplTest {
 
     Long resignId = 2L;
 
-    Optional<ResignRequest> request = Optional.of(resignRequest);
-
     when(resignRepository.findById(resignId)).thenThrow(new RuntimeException());
     ResponseEntity<?> responseEntity =
         resignService.deleteResignationRequestById(userPrincipal, resignId);
