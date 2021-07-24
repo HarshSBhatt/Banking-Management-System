@@ -118,8 +118,12 @@ public class TermDepositDetailRepositoryImpl extends JdbcDaoSupport implements I
         termDepositDetail.getRateOfInterest(),
         termDepositDetail.getTermDepositStatus().name(),
         termDepositDetail.getTermDepositId());
-    return status != 0;
 
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }

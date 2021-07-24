@@ -356,6 +356,7 @@ public class TermDepositDetailServiceImplTest {
         "Term deposit cannot be closed!");
   }
 
+  @Test
   void checkActiveTermDepositTrueTest() {
     List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
 

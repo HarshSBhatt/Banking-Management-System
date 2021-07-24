@@ -129,7 +129,12 @@ public class ResignRepositoryImpl extends JdbcDaoSupport implements IResignRepos
         new Date(),
         resignRequest.getDate(), resignRequest.getReason(),
         resignRequest.getRequestStatus().name(), resignRequest.getResignId());
-    return status != 0;
+
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
   @Override

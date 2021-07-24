@@ -98,12 +98,13 @@ public class LeaveServiceImpl implements ILeaveService {
   public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
     try {
       LeaveRequest leaveRequest = getLeaveById(leaveId);
-      if (leaveRequest.getUser().getId() != currentUser.getId()) {
-        return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
-            HttpStatus.FORBIDDEN);
+      if (leaveRequest.getUser().getId().equals(currentUser.getId())) {
+        leaveRepository.delete(leaveId);
+        return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
       }
-      leaveRepository.delete(leaveId);
-      return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
+      return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+          HttpStatus.FORBIDDEN);
+
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
           HttpStatus.BAD_REQUEST);
