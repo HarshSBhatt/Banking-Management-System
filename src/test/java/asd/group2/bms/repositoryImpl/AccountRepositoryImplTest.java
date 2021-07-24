@@ -2,8 +2,6 @@ package asd.group2.bms.repositoryImpl;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountType;
-import asd.group2.bms.model.cards.debit.DebitCard;
-import asd.group2.bms.model.cards.debit.DebitCardStatus;
 import asd.group2.bms.model.user.User;
 import asd.group2.bms.repositoryMapper.AccountRowMapper;
 import org.junit.jupiter.api.BeforeEach;

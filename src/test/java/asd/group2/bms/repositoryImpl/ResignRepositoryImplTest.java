@@ -225,7 +225,7 @@ public class ResignRepositoryImplTest {
     when(jdbcTemplate.update(ArgumentMatchers.any(),
         (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(),
         (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any(), (Object[]) ArgumentMatchers.any()
-        )).thenReturn(1);
+    )).thenReturn(1);
 
     Boolean response = resignRepository.update(resignRequest);
     assertEquals(true, response);

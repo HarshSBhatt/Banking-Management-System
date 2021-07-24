@@ -65,7 +65,7 @@ public class UserController {
   public ResponseEntity<?> updateUserProfile(@CurrentLoggedInUser UserPrincipal currentUser, @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
     Boolean isUserProfileUpdated = userService.updateUserProfileByUsername(currentUser, updateProfileRequest);
     if (isUserProfileUpdated) {
-      return ResponseEntity.ok(new ApiResponse(true, "Profile updated successfully!"));
+      return ResponseEntity.ok(new ApiResponse(true, "Profile updated successfully!!!!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while updating user profile"),
           HttpStatus.BAD_REQUEST);

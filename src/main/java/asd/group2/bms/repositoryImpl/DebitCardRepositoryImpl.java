@@ -105,7 +105,11 @@ public class DebitCardRepositoryImpl extends JdbcDaoSupport implements IDebitCar
         debitCard.getDebitCardNumber()
     );
 
-    return status != 0;
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }

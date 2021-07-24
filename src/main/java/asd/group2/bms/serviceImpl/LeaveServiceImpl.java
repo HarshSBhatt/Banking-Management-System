@@ -20,7 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class LeaveServiceImpl implements ILeaveService {
@@ -95,12 +98,13 @@ public class LeaveServiceImpl implements ILeaveService {
   public ResponseEntity<?> deleteLeaveRequestById(UserPrincipal currentUser, Long leaveId) {
     try {
       LeaveRequest leaveRequest = getLeaveById(leaveId);
-      if (leaveRequest.getUser().getId() != currentUser.getId()) {
-        return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
-            HttpStatus.FORBIDDEN);
+      if (leaveRequest.getUser().getId().equals(currentUser.getId())) {
+        leaveRepository.delete(leaveId);
+        return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
       }
-      leaveRepository.delete(leaveId);
-      return ResponseEntity.ok(new ApiResponse(true, "Leave request deleted successfully"));
+      return new ResponseEntity<>(new ApiResponse(false, "You are not authorized to perform this operation"),
+          HttpStatus.FORBIDDEN);
+
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong!"),
           HttpStatus.BAD_REQUEST);

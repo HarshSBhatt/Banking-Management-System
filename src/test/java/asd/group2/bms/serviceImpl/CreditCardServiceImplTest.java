@@ -123,7 +123,6 @@ public class CreditCardServiceImplTest {
   @Test
   void setCreditCardRequestStatusTestPassCondition1() throws MessagingException,
       UnsupportedEncodingException {
-    int transactionLimit = 1000;
     CreditCard creditCard = new CreditCard();
     Long card = 123L;
     User user = new User();
@@ -149,7 +148,6 @@ public class CreditCardServiceImplTest {
   @Test
   void setCreditCardRequestStatusTestPassCondition2() throws MessagingException,
       UnsupportedEncodingException {
-    int transactionLimit = 4000;
     CreditCard creditCard = new CreditCard();
     Long card = 123L;
     User user = new User();
@@ -175,7 +173,6 @@ public class CreditCardServiceImplTest {
   @Test
   void setCreditCardRequestStatusTestPassCondition3() throws MessagingException,
       UnsupportedEncodingException {
-    int transactionLimit = 4000;
     CreditCard creditCard = new CreditCard();
     Long card = 123L;
     User user = new User();
@@ -201,7 +198,6 @@ public class CreditCardServiceImplTest {
   @Test
   void setCreditCardRequestStatusTestPassCondition4() throws MessagingException,
       UnsupportedEncodingException {
-    int transactionLimit = 4000;
     CreditCard creditCard = new CreditCard();
     Long card = 123L;
     User user = new User();
@@ -250,7 +246,7 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void createCreditCardTestFail() throws Exception {
+  void createCreditCardTestFail() {
     Account account = new Account();
     account.setAccountNumber(123L);
     account.setCreditScore(600);
@@ -268,10 +264,8 @@ public class CreditCardServiceImplTest {
     when(helper.generateCardDetails()).thenReturn(cardDetails);
 
     Exception exception = assertThrows(Exception.class,
-        () -> {
-          creditCardService.createCreditCard(account,
-              requestedTransactionLimit);
-        });
+        () -> creditCardService.createCreditCard(account,
+            requestedTransactionLimit));
 
     String expectedMessage = "You are not eligible to apply for our Credit Card";
 
@@ -300,7 +294,7 @@ public class CreditCardServiceImplTest {
   }
 
   @Test
-  void setCreditCardPinTestFail() throws Exception {
+  void setCreditCardPinTestFail() {
     Long card = 123L;
     String pin = "1234";
     Long id = 2L;
@@ -315,9 +309,7 @@ public class CreditCardServiceImplTest {
 
 
     Exception exception = assertThrows(Exception.class,
-        () -> {
-          creditCardService.setCreditCardPin(card, pin, id);
-        });
+        () -> creditCardService.setCreditCardPin(card, pin, id));
 
     String expectedMessage = "You are not authorized to perform this operation";
 

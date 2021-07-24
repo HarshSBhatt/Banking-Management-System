@@ -56,7 +56,7 @@ class DebitCardRepositoryImplTest {
   }
 
   @Test
-  void findByIdNotFoundTest(){
+  void findByIdNotFoundTest() {
     Long debitCardNumber = 6L;
 
     when(Optional.ofNullable(jdbcTemplate.queryForObject(
@@ -116,7 +116,7 @@ class DebitCardRepositoryImplTest {
 
   @Test
   void save() {
-    Long debitCardNumber =  6L;
+    Long debitCardNumber = 6L;
     Long accountNumber = 123L;
     DebitCardStatus debitCardStatus = DebitCardStatus.ACTIVE;
     DebitCard debitCard = new DebitCard();
@@ -136,7 +136,7 @@ class DebitCardRepositoryImplTest {
 
   @Test
   void updateTrue() {
-    Long debitCardNumber =  6L;
+    Long debitCardNumber = 6L;
     DebitCardStatus debitCardStatus = DebitCardStatus.ACTIVE;
     DebitCard debitCard = new DebitCard();
     debitCard.setDebitCardNumber(debitCardNumber);
@@ -151,7 +151,7 @@ class DebitCardRepositoryImplTest {
 
   @Test
   void updateFalse() {
-    Long debitCardNumber =  6L;
+    Long debitCardNumber = 6L;
     DebitCardStatus debitCardStatus = DebitCardStatus.ACTIVE;
     DebitCard debitCard = new DebitCard();
     debitCard.setDebitCardNumber(debitCardNumber);
@@ -162,4 +162,5 @@ class DebitCardRepositoryImplTest {
 
     assertFalse(debitCardRepository.update(debitCard));
   }
+
 }

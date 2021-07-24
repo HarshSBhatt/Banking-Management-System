@@ -118,7 +118,11 @@ public class CreditCardRepositoryImpl extends JdbcDaoSupport implements ICreditC
         creditCard.getCreditCardNumber()
     );
 
-    return status != 0;
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }

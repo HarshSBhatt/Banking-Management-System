@@ -3,12 +3,14 @@ package asd.group2.bms.repositoryImpl;
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
-import asd.group2.bms.repositoryMapper.ResignRowMapper;
 import asd.group2.bms.repositoryMapper.TermDepositDetailRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,7 +93,7 @@ class TermDepositDetailRepositoryImplTest {
   }
 
   @Test
-  void findByIdSuccessTest(){
+  void findByIdSuccessTest() {
     Long termDepositId = 1L;
     Long accountNumber = 1L;
 
@@ -115,7 +117,7 @@ class TermDepositDetailRepositoryImplTest {
   }
 
   @Test
-  void findByIdFailTest(){
+  void findByIdFailTest() {
     Long termDepositId = 1L;
     Long accountNumber = 1L;
 
@@ -141,7 +143,7 @@ class TermDepositDetailRepositoryImplTest {
   }
 
   @Test
-  void updateSuccessTest(){
+  void updateSuccessTest() {
     TermDepositDetail termDepositDetail = new TermDepositDetail();
     termDepositDetail.setTermDepositId(1L);
     termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);
@@ -153,7 +155,7 @@ class TermDepositDetailRepositoryImplTest {
   }
 
   @Test
-  void updateFailTest(){
+  void updateFailTest() {
     TermDepositDetail termDepositDetail = new TermDepositDetail();
     termDepositDetail.setTermDepositId(1L);
     termDepositDetail.setTermDepositStatus(TermDepositStatus.ACTIVE);

@@ -2,7 +2,6 @@ package asd.group2.bms.serviceImpl;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.account.AccountActivity;
-import asd.group2.bms.model.account.ActivityType;
 import asd.group2.bms.model.term_deposit.TermDepositDetail;
 import asd.group2.bms.model.term_deposit.TermDepositStatus;
 import asd.group2.bms.model.user.User;
@@ -25,7 +24,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -136,7 +134,6 @@ public class TermDepositDetailServiceImplTest {
     String email = "arpan@gmail.com";
     String firstName = "arpan";
     Double fdAmount = 10.0;
-    Double balance = 5000.0;
     Date date = new Date();
     int duration = 4;
 
@@ -359,6 +356,7 @@ public class TermDepositDetailServiceImplTest {
         "Term deposit cannot be closed!");
   }
 
+  @Test
   void checkActiveTermDepositTrueTest() {
     List<TermDepositDetail> termDepositDetailList = new ArrayList<>();
 

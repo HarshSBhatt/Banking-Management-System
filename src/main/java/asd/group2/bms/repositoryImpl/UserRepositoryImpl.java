@@ -215,7 +215,12 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements IUserRepositor
         user.getForgotPasswordToken(),
         user.getRequestedAccountType().name(),
         user.getCity(), user.getState(), user.getZipCode(), user.getId());
-    return status != 0;
+
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }
