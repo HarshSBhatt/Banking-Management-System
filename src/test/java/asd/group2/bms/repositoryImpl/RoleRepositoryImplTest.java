@@ -3,7 +3,6 @@ package asd.group2.bms.repositoryImpl;
 import asd.group2.bms.model.user.Role;
 import asd.group2.bms.model.user.RoleType;
 import asd.group2.bms.repositoryMapper.RoleRowMapper;
-import asd.group2.bms.repositoryMapper.UserRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class RoleRepositoryImplTest {

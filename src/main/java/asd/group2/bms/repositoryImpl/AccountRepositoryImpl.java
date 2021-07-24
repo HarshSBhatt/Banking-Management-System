@@ -91,7 +91,11 @@ public class AccountRepositoryImpl extends JdbcDaoSupport implements IAccountRep
         account.getAccountNumber()
     );
 
-    return status != 0;
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }

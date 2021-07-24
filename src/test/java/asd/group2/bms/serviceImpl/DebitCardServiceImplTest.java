@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DebitCardServiceImplTest {
@@ -130,7 +130,7 @@ class DebitCardServiceImplTest {
     when(debitCardRepository.update(fetchDebitCard)).thenReturn(true);
 
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
-        newPin,id);
+        newPin, id);
     assertTrue(updatePin, "Pin not updated");
   }
 
@@ -155,7 +155,7 @@ class DebitCardServiceImplTest {
     when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
-        newPin,id);
+        newPin, id);
 
     assertFalse(updatePin, "Pin updated");
   }
@@ -182,7 +182,7 @@ class DebitCardServiceImplTest {
     when(debitCardRepository.findById(debitCardNumber)).thenReturn(Optional.ofNullable(debitCard));
 
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
-        newPin,newId);
+        newPin, newId);
 
     assertFalse(updatePin, "Pin updated");
   }
@@ -210,12 +210,12 @@ class DebitCardServiceImplTest {
     when(debitCardRepository.update(fetchDebitCard)).thenReturn(false);
 
     Boolean updatePin = debitCardService.setDebitCardPin(debitCardNumber,
-        newPin,id);
+        newPin, id);
     assertFalse(updatePin, "Pin not updated");
   }
 
   @Test
-  void setDebitCardRequestStatusSuccessTest(){
+  void setDebitCardRequestStatusSuccessTest() {
     DebitCard debitCard = new DebitCard();
     Long debitCardNumber = 6L;
     User user = new User();
@@ -232,12 +232,12 @@ class DebitCardServiceImplTest {
 
     Boolean updateStatus =
         debitCardService.setDebitCardRequestStatus(debitCardNumber,
-        debitCardStatus);
-    assertTrue(updateStatus,"Status not updated");
+            debitCardStatus);
+    assertTrue(updateStatus, "Status not updated");
   }
 
   @Test
-  void setDebitCardRequestStatusFailureTest(){
+  void setDebitCardRequestStatusFailureTest() {
     DebitCard debitCard = new DebitCard();
     Long debitCardNumber = 6L;
     User user = new User();
@@ -255,11 +255,11 @@ class DebitCardServiceImplTest {
     Boolean updateStatus =
         debitCardService.setDebitCardRequestStatus(debitCardNumber,
             debitCardStatus);
-    assertFalse(updateStatus,"Status updated");
+    assertFalse(updateStatus, "Status updated");
   }
 
   @Test
-  void getDebitCardByAccountNumberTest(){
+  void getDebitCardByAccountNumberTest() {
     Long debitCardNumber = 6L;
     DebitCard debitCard = new DebitCard();
     Long accountNumber = 123L;

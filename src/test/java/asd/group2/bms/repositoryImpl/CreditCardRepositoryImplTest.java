@@ -146,5 +146,6 @@ public class CreditCardRepositoryImplTest {
 
     Boolean response = creditCardRepository.update(creditCard);
     assertEquals(true, response);
-  };
+  }
+
 }

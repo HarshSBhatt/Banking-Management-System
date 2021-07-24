@@ -93,7 +93,11 @@ public class AccountActivityRepositoryImpl extends JdbcDaoSupport implements IAc
         accountActivity.getActivityId()
     );
 
-    return status != 0;
+    if (status == 0) {
+      return false;
+    }
+
+    return true;
   }
 
 }

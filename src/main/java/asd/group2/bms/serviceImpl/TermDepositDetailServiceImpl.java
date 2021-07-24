@@ -91,7 +91,7 @@ public class TermDepositDetailServiceImpl implements ITermDepositDetailService {
 
       //Setting account activity
       AccountActivity accountActivity = new AccountActivity(account,
-          ActivityType.WITHDRAWAL,fdAmount, "Term Deposit withdrawal!");
+          ActivityType.WITHDRAWAL, fdAmount, "Term Deposit withdrawal!");
       accountActivityRepository.save(accountActivity);
 
       // Saving TermDepositDetail & TermDeposit
