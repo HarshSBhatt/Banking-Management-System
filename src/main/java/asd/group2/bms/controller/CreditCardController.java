@@ -2,6 +2,7 @@ package asd.group2.bms.controller;
 
 import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.CreditCard;
+import asd.group2.bms.model.cards.credit.CreditCardBill;
 import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import asd.group2.bms.payload.request.CreditCardRequest;
 import asd.group2.bms.payload.request.CreditCardSetPinRequest;
@@ -12,6 +13,7 @@ import asd.group2.bms.payload.response.PagedResponse;
 import asd.group2.bms.security.CurrentLoggedInUser;
 import asd.group2.bms.security.UserPrincipal;
 import asd.group2.bms.service.IAccountService;
+import asd.group2.bms.service.ICreditCardBillService;
 import asd.group2.bms.service.ICreditCardService;
 import asd.group2.bms.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +36,9 @@ public class CreditCardController {
 
   @Autowired
   IAccountService accountService;
+
+  @Autowired
+  ICreditCardBillService creditCardBillService;
 
   /**
    * @param creditCardStatus: Credit card status
@@ -99,6 +105,30 @@ public class CreditCardController {
       return ResponseEntity.ok(new ApiResponse(true, "Pin updated successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while changing pin"),
+          HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @GetMapping("/services/creditCards/show_bills")
+  @RolesAllowed({"ROLE_USER"})
+  public Optional<CreditCardBill> showBills(@RequestParam(value = "creditCardNo") Long creditCardNo) {
+    return creditCardBillService.getBills(creditCardNo);
+  }
+
+  @PutMapping("/services/creditCards/show_bills/pay_credit_card")
+  @RolesAllowed({"ROLE_USER"})
+  public ResponseEntity<?> payCreditCardBill(
+      @RequestParam(value = "billId") Long billId,
+      @CurrentLoggedInUser UserPrincipal currentUser
+  ) {
+    Long userid = currentUser.getId();
+    Account account = accountService.getAccountByUserId(userid);
+    Long accountNumber = account.getAccountNumber();
+    Boolean isPaid = creditCardBillService.payCreditCardBill(accountNumber, billId);
+    if (isPaid) {
+      return ResponseEntity.ok(new ApiResponse(true, "Bill paid successfully!"));
+    } else {
+      return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while paying bill balance might be insufficient"),
           HttpStatus.BAD_REQUEST);
     }
   }
