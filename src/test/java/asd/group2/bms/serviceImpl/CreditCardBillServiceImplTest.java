@@ -17,7 +17,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -50,18 +49,6 @@ class CreditCardBillServiceImplTest {
   public void teardown() {
     RequestContextHolder.resetRequestAttributes();
   }
-
-
-  @Test
-  void payCreditCardBillBalanceSufficient() {
-
-
-  }
-  @Test
-  void payCreditCardBillBalanceInSufficient() {
-
-  }
-
 
   @Test
   void getBillsByCreditCardNumber() {
