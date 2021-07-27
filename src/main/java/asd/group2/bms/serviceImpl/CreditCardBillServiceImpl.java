@@ -13,35 +13,34 @@ import java.util.Optional;
 @Service
 public class CreditCardBillServiceImpl implements ICreditCardBillService {
 
-    @Autowired
-    ICreditCardBillRepository CreditCard;
+  @Autowired
+  ICreditCardBillRepository creditCardBillRepository;
 
-    @Autowired
-    IAccountService accountService;
+  @Autowired
+  IAccountService accountService;
 
-    /**
-     * @param accountNumber: accountNumber of User
-     * @param billId: billId of the CreditCardBill
-     * @return the updated status of the credit card bill having bill no BillId
-     */
-    public Boolean payCreditCardBill(Long accountNumber,Long billId) {
-        Long creditCardNumber = CreditCard.getCreditCardNumber(accountNumber);
-        Account account = accountService.getAccountByAccountNumber(accountNumber);
-        Double balance = account.getBalance();
-        Double billAmount = CreditCard.getBillAmount(creditCardNumber);
-        if (balance >= billAmount)
-        {
-            return CreditCard.payCreditCardBill(billId);
-        }
-        return false;
+  /**
+   * @param accountNumber: accountNumber of User
+   * @param billId:        billId of the CreditCardBill
+   * @return the updated status of the credit card bill having bill no BillId
+   */
+  public Boolean payCreditCardBill(Long accountNumber, Long billId) {
+    Long creditCardNumber = creditCardBillRepository.getCreditCardNumber(accountNumber);
+    Account account = accountService.getAccountByAccountNumber(accountNumber);
+    Double balance = account.getBalance();
+    Double billAmount = creditCardBillRepository.getBillAmount(creditCardNumber);
+    if (balance >= billAmount) {
+      return creditCardBillRepository.payCreditCardBill(billId);
     }
+    return false;
+  }
 
-    /**
-     * @parm creditCardNo: CreditCardNo of User
-     * @return the CreditCardBills associated with the Card
-     */
-    public Optional<CreditCardBill> getBills(Long creditCardNo)
-    {
-        return CreditCard.showBills(creditCardNo);
-    }
+  /**
+   * @param creditCardNo: CreditCardNo of User
+   * @return the CreditCardBills associated with the Card
+   */
+  public Optional<CreditCardBill> getBills(Long creditCardNo) {
+    return creditCardBillRepository.showBills(creditCardNo);
+  }
+
 }

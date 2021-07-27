@@ -4,13 +4,13 @@ import asd.group2.bms.model.cheque.ChequeStatus;
 
 public interface IChequeRepository {
 
-  public Boolean update_cheque(Long chequeNumber);
+  Boolean updateCheque(Long chequeNumber);
 
-  public Boolean update_chequeTransaction(Long senderAccountNumber,
-      Long receiverAccountNumber, Long chequeNumber, Double chequeAmount);
+  Boolean updateChequeTransaction(Long senderAccountNumber,
+                                  Long receiverAccountNumber, Long chequeNumber, Double chequeAmount);
 
-  public Boolean updateChequeStatus (ChequeStatus chequeStatus);
+  Boolean updateChequeStatus(ChequeStatus chequeStatus);
 
-  public ChequeStatus getChequeStatus(Long chequeNumber);
+  ChequeStatus getChequeStatus(Long chequeNumber);
 
 }

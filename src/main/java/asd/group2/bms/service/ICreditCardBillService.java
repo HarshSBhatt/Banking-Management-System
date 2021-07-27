@@ -6,8 +6,9 @@ import java.util.Optional;
 
 public interface ICreditCardBillService {
 
-      Boolean payCreditCardBill(Long accountNumber,Long billId);
+  Boolean payCreditCardBill(Long accountNumber, Long billId);
 
 
-      Optional<CreditCardBill> getBills(Long creditCardNo);
+  Optional<CreditCardBill> getBills(Long creditCardNo);
+
 }

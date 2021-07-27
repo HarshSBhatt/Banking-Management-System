@@ -11,13 +11,14 @@ import javax.sql.DataSource;
 import java.util.Date;
 
 @Repository
-public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeRepository {
+public class ChequeRepositoryImpl extends JdbcDaoSupport implements IChequeRepository {
+
   private final JdbcTemplate jdbcTemplate;
 
   final
   DataSource dataSource;
 
-  public ChequeRepositoryImp(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+  public ChequeRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
     this.jdbcTemplate = jdbcTemplate;
     this.dataSource = dataSource;
   }
@@ -28,20 +29,21 @@ public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeReposi
   }
 
   @Override
-  public Boolean update_cheque(Long chequeNumber) {
+  public Boolean updateCheque(Long chequeNumber) {
 
     String createCheque = "INSERT INTO cheques " +
         "(cheque_number, created_at) " +
-        "VALUES (?, ?, ?)";
+        "VALUES (?, ?)";
 
-    int status = jdbcTemplate.update(createCheque,chequeNumber,
+    int status = jdbcTemplate.update(createCheque, chequeNumber,
         new Date());
 
-    return status!=0 ;
+    return status != 0;
   }
 
   @Override
-  public Boolean update_chequeTransaction(Long senderAccountNumber, Long receiverAccountNumber, Long chequeNumber, Double chequeAmount) {
+  public Boolean updateChequeTransaction(Long senderAccountNumber,
+                                         Long receiverAccountNumber, Long chequeNumber, Double chequeAmount) {
     String createChequeTransaction = "INSERT INTO cheque_transactions " +
         "(created_at,amount,cheque_status,cheque_number," +
         "receiver_account_number,sender_account_number) " +
@@ -56,13 +58,13 @@ public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeReposi
         chequeNumber,
         receiverAccountNumber,
         senderAccountNumber
-        );
+    );
 
-    return status!=0 ;
+    return status != 0;
   }
+
   @Override
-  public Boolean updateChequeStatus(ChequeStatus chequeStatus)
-  {
+  public Boolean updateChequeStatus(ChequeStatus chequeStatus) {
     String updateChequeStatus = "INSERT INTO cheque_transactions " +
         "(updated_at,cheque_status) " +
         "VALUES (?, ?)";
@@ -72,7 +74,7 @@ public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeReposi
         chequeStatus.name()
     );
 
-    return status!=0 ;
+    return status != 0;
 
   }
 
@@ -81,9 +83,9 @@ public class ChequeRepositoryImp extends JdbcDaoSupport implements IChequeReposi
 
     String chequeStatus = "SELECT cheque_status from cheque_transactions " +
         "where cheque_number = ?";
-    ChequeStatus chequeStatus1 = jdbcTemplate.queryForObject(chequeStatus,
-        new Object[]{chequeNumber},ChequeStatus.class);
-    return chequeStatus1;
+
+    return jdbcTemplate.queryForObject(chequeStatus,
+        new Object[]{chequeNumber}, ChequeStatus.class);
 
   }
 

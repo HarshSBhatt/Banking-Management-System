@@ -109,30 +109,28 @@ public class CreditCardController {
     }
   }
 
-  @GetMapping("/services/creditCards/ShowBills")
+  @GetMapping("/services/creditCards/show_bills")
   @RolesAllowed({"ROLE_USER"})
-  public Optional<CreditCardBill> showBills(@RequestParam(value = "creditCardNo") Long creditCardNo)
-  {
+  public Optional<CreditCardBill> showBills(@RequestParam(value = "creditCardNo") Long creditCardNo) {
     return creditCardBillService.getBills(creditCardNo);
   }
 
-
-  @PutMapping("/services/creditCards/ShowBills/PayCreditCard")
+  @PutMapping("/services/creditCards/show_bills/pay_credit_card")
   @RolesAllowed({"ROLE_USER"})
-  public ResponseEntity<?> payCreditCard(
-          @RequestParam(value = "billId") Long billId,
-          @CurrentLoggedInUser UserPrincipal currentUser
-         )
-  {
+  public ResponseEntity<?> payCreditCardBill(
+      @RequestParam(value = "billId") Long billId,
+      @CurrentLoggedInUser UserPrincipal currentUser
+  ) {
     Long userid = currentUser.getId();
     Account account = accountService.getAccountByUserId(userid);
     Long accountNumber = account.getAccountNumber();
-    Boolean isPaid =  creditCardBillService.payCreditCardBill(accountNumber,billId);
+    Boolean isPaid = creditCardBillService.payCreditCardBill(accountNumber, billId);
     if (isPaid) {
       return ResponseEntity.ok(new ApiResponse(true, "Bill paid successfully!"));
     } else {
       return new ResponseEntity<>(new ApiResponse(false, "Something went wrong while paying bill balance might be insufficient"),
-              HttpStatus.BAD_REQUEST);
+          HttpStatus.BAD_REQUEST);
     }
   }
+
 }

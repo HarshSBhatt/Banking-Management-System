@@ -1,48 +1,51 @@
 package asd.group2.bms.payload.request;
+
 import javax.validation.constraints.NotNull;
 
 public class StartChequeRequest {
-    public long getAccountNumberSender() {
-        return accountNumberSender;
-    }
 
-    public void setAccountNumberSender(long accountNumberSender) {
-        this.accountNumberSender = accountNumberSender;
-    }
+  @NotNull
+  private long accountNumberSender;
 
-    public long getAccountNumberReceiver() {
-        return accountNumberReceiver;
-    }
+  @NotNull
+  private long accountNumberReceiver;
 
-    public void setAccountNumberReceiver(long accountNumberReceiver) {
-        this.accountNumberReceiver = accountNumberReceiver;
-    }
+  @NotNull
+  private long chequeNumber;
 
-    public long getChequeNumber() {
-        return chequeNumber;
-    }
+  @NotNull
+  private Double amount;
 
-    public void setChequeNumber(long chequeNumber) {
-        this.chequeNumber = chequeNumber;
-    }
+  public long getAccountNumberSender() {
+    return accountNumberSender;
+  }
 
-    public Double getAmount() {
-        return amount;
-    }
+  public void setAccountNumberSender(long accountNumberSender) {
+    this.accountNumberSender = accountNumberSender;
+  }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+  public long getAccountNumberReceiver() {
+    return accountNumberReceiver;
+  }
 
-    @NotNull
-    private long accountNumberSender;
-    @NotNull
-    private long accountNumberReceiver;
-    @NotNull
-    private long chequeNumber;
-    @NotNull
-    private Double amount;
+  public void setAccountNumberReceiver(long accountNumberReceiver) {
+    this.accountNumberReceiver = accountNumberReceiver;
+  }
 
+  public long getChequeNumber() {
+    return chequeNumber;
+  }
 
+  public void setChequeNumber(long chequeNumber) {
+    this.chequeNumber = chequeNumber;
+  }
+
+  public Double getAmount() {
+    return amount;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
 
 }

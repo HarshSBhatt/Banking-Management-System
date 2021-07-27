@@ -1,10 +1,8 @@
 package asd.group2.bms.repositoryMapper;
 
-import asd.group2.bms.model.account.Account;
 import asd.group2.bms.model.cards.credit.BillStatus;
 import asd.group2.bms.model.cards.credit.CreditCard;
 import asd.group2.bms.model.cards.credit.CreditCardBill;
-import asd.group2.bms.model.cards.credit.CreditCardStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,8 +13,10 @@ public class CreditCardBillMapper implements RowMapper<CreditCardBill> {
   @Override
   public CreditCardBill mapRow(ResultSet resultSet, int i) throws SQLException {
     CreditCardRowMapper creditCardRowMapper = new CreditCardRowMapper();
+
     CommonMapping commonMapping = new CommonMapping();
     CreditCardBill creditCardBill = new CreditCardBill();
+
     creditCardBill.setCreatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
         "created_at").toLocalDate()));
     creditCardBill.setUpdatedAt(commonMapping.mapCreatedAtOrUpdatedAt(resultSet.getDate(
@@ -28,6 +28,7 @@ public class CreditCardBillMapper implements RowMapper<CreditCardBill> {
     creditCardBill.setDueDate(resultSet.getDate("due_date"));
     CreditCard creditCard = creditCardRowMapper.mapRow(resultSet, i);
     creditCardBill.setCreditCard(creditCard);
+
     return creditCardBill;
   }
 
